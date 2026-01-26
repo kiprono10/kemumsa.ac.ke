@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2rem;
+        }
+        .login-header p {
+            color: #666;
+            margin: 0.5rem 0 0;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-btn:hover {
+            background: #5a6fd8;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin-top: 1rem;
+        }
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Admin Login</h1>
+            <p>KeMUMSA Admin Dashboard</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" required style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; box-sizing: border-box;">
+                    <button type="button" onclick="togglePassword()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #667eea; font-size: 1rem;">
+                        <i id="passwordToggleIcon" class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">Login</button>
+        </form>
+        <div id="errorMessage" class="error-message">Invalid credentials. Please try again.</div>
+        <div id="loading" class="loading">Logging in...</div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            console.log('Login attempt with:', { username, password });
+            
+            // Show loading state
+            loading.style.display = 'block';
+            errorMsg.style.display = 'none';
+            loginBtn.disabled = true;
+            
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    console.log('Response not ok, status:', response.status);
+                }
+                return response.json().then(data => ({ data, status: response.status }));
+            })
+            .then(result => {
+                const { data, status } = result;
+                console.log('Response data:', data);
+                loading.style.display = 'none';
+                
+                if (data.success) {
+                    // Store token and redirect to admin dashboard
+                    localStorage.setItem('adminToken', data.token);
+                    console.log('Token stored, redirecting...');
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 500);
+                } else {
+                    console.log('Login failed:', data.message);
+                    errorMsg.textContent = data.message || 'Login failed. Please try again.';
+                    errorMsg.style.display = 'block';
+                    loginBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                loading.style.display = 'none';
+                errorMsg.textContent = 'Network error: ' + error.message + ' - Make sure the server is running!';
+                errorMsg.style.display = 'block';
+                loginBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

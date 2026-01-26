@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #871054;
+            --primary-light: #a83b6e;
+            --primary-dark: #4d1c12;
+            --secondary-color: #d4af37;
+            --accent-color: #2e8b57;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background-light: #f8f9fa;
+            --white: #ffffff;
+            --gray-light: #e9ecef;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 30px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header-content p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .welcome-text p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .profile-badge {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .resource-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-item:hover {
+            background: var(--background-light);
+            padding: 12px;
+            margin: 0 -12px;
+            border-radius: 8px;
+        }
+
+        .resource-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: rgba(135, 16, 84, 0.1);
+            color: var(--primary-color);
+        }
+
+        .badge-success {
+            background: rgba(46, 139, 87, 0.1);
+            color: var(--accent-color);
+        }
+
+        .download-btn {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Full Width Section */
+        .full-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .exam-card {
+            background: var(--background-light);
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .exam-card:hover {
+            border-color: var(--primary-color);
+            background: rgba(135, 16, 84, 0.05);
+        }
+
+        .exam-year {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .exam-type {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-heavy);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(135, 16, 84, 0.1);
+        }
+
+        .toggle-group {
+            background: var(--background-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .toggle-label strong {
+            color: var(--text-dark);
+        }
+
+        .toggle-label small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: var(--gray-light);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--success-color);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--white);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px 30px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .modal-footer button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-cancel {
+            background: var(--gray-light);
+            color: var(--text-dark);
+        }
+
+        .btn-cancel:hover {
+            background: #ddd;
+        }
+
+        .btn-save {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-save:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gray-light);
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-container">
+            <div class="header-content">
+                <h1>👋 Member Dashboard</h1>
+                <p id="memberGreeting">Welcome to KeMUMSA</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-primary" id="editProfileBtn">
+                    <i class="fi fi-ts-user"></i>
+                    Edit Profile
+                </button>
+                <button class="btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <div class="welcome-text">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Access study resources, previous exams, and manage your profile all in one place.</p>
+            </div>
+            <div class="profile-badge">
+                <div class="profile-avatar">
+                    <img id="dashboardProfileAvatar" src="" alt="Profile Picture" style="display:none;">
+                    <i class="fas fa-user-circle" id="avatarFallback"></i>
+                </div>
+                <div class="profile-info">
+                    <p id="profileYear">Year: Loading...</p>
+                    <p id="profileDept">Speciality: Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div id="successAlert" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span id="successMessage"></span>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Study Resources -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fi fi-ts-book"></i>
+                    <h3>Study Resources</h3>
+                </div>
+                <div class="card-body" id="studyResourcesContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>No resources available for your year yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fi fi-ts-link"></i>
+                    <h3>Quick Links</h3>
+                </div>
+                <div class="card-body">
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-calendar-alt"></i>
+                            Events Calendar
+                        </div>
+                        <a href="events.html" class="download-btn">View</a>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-users"></i>
+                            Members Directory
+                        </div>
+                        <a href="members.html" class="download-btn">View</a>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-info-circle"></i>
+                            About Association
+                        </div>
+                        <a href="about.html" class="download-btn">Learn</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Status -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Account Status</h3>
+                </div>
+                <div class="card-body">
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-check-circle"></i>
+                            Account Status
+                        </div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-eye"></i>
+                            Profile Visibility
+                        </div>
+                        <span class="badge badge-primary" id="visibilityBadge">Private</span>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-name">
+                            <i class="fas fa-clock"></i>
+                            Member Since
+                        </div>
+                        <small id="memberSince">Today</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div class="full-section">
+            <div class="section-title">
+                <i class="fas fa-envelope"></i>
+                My Messages
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="resource-item" style="justify-content: space-between; align-items: center;">
+                        <div class="resource-name">
+                            <i class="fas fa-inbox"></i>
+                            Inbox
+                        </div>
+                        <span class="badge badge-primary" id="messageCount">0</span>
+                    </div>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <button class="btn-primary" onclick="loadMemberMessages()" style="margin-bottom: 1rem;">
+                            <i class="fas fa-sync"></i> Refresh Messages
+                        </button>
+                        <div id="messagesContainer" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+                            <div style="text-align: center; padding: 2rem; color: #999;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading messages...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exams & CATs Section -->
+        <div class="full-section">
+            <div class="section-title">
+                <i class="fas fa-file-pdf"></i>
+                Previous Exams & CATs
+            </div>
+            <div class="exam-grid" id="examsContainer">
+                <!-- Exam cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Additional Resources -->
+        <div class="full-section">
+            <div class="section-title">
+                <i class="fas fa-folder-open"></i>
+                Year-Specific Resources
+            </div>
+            <div id="yearSpecificContainer">
+                <!-- Resources will be populated based on year -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="close-btn" onclick="closeProfileModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <!-- Profile Picture Section -->
+                    <div class="form-group" style="text-align: center; margin-bottom: 30px;">
+                        <label style="display: block; margin-bottom: 10px;"><strong>Update Profile Photo</strong></label>
+                        
+                        <!-- Current Preview -->
+                        <div id="profilePicturePreview" style="width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border: 3px solid #ddd;">
+                            <img id="profilePictureImg" src="" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        
+                        <!-- Upload Button -->
+                        <input type="file" id="editProfilePicture" accept="image/*" style="display: none;">
+                        <button type="button" class="btn-secondary" onclick="document.getElementById('editProfilePicture').click()" style="padding: 8px 16px; margin-bottom: 10px;">
+                            <i class="fas fa-upload"></i> Choose Image
+                        </button>
+                        <small style="display: block; margin-bottom: 15px; color: #666;">Max 5MB. JPG, PNG supported.</small>
+
+                        <!-- Image Editor Modal (Hidden by default) -->
+                        <div id="imageEditorContainer" style="display: none; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #f9f9f9; margin-top: 15px;">
+                            <h4 style="margin-bottom: 15px;">Edit Photo</h4>
+                            
+                            <!-- Canvas for cropping -->
+                            <div style="margin-bottom: 15px; text-align: center;">
+                                <img id="cropperImage" src="" style="max-width: 100%; max-height: 400px;" alt="Crop image">
+                            </div>
+
+                            <!-- Controls -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                                <!-- Crop Controls -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Crop</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="cropImage()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-crop"></i> Crop
+                                    </button>
+                                </div>
+
+                                <!-- Rotate Left -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Rotate</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="rotateImage(-45)" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-redo"></i> Rotate Left
+                                    </button>
+                                </div>
+
+                                <!-- Rotate Right -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Flip</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="flipImageHorizontal()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-arrows-alt-h"></i> Flip Horizontal
+                                    </button>
+                                </div>
+
+                                <!-- Vertical Flip -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Flip</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="flipImageVertical()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-arrows-alt-v"></i> Flip Vertical
+                                    </button>
+                                </div>
+
+                                <!-- Zoom In -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Zoom</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="zoomImage(0.1)" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-search-plus"></i> Zoom In
+                                    </button>
+                                </div>
+
+                                <!-- Zoom Out -->
+                                <div>
+                                    <label style="display: block; font-size: 0.9rem; margin-bottom: 5px;"><strong>Zoom</strong></label>
+                                    <button type="button" class="btn-secondary" onclick="zoomImage(-0.1)" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-search-minus"></i> Zoom Out
+                                    </button>
+                                </div>
+
+                                <!-- Reset -->
+                                <div style="grid-column: 1 / -1;">
+                                    <button type="button" class="btn-secondary" onclick="resetImage()" style="width: 100%; padding: 8px; font-size: 0.9rem;">
+                                        <i class="fas fa-undo"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Apply/Cancel Buttons -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <button type="button" class="btn-primary" onclick="applyImageEdit()" style="padding: 10px;">
+                                    <i class="fas fa-check"></i> Apply
+                                </button>
+                                <button type="button" class="btn-secondary" onclick="cancelImageEdit()" style="padding: 10px;">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" id="editEmail" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="tel" id="editPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentId">Student ID</label>
+                        <input type="text" id="editStudentId" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editDepartment">Area of Speciality</label>
+                        <select id="editDepartment" required>
+                            <option value="">Select Area of Speciality</option>
+                            <optgroup label="Surgical Specialties">
+                                <option value="General Surgery">General Surgery</option>
+                                <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
+                                <option value="Neurosurgery">Neurosurgery</option>
+                                <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+                                <option value="Urology">Urology</option>
+                                <option value="Otorhinolaryngology (ENT)">Otorhinolaryngology (ENT)</option>
+                                <option value="Ophthalmology">Ophthalmology</option>
+                                <option value="Plastic & Reconstructive Surgery">Plastic & Reconstructive Surgery</option>
+                                <option value="Vascular Surgery">Vascular Surgery</option>
+                                <option value="Thoracic Surgery">Thoracic Surgery</option>
+                                <option value="Colorectal Surgery">Colorectal Surgery</option>
+                                <option value="Pediatric Surgery">Pediatric Surgery</option>
+                            </optgroup>
+                            <optgroup label="Internal Medicine & Medical Specialties">
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Pulmonology (Respiratory Medicine)">Pulmonology (Respiratory Medicine)</option>
+                                <option value="Gastroenterology">Gastroenterology</option>
+                                <option value="Hepatology">Hepatology</option>
+                                <option value="Nephrology">Nephrology</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Rheumatology">Rheumatology</option>
+                                <option value="Hematology & Oncology">Hematology & Oncology</option>
+                                <option value="Infectious Disease">Infectious Disease</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Psychiatry">Psychiatry</option>
+                            </optgroup>
+                            <optgroup label="Obstetrics & Gynecology">
+                                <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                                <option value="Maternal-Fetal Medicine">Maternal-Fetal Medicine</option>
+                                <option value="Reproductive Medicine & Infertility">Reproductive Medicine & Infertility</option>
+                                <option value="Gynecologic Oncology">Gynecologic Oncology</option>
+                            </optgroup>
+                            <optgroup label="Pediatrics & Child Health">
+                                <option value="Pediatrics">Pediatrics</option>
+                                <option value="Pediatric Cardiology">Pediatric Cardiology</option>
+                                <option value="Pediatric Gastroenterology">Pediatric Gastroenterology</option>
+                                <option value="Pediatric Hematology & Oncology">Pediatric Hematology & Oncology</option>
+                                <option value="Neonatology">Neonatology</option>
+                                <option value="Pediatric Nephrology">Pediatric Nephrology</option>
+                            </optgroup>
+                            <optgroup label="Diagnostic & Therapeutic">
+                                <option value="Radiology">Radiology</option>
+                                <option value="Pathology">Pathology</option>
+                                <option value="Nuclear Medicine">Nuclear Medicine</option>
+                                <option value="Anesthesiology">Anesthesiology</option>
+                                <option value="Radiation Oncology">Radiation Oncology</option>
+                            </optgroup>
+                            <optgroup label="Emergency & Critical Care">
+                                <option value="Emergency Medicine">Emergency Medicine</option>
+                                <option value="Intensive Care Medicine">Intensive Care Medicine</option>
+                                <option value="Trauma Surgery">Trauma Surgery</option>
+                            </optgroup>
+                            <optgroup label="Other Specialties">
+                                <option value="Dermatology">Dermatology</option>
+                                <option value="Physical Medicine & Rehabilitation">Physical Medicine & Rehabilitation</option>
+                                <option value="Occupational Medicine">Occupational Medicine</option>
+                                <option value="Sports Medicine">Sports Medicine</option>
+                                <option value="Palliative Care">Palliative Care</option>
+                                <option value="Family Medicine">Family Medicine</option>
+                                <option value="Public Health">Public Health</option>
+                                <option value="Medical Genetics">Medical Genetics</option>
+                                <option value="Forensic Medicine">Forensic Medicine</option>
+                                <option value="Tropical Medicine">Tropical Medicine</option>
+                            </optgroup>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editYearOfStudy">Year of Study</label>
+                        <select id="editYearOfStudy" required>
+                            <option value="">Select Year</option>
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                            <option value="5">Year 5</option>
+                            <option value="6">Year 6</option>
+                        </select>
+                    </div>
+
+                    <!-- Visibility Toggle -->
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <strong>Show Profile on Members Directory</strong>
+                            <small>Allow other members to see your profile information</small>
+                        </div>
+                        <div class="toggle-switch" id="visibilityToggle" onclick="toggleVisibility()"></div>
+                    </div>
+
+                    <!-- Password Change Section -->
+                    <hr style="margin: 30px 0;">
+                    <h3 style="margin-bottom: 20px; color: #333;">Change Password</h3>
+                    
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter your current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password (min 6 characters)">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                    </div>
+                    <small style="color: #666; display: block; margin-bottom: 15px;">Leave password fields empty if you don't want to change your password.</small>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeProfileModal()">Cancel</button>
+                <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load member data from localStorage
+        function loadMemberData() {
+            const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+            const firstName = memberData.firstName || 'Member';
+            const yearOfStudy = memberData.yearOfStudy || 1;
+            const department = memberData.department || 'Medical';
+            const email = memberData.email || 'member@kemumsa.ac.ke';
+            const profileVisible = localStorage.getItem('profileVisible') === 'true';
+
+            // Update greeting
+            document.getElementById('memberGreeting').textContent = `Welcome back, ${firstName}!`;
+            
+            // Update profile info
+            document.getElementById('profileYear').textContent = `Year: ${yearOfStudy}`;
+            document.getElementById('profileDept').textContent = `Speciality: ${department}`;
+            document.getElementById('memberSince').textContent = new Date().toLocaleDateString();
+            document.getElementById('visibilityBadge').textContent = profileVisible ? 'Public' : 'Private';
+            
+            // Display profile picture in welcome card
+            if (memberData.profilePicture) {
+                const avatarImg = document.getElementById('dashboardProfileAvatar');
+                avatarImg.src = memberData.profilePicture;
+                avatarImg.style.display = 'block';
+                document.getElementById('avatarFallback').style.display = 'none';
+            } else {
+                document.getElementById('dashboardProfileAvatar').style.display = 'none';
+                document.getElementById('avatarFallback').style.display = 'block';
+            }
+            
+            // Load study resources
+            loadStudyResources(yearOfStudy);
+            
+            // Load exams and CATs
+            loadExamsAndCATs();
+            
+            // Load year-specific resources
+            loadYearSpecificResources(yearOfStudy);
+            
+            // Set edit profile form values
+            document.getElementById('editFirstName').value = memberData.firstName || '';
+            document.getElementById('editLastName').value = memberData.lastName || '';
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editPhone').value = memberData.phone || '';
+            document.getElementById('editStudentId').value = memberData.studentId || '';
+            document.getElementById('editDepartment').value = department;
+            document.getElementById('editYearOfStudy').value = yearOfStudy || '';
+            
+            // Set profile picture preview
+            if (memberData.profilePicture) {
+                document.getElementById('profilePictureImg').src = memberData.profilePicture;
+            } else {
+                // Default avatar - use initials or placeholder
+                const initials = ((memberData.firstName || 'M')[0] + (memberData.lastName || 'U')[0]).toUpperCase();
+                const canvas = document.createElement('canvas');
+                canvas.width = 120;
+                canvas.height = 120;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#007bff';
+                ctx.fillRect(0, 0, 120, 120);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(initials, 60, 60);
+                document.getElementById('profilePictureImg').src = canvas.toDataURL();
+            }
+            
+            // Set visibility toggle
+            const visibilityToggle = document.getElementById('visibilityToggle');
+            if (profileVisible) {
+                visibilityToggle.classList.add('active');
+            }
+        }
+
+        // Academic Resources will be loaded dynamically from API
+        let academicResources = [];
+
+        // Load study resources based on year from API
+        async function loadStudyResources(year) {
+            try {
+                const response = await fetch(`/api/resources/year/${year}`);
+                if (response.ok) {
+                    academicResources = await response.json();
+                } else {
+                    academicResources = [];
+                }
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                academicResources = [];
+            }
+
+            // Filter resources for the user's year - year is already filtered by API
+            const userResources = academicResources.filter(r => r.isActive);
+
+            if (userResources.length === 0) {
+                document.getElementById('studyResourcesContainer').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>No resources available for your year yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            document.getElementById('studyResourcesContainer').innerHTML = userResources.map(resource => {
+                const typeIcon = resource.type === 'exam' ? 'fa-file-pdf' : resource.type === 'cat' ? 'fa-clipboard-list' : 'fa-book';
+                const typeLabel = resource.type === 'exam' ? 'Exam' : resource.type === 'cat' ? 'CAT' : 'Study Notes';
+                const typeColor = resource.type === 'exam' ? '#dc3545' : resource.type === 'cat' ? '#007bff' : '#28a745';
+
+                return `
+                    <div class="resource-item" style="border-left: 4px solid ${typeColor}; padding-left: 12px;">
+                        <div class="resource-name">
+                            <i class="fas ${typeIcon}" style="color: ${typeColor};"></i>
+                            <strong>${resource.title}</strong>
+                            <br><small style="color: #999; margin-top: 4px;">${typeLabel} • ${resource.subject}</small>
+                        </div>
+                        <a href="${resource.fileUrl}" target="_blank" class="download-btn" style="background: ${typeColor}; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem;">
+                            <i class="fas fa-download"></i> Open
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load exams and CATs
+        function loadExamsAndCATs() {
+            const allExams = academicResources.filter(r => r.type === 'exam' || r.type === 'cat');
+            
+            const container = document.getElementById('examsContainer');
+            if (allExams.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #999;">No exams or CATs available yet</div>';
+                return;
+            }
+
+            container.innerHTML = allExams.map(exam => {
+                const typeColor = exam.type === 'exam' ? '#dc3545' : '#007bff';
+                const typeLabel = exam.type === 'exam' ? 'Exam' : 'CAT';
+                return `
+                    <div class="exam-card" onclick="viewExam('${exam._id}', '${exam.title}', '${exam.subject}'); event.preventDefault();" style="border-left: 4px solid ${typeColor}; cursor: pointer;">
+                        <div class="exam-year" style="color: ${typeColor};">Year ${exam.year}</div>
+                        <div class="exam-type"><strong>${typeLabel}</strong></div>
+                        <div class="exam-type" style="margin-top: 5px; font-size: 0.85rem;">${exam.subject}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load year-specific resources
+        function loadYearSpecificResources(year) {
+            const yearResources = {
+                1: 'Foundation Courses - Focus on basic medical sciences',
+                2: 'Pre-clinical Year - Lab work and clinical foundations',
+                3: 'Clinical Rotations Begin - Hospital-based learning',
+                4: 'Advanced Clinical Skills - Specialized rotations',
+                5: 'Senior Clinical Year - Leadership and independence',
+                6: 'Internship Preparation - Finalizing clinical training'
+            };
+
+            const container = document.getElementById('yearSpecificContainer');
+            container.innerHTML = `
+                <div class="resource-item">
+                    <div class="resource-name">
+                        <i class="fas fa-star"></i>
+                        Year ${year} Overview
+                    </div>
+                </div>
+                <p style="padding: 15px 0; color: var(--text-light);">
+                    ${yearResources[year] || 'Resources for this year'}
+                </p>
+                <div class="resource-item">
+                    <div class="resource-name">
+                        <i class="fas fa-list"></i>
+                        Curriculum Focus Areas
+                    </div>
+                </div>
+                <ul style="padding: 10px 0; color: var(--text-light);">
+                    <li style="padding: 5px 0;">📚 Core subjects and specializations</li>
+                    <li style="padding: 5px 0;">👨‍🏫 Faculty contacts and office hours</li>
+                    <li style="padding: 5px 0;">📅 Important dates and deadlines</li>
+                    <li style="padding: 5px 0;">🏥 Clinical placement information</li>
+                </ul>
+            `;
+        }
+
+        // Edit profile button
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            document.getElementById('editProfileModal').classList.add('show');
+        });
+
+        // Close modal
+        function closeProfileModal() {
+            document.getElementById('editProfileModal').classList.remove('show');
+        }
+
+        // Toggle visibility
+        function toggleVisibility() {
+            const toggle = document.getElementById('visibilityToggle');
+            toggle.classList.toggle('active');
+        }
+
+        // Save profile with password change and profile picture upload
+        async function saveProfile() {
+            const firstName = document.getElementById('editFirstName').value;
+            const lastName = document.getElementById('editLastName').value;
+            const phone = document.getElementById('editPhone').value;
+            const department = document.getElementById('editDepartment').value;
+            const yearOfStudy = document.getElementById('editYearOfStudy').value;
+            const visibilityToggle = document.getElementById('visibilityToggle');
+            const profileVisible = visibilityToggle.classList.contains('active');
+
+            // Password validation
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            let passwordChangeData = null;
+
+            // Check if user wants to change password
+            if (newPassword || currentPassword || confirmPassword) {
+                if (!currentPassword) {
+                    alert('Please enter your current password to change your password.');
+                    return;
+                }
+                if (!newPassword) {
+                    alert('Please enter a new password.');
+                    return;
+                }
+                if (newPassword.length < 6) {
+                    alert('New password must be at least 6 characters long.');
+                    return;
+                }
+                if (newPassword !== confirmPassword) {
+                    alert('New passwords do not match. Please try again.');
+                    return;
+                }
+
+                passwordChangeData = { currentPassword, newPassword };
+            }
+
+            // Get member data from localStorage
+            const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+            const memberId = memberData._id;
+
+            if (!memberId) {
+                alert('Error: Member ID not found. Please login again.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Prepare update object
+            const updateData = {
+                firstName,
+                lastName,
+                phone,
+                department,
+                yearOfStudy: parseInt(yearOfStudy),
+                profileVisible
+            };
+
+            // Add password if changing
+            if (passwordChangeData) {
+                updateData.password = passwordChangeData.newPassword;
+            }
+
+            // Handle profile picture upload
+            const profilePictureInput = document.getElementById('editProfilePicture');
+            if (profilePictureInput && profilePictureInput.files && profilePictureInput.files[0]) {
+                const file = profilePictureInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = async function(event) {
+                    const base64Image = event.target.result;
+                    updateData.profilePicture = base64Image;
+
+                    // Verify password if changing
+                    if (passwordChangeData) {
+                        try {
+                            const verifyRes = await fetch('/api/members/verify-password', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    memberId,
+                                    password: passwordChangeData.currentPassword
+                                })
+                            });
+
+                            if (!verifyRes.ok) {
+                                alert('Current password is incorrect. Password not changed.');
+                                document.getElementById('currentPassword').value = '';
+                                document.getElementById('newPassword').value = '';
+                                document.getElementById('confirmPassword').value = '';
+                                return;
+                            }
+                        } catch (error) {
+                            console.error('Error verifying password:', error);
+                            alert('Error verifying password. Please try again.');
+                            return;
+                        }
+                    }
+
+                    // Update member
+                    updateMemberProfile(memberId, updateData, memberData);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // No image upload, just update profile
+
+                // Verify password if changing
+                if (passwordChangeData) {
+                    try {
+                        const verifyRes = await fetch('/api/members/verify-password', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                memberId,
+                                password: passwordChangeData.currentPassword
+                            })
+                        });
+
+                        if (!verifyRes.ok) {
+                            alert('Current password is incorrect. Password not changed.');
+                            document.getElementById('currentPassword').value = '';
+                            document.getElementById('newPassword').value = '';
+                            document.getElementById('confirmPassword').value = '';
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error verifying password:', error);
+                        alert('Error verifying password. Please try again.');
+                        return;
+                    }
+                }
+
+                updateMemberProfile(memberId, updateData, memberData);
+            }
+        }
+
+        // Update member profile via API
+        async function updateMemberProfile(memberId, updateData, memberData) {
+            try {
+                const response = await fetch(`/api/members/${memberId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update profile');
+                }
+
+                const updatedMember = await response.json();
+
+                // Update localStorage
+                const newMemberData = { ...memberData, ...updateData };
+                localStorage.setItem('memberData', JSON.stringify(newMemberData));
+                localStorage.setItem('profileVisible', updateData.profileVisible !== undefined ? updateData.profileVisible : memberData.profileVisible);
+
+                // Show success message
+                const alert = document.getElementById('successAlert');
+                const message = document.getElementById('successMessage');
+                message.textContent = 'Profile updated successfully!';
+                alert.classList.add('show');
+
+                // Update UI
+                document.getElementById('memberGreeting').textContent = `Welcome back, ${updateData.firstName}!`;
+                document.getElementById('profileYear').textContent = `Year: ${updateData.yearOfStudy}`;
+                document.getElementById('profileDept').textContent = `Speciality: ${updateData.department}`;
+                document.getElementById('visibilityBadge').textContent = updateData.profileVisible ? 'Public' : 'Private';
+
+                // Clear password fields
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                document.getElementById('editProfilePicture').value = '';
+
+                // Close modal
+                setTimeout(() => {
+                    closeProfileModal();
+                    alert.classList.remove('show');
+                }, 2000);
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile. Please try again.');
+            }
+        }
+
+        // Download resource
+        function downloadResource(resourceName) {
+            alert(`Downloading: ${resourceName}\n\nThis is a demo. In production, this would download the actual file.`);
+        }
+
+        // View exam
+        function viewExam(year, type, subject) {
+            alert(`Opening: ${year} ${type} - ${subject}\n\nThis is a demo. In production, this would open the exam paper.`);
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('memberToken');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('editProfileModal');
+            if (event.target === modal) {
+                closeProfileModal();
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('memberToken');
+            const memberApproved = localStorage.getItem('memberApproved');
+            
+            if (!token) {
+                // No token - redirect to signup
+                alert('Please sign up first!');
+                window.location.href = 'signup.html';
+                return;
+            }
+
+            // Check if member is approved
+            if (memberApproved === 'false' || !memberApproved) {
+                // Member not approved yet - redirect to pending approval page
+                alert('Your membership is still pending admin approval. Please wait or check back later.');
+                window.location.href = 'pending-approval.html';
+                return;
+            }
+
+            loadMemberData();
+            loadMemberMessages();
+        });
+
+        // Load member messages
+        async function loadMemberMessages() {
+            try {
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                if (!loggedInUser) {
+                    document.getElementById('messagesContainer').innerHTML = '<div style="padding: 1rem; color: #dc3545;">Please log in to view messages</div>';
+                    return;
+                }
+
+                const userData = JSON.parse(loggedInUser);
+                const memberId = userData.id;
+
+                // Get all messages for this member
+                const response = await fetch(`/api/admin/messages?folder=inbox`);
+                const data = await response.json();
+
+                // Filter messages for this member or sent to their email
+                const memberMessages = data.messages?.filter(msg =>
+                    msg.sender?.email === userData.email || msg.sender?.memberId === memberId
+                ) || [];
+
+                // Also get admin replies
+                const viewedResponse = await fetch(`/api/admin/messages?folder=viewed`);
+                const viewedData = await viewedResponse.json();
+                const replies = viewedData.messages?.filter(msg =>
+                    (msg.sender?.email === userData.email || msg.sender?.memberId === memberId) && msg.adminReply
+                ) || [];
+
+                const allMessages = [...memberMessages, ...replies];
+                document.getElementById('messageCount').textContent = allMessages.length;
+
+                if (allMessages.length === 0) {
+                    document.getElementById('messagesContainer').innerHTML = '<div style="padding: 1rem; color: #999; text-align: center;"><i class="fas fa-inbox"></i><p>No messages yet</p></div>';
+                    return;
+                }
+
+                document.getElementById('messagesContainer').innerHTML = allMessages.map(msg => `
+                    <div style="padding: 1rem; border-bottom: 1px solid #eee; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor='transparent'" onclick="viewMemberMessage('${msg._id}')">
+                        <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.25rem 0; color: var(--primary-color);">${msg.subject}</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666;">${msg.message.substring(0, 100)}...</p>
+                                ${msg.adminReply ? '<small style="color: var(--success-color); font-weight: 600;"><i class="fas fa-check-double"></i> Admin Reply Received</small>' : '<small style="color: #999;">Awaiting response...</small>'}
+                            </div>
+                            <small style="color: #999; white-space: nowrap;">${new Date(msg.createdAt).toLocaleDateString()}</small>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('messagesContainer').innerHTML = '<div style="padding: 1rem; color: #dc3545;">Error loading messages</div>';
+            }
+        }
+
+        // View message in modal
+        async function viewMemberMessage(messageId) {
+            try {
+                const response = await fetch(`/api/admin/messages/${messageId}`);
+                const message = await response.json();
+
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                
+                let content = `
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">${message.subject}</h3>
+                        <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <p style="margin: 0.5rem 0;"><strong>From:</strong> ${message.sender?.name || 'Unknown'}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Date:</strong> ${new Date(message.createdAt).toLocaleString()}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Status:</strong> ${message.status.charAt(0).toUpperCase() + message.status.slice(1)}</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+                            <p style="white-space: pre-wrap; word-break: break-word; margin: 0; line-height: 1.6;">${message.message}</p>
+                        </div>
+                `;
+
+                if (message.adminReply) {
+                    content += `
+                        <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--success-color);">
+                            <p style="margin: 0 0 0.5rem 0; color: var(--success-color); font-weight: 600;"><i class="fas fa-reply"></i> Admin Response</p>
+                            <p style="white-space: pre-wrap; word-break: break-word; margin: 0; line-height: 1.6;">${message.adminReply.message}</p>
+                            <small style="color: #666; display: block; margin-top: 0.5rem;">Replied on: ${new Date(message.adminReply.repliedAt).toLocaleString()}</small>
+                        </div>
+                    `;
+                }
+
+                content += `<button onclick="alert('Message dismissed')" style="margin-top: 1rem; padding: 0.6rem 1.2rem; background: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button></div>`;
+
+                alert(content);
+            } catch (error) {
+                console.error('Error loading message:', error);
+                alert('Error loading message details');
+            }
+        }
+    </script>
+
+    <!-- Cropper.js Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script>
+        // Image Editor Variables
+        let cropper = null;
+        let originalImageData = null;
+        let imageScale = { scaleX: 1, scaleY: 1 };
+        let imageRotate = 0;
+
+        // Handle profile picture file selection
+        document.getElementById('editProfilePicture').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size exceeds 5MB limit. Please choose a smaller image.');
+                    this.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    originalImageData = event.target.result;
+                    openImageEditor(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Open image editor
+        function openImageEditor(imageSrc) {
+            document.getElementById('imageEditorContainer').style.display = 'block';
+            const cropperImageElement = document.getElementById('cropperImage');
+            cropperImageElement.src = imageSrc;
+
+            // Destroy existing cropper if any
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            // Initialize Cropper.js
+            cropper = new Cropper(cropperImageElement, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true,
+                guides: true,
+                center: true,
+                highlight: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: true,
+                background: false,
+            });
+
+            // Reset transformations
+            imageScale = { scaleX: 1, scaleY: 1 };
+            imageRotate = 0;
+        }
+
+        // Close image editor
+        function cancelImageEdit() {
+            document.getElementById('imageEditorContainer').style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            document.getElementById('editProfilePicture').value = '';
+        }
+
+        // Crop image
+        function cropImage() {
+            if (!cropper) return;
+            // Cropper.js handles this automatically, just a visual confirmation
+            alert('Image crop area is selected. Click "Apply" to confirm.');
+        }
+
+        // Rotate image
+        function rotateImage(degree) {
+            if (!cropper) return;
+            imageRotate += degree;
+            cropper.rotate(degree);
+        }
+
+        // Flip horizontally
+        function flipImageHorizontal() {
+            if (!cropper) return;
+            const newScaleX = imageScale.scaleX === 1 ? -1 : 1;
+            imageScale.scaleX = newScaleX;
+            cropper.scaleX(newScaleX);
+        }
+
+        // Flip vertically
+        function flipImageVertical() {
+            if (!cropper) return;
+            const newScaleY = imageScale.scaleY === 1 ? -1 : 1;
+            imageScale.scaleY = newScaleY;
+            cropper.scaleY(newScaleY);
+        }
+
+        // Zoom in
+        function zoomImage(ratio) {
+            if (!cropper) return;
+            cropper.zoom(ratio);
+        }
+
+        // Reset image
+        function resetImage() {
+            if (!cropper) return;
+            cropper.reset();
+            imageScale = { scaleX: 1, scaleY: 1 };
+            imageRotate = 0;
+        }
+
+        // Apply image edit
+        function applyImageEdit() {
+            if (!cropper) return;
+
+            // Get the canvas with the cropped image
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: 500,
+                maxHeight: 500,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            // Convert canvas to data URL and set as profile picture
+            const croppedImage = canvas.toDataURL();
+            
+            // Update the preview
+            document.getElementById('profilePictureImg').src = croppedImage;
+            
+            // Store the edited image for saving
+            document.getElementById('editProfilePicture').dataset.editedImage = croppedImage;
+            
+            // Close editor
+            document.getElementById('imageEditorContainer').style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+
+            alert('Image updated! Click "Save Profile" to save changes.');
+        }
+
+        // Override the saveProfile function to include edited image
+        const originalSaveProfile = saveProfile;
+        window.saveProfile = async function() {
+            const profilePictureInput = document.getElementById('editProfilePicture');
+            const editedImage = profilePictureInput.dataset.editedImage;
+
+            if (editedImage && editedImage !== '') {
+                // Use the edited image
+                const originalFiles = profilePictureInput.files;
+                
+                // Temporarily set the edited image as the source
+                const firstName = document.getElementById('editFirstName').value;
+                const lastName = document.getElementById('editLastName').value;
+                const phone = document.getElementById('editPhone').value;
+                const department = document.getElementById('editDepartment').value;
+                const yearOfStudy = document.getElementById('editYearOfStudy').value;
+                const visibilityToggle = document.getElementById('visibilityToggle');
+                const profileVisible = visibilityToggle.classList.contains('active');
+
+                // Password validation
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                let passwordChangeData = null;
+
+                if (newPassword || currentPassword || confirmPassword) {
+                    if (!currentPassword) {
+                        alert('Please enter your current password to change your password.');
+                        return;
+                    }
+                    if (!newPassword) {
+                        alert('Please enter a new password.');
+                        return;
+                    }
+                    if (newPassword.length < 6) {
+                        alert('New password must be at least 6 characters long.');
+                        return;
+                    }
+                    if (newPassword !== confirmPassword) {
+                        alert('New passwords do not match. Please try again.');
+                        return;
+                    }
+
+                    passwordChangeData = { currentPassword, newPassword };
+                }
+
+                const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+                const memberId = memberData._id;
+
+                if (!memberId) {
+                    alert('Error: Member ID not found. Please login again.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const updateData = {
+                    firstName,
+                    lastName,
+                    phone,
+                    department,
+                    yearOfStudy: parseInt(yearOfStudy),
+                    profileVisible,
+                    profilePicture: editedImage
+                };
+
+                if (passwordChangeData) {
+                    updateData.password = passwordChangeData.newPassword;
+                }
+
+                if (passwordChangeData) {
+                    try {
+                        const verifyRes = await fetch('/api/members/verify-password', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                memberId,
+                                password: passwordChangeData.currentPassword
+                            })
+                        });
+
+                        if (!verifyRes.ok) {
+                            alert('Current password is incorrect. Password not changed.');
+                            document.getElementById('currentPassword').value = '';
+                            document.getElementById('newPassword').value = '';
+                            document.getElementById('confirmPassword').value = '';
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error verifying password:', error);
+                        alert('Error verifying password. Please try again.');
+                        return;
+                    }
+                }
+
+                updateMemberProfile(memberId, updateData, memberData);
+                profilePictureInput.dataset.editedImage = '';
+            } else {
+                originalSaveProfile.call(this);
+            }
+        };
+    </script>
+</body>
+</html>

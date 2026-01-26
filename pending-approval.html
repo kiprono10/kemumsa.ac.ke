@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Approval | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #871054;
+            --primary-light: #a83b6e;
+            --secondary-color: #d4af37;
+            --white: #ffffff;
+            --background-light: #f8f9fa;
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .pending-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pending-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .pending-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .pending-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .pending-content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #fff3cd;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            color: #ff9800;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status-message {
+            margin: 20px 0;
+        }
+
+        .status-message h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .status-message p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .member-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .info-value {
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #6a0d42;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(135, 16, 84, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .timeline {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .timeline-dot.completed {
+            background: #28a745;
+        }
+
+        .timeline-dot.pending {
+            background: #ffc107;
+        }
+
+        .timeline-text {
+            padding-top: 2px;
+        }
+
+        .timeline-text strong {
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .timeline-text small {
+            color: #999;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .pending-container {
+                margin: 20px;
+            }
+
+            .pending-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pending-container">
+        <div class="pending-header">
+            <h1>Application Received ✓</h1>
+            <p>Your membership application is under review</p>
+        </div>
+
+        <div class="pending-content">
+            <div class="status-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+
+            <div class="status-message">
+                <h2>Pending Admin Approval</h2>
+                <p>Thank you for signing up! Your membership application has been submitted successfully.</p>
+                <p id="waitMessage">Our admin team will review your application and approve it shortly. You'll be able to access the member dashboard once approved.</p>
+            </div>
+
+            <div class="member-info" id="memberInfo">
+                <!-- Member details will be populated here -->
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">
+                        <i class="fas fa-check" style="font-size: 0.5rem;"></i>
+                    </div>
+                    <div class="timeline-text">
+                        <strong>Application Submitted</strong>
+                        <small id="submissionTime">Just now</small>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot pending">
+                        <i class="fas fa-spinner spin" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <div class="timeline-text">
+                        <strong>Pending Review</strong>
+                        <small>Awaiting admin approval</small>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">
+                        <i class="fas fa-lock" style="font-size: 0.6rem;"></i>
+                    </div>
+                    <div class="timeline-text">
+                        <strong>Dashboard Access</strong>
+                        <small>Unlocked after approval</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="checkApprovalStatus()">
+                    <i class="fas fa-sync-alt"></i>
+                    Check Status
+                </button>
+                <button class="btn btn-secondary" onclick="goHome()">
+                    <i class="fas fa-home"></i>
+                    Go Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get member data from localStorage
+        function loadMemberInfo() {
+            try {
+                const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+                const info = document.getElementById('memberInfo');
+                
+                info.innerHTML = `
+                    <div class="info-row">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">${memberData.firstName} ${memberData.lastName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">${memberData.email}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Department</span>
+                        <span class="info-value">${memberData.department || 'N/A'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Year of Study</span>
+                        <span class="info-value">Year ${memberData.yearOfStudy || 'N/A'}</span>
+                    </div>
+                `;
+
+                // Set submission time
+                const now = new Date();
+                document.getElementById('submissionTime').textContent = now.toLocaleTimeString();
+            } catch (error) {
+                console.error('Error loading member info:', error);
+            }
+        }
+
+        // Check approval status
+        async function checkApprovalStatus() {
+            try {
+                const btn = event.target.closest('.btn');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<div class="spinner"></div> Checking...';
+                btn.disabled = true;
+
+                const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+                const email = memberData.email;
+
+                // Fetch member from API to check approval status
+                const response = await fetch('/api/members');
+                const result = await response.json();
+                
+                const members = result.members || result;
+                const member = members.find(m => m.email === email);
+
+                if (member && member.profileVisible) {
+                    // Member is approved
+                    localStorage.setItem('memberApproved', 'true');
+                    localStorage.setItem('memberId', member._id);
+                    
+                    alert('✓ Your membership has been approved! Redirecting to dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'member-dashboard.html';
+                    }, 1500);
+                } else if (member) {
+                    // Still pending
+                    alert('Your application is still under review. Please check back soon!');
+                } else {
+                    alert('Member record not found. Please contact admin.');
+                }
+
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('Error checking approval status:', error);
+                alert('Error checking status. Please try again.');
+                
+                const btn = event.target.closest('.btn');
+                btn.disabled = false;
+            }
+        }
+
+        // Go back to home
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Load member info on page load
+        window.addEventListener('load', () => {
+            loadMemberInfo();
+
+            // Auto-check status every 30 seconds
+            setInterval(checkApprovalStatusSilent, 30000);
+        });
+
+        // Silent status check (no alerts)
+        async function checkApprovalStatusSilent() {
+            try {
+                const memberData = JSON.parse(localStorage.getItem('memberData')) || {};
+                const email = memberData.email;
+
+                const response = await fetch('/api/members');
+                const result = await response.json();
+                
+                const members = result.members || result;
+                const member = members.find(m => m.email === email);
+
+                if (member && member.profileVisible) {
+                    // Member is approved
+                    localStorage.setItem('memberApproved', 'true');
+                    localStorage.setItem('memberId', member._id);
+                    
+                    // Show notification
+                    alert('✓ Your membership has been approved! Redirecting to dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'member-dashboard.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Silent status check error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&family=Playfair+Display:wght@700;800&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-heart">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="logo-caduceus">
+                        <i class="fas fa-staff-snake"></i>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="association-name">KeMUMSA</h1>
+                    <p class="association-full">Kenya Methodist University<br>Medical Students Association</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fi fi-ts-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fi fi-ts-info"></i> About</a></li>
+                    <li><a href="events.html" class="active"><i class="fi fi-ts-calendar"></i> Events</a></li>
+                    <li><a href="members.html"><i class="fi fi-ts-users"></i> Members</a></li>
+                    <li><a href="contact.html"><i class="fi fi-ts-phone-call"></i> Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-login"><i class="fi fi-ts-user"></i> Login</button>
+                <button class="btn-join">Join Now</button>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Events Calendar</h1>
+            <p class="page-subtitle">Stay updated with our upcoming activities and workshops</p>
+        </section>
+
+        <!-- Events Filter -->
+        <section class="events-filter">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Events</button>
+                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="past">Past Events</button>
+                <button class="filter-btn" data-filter="workshop">Workshops</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" placeholder="Search events..." class="search-input">
+                <button class="search-btn"><i class="fi fi-ts-search"></i></button>
+            </div>
+        </section>
+
+        <!-- Upcoming Events -->
+        <section id="upcoming" class="events-list">
+            <h2 class="section-title">Upcoming Events</h2>
+            <div id="upcoming-events-container" class="events-container">
+                <div class="loading-spinner" id="upcoming-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading upcoming events...
+                </div>
+            </div>
+        </section>
+
+        <!-- Past Events -->
+        <section id="past" class="events-list">
+            <h2 class="section-title">Past Events</h2>
+            <div id="past-events-container" class="events-container">
+                <div class="loading-spinner" id="past-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading past events...
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar View -->
+        <section class="calendar-section">
+            <div class="calendar-header-controls">
+                <h2 class="section-title">Monthly Calendar</h2>
+                <button id="toggleCalendarBtn" class="btn-toggle-calendar">
+                    <i class="fas fa-chevron-down"></i> View Calendar
+                </button>
+            </div>
+            <div id="calendarContent" class="calendar-content" style="display: none;">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prevMonth" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                        <h3 id="currentMonth"></h3>
+                        <button id="nextMonth" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="weekday">Sun</div>
+                        <div class="weekday">Mon</div>
+                        <div class="weekday">Tue</div>
+                        <div class="weekday">Wed</div>
+                        <div class="weekday">Thu</div>
+                        <div class="weekday">Fri</div>
+                        <div class="weekday">Sat</div>
+                    </div>
+                    <div id="calendarDays" class="calendar-days"></div>
+                </div>
+                <div id="calendarEventsList" class="calendar-events-list" style="display: none;">
+                    <h3>Events on <span id="selectedDate"></span></h3>
+                    <div id="calendarEventsDetail"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fi fi-ts-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="events.html" class="nav-item active">
+            <i class="fi fi-ts-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="members.html" class="nav-item">
+            <i class="fi fi-ts-users"></i>
+            <span>Members</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <i class="fi fi-ts-chat"></i>
+            <span>Chat</span>
+        </a>
+        <a href="about.html" class="nav-item">
+            <i class="fi fi-ts-info"></i>
+            <span>About</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>KeMUMSA</h3>
+                <p>Kenya Methodist University Medical Students Association</p>
+                <div class="social-links" id="footerSocialLinks">
+                    <!-- Social links will be loaded here -->
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="events.html">Events Calendar</a></li>
+                    <li><a href="members.html">Member Directory</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fi fi-ts-marker"></i> Kenya Methodist University, Meru</li>
+                    <li><i class="fi fi-ts-envelope"></i> kemumsa@kemu.ac.ke</li>
+                    <li><i class="fi fi-ts-phone"></i> +254 712 345 678</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 KeMUMSA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/css/js/main.js"></script>
+    <script>
+        // ===== EVENTS DYNAMIC LOADING =====
+        let allEvents = [];
+        let filteredEvents = [];
+
+        // Sample Events Data (Same as Admin Dashboard)
+        const sampleEvents = [
+            {
+                _id: '1',
+                title: 'Medical Ethics Workshop',
+                description: 'Learn about ethical considerations in medical practice and professional responsibilities.',
+                date: '2024-12-15T14:00:00',
+                time: '14:00',
+                location: 'Main Auditorium',
+                organizer: 'Academic Board',
+                maxAttendees: 100,
+                isActive: true,
+                isPast: false,
+                image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop'
+            },
+            {
+                _id: '2',
+                title: 'Clinical Skills Training',
+                description: 'Hands-on training in basic clinical skills including patient examination techniques.',
+                date: '2024-12-20T10:00:00',
+                time: '10:00',
+                location: 'Skills Lab',
+                organizer: 'Clinical Department',
+                maxAttendees: 50,
+                isActive: true,
+                isPast: false,
+                image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&h=400&fit=crop'
+            },
+            {
+                _id: '3',
+                title: 'Research Methodology Seminar',
+                description: 'Introduction to research design, data collection, and analysis for medical students.',
+                date: '2024-12-28T15:30:00',
+                time: '15:30',
+                location: 'Conference Room A',
+                organizer: 'Research Department',
+                maxAttendees: 75,
+                isActive: true,
+                isPast: false,
+                image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&h=400&fit=crop'
+            },
+            {
+                _id: '4',
+                title: 'KeMUMSA Annual Gala',
+                description: 'Celebration of achievements and networking event for all medical students.',
+                date: '2024-12-30T18:00:00',
+                time: '18:00',
+                location: 'Grand Hotel Ballroom',
+                organizer: 'Executive Committee',
+                maxAttendees: 200,
+                isActive: true,
+                isPast: true,
+                image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=400&fit=crop'
+            },
+            {
+                _id: '5',
+                title: 'Mental Health Awareness Workshop',
+                description: 'Discussion on mental health, stress management, and well-being for medical professionals.',
+                date: '2025-01-10T13:00:00',
+                time: '13:00',
+                location: 'Health Center',
+                organizer: 'Welfare Committee',
+                maxAttendees: 80,
+                isActive: true,
+                isPast: false,
+                image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&h=400&fit=crop'
+            },
+            {
+                _id: '6',
+                title: 'Public Health Initiative Launch',
+                description: 'Community outreach and health screening program in partnership with local hospitals.',
+                date: '2025-01-15T08:00:00',
+                time: '08:00',
+                location: 'Community Center',
+                organizer: 'Public Health Team',
+                maxAttendees: 150,
+                isActive: true,
+                isPast: false,
+                image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=400&fit=crop'
+            }
+        ];
+
+        // Fetch events from API
+        async function fetchEvents() {
+            try {
+                const response = await fetch('http://localhost:3000/api/events');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                let events = await response.json();
+                
+                // Normalize events - ensure all have isActive property
+                events = events.map(event => ({
+                    ...event,
+                    isActive: event.isActive !== undefined ? event.isActive : true,
+                    isPast: event.isPast !== undefined ? event.isPast : false
+                }));
+                
+                allEvents = events;
+                console.log('Fetched events from API:', allEvents);
+                return allEvents;
+            } catch (error) {
+                console.error('Error loading events:', error);
+                // Fallback to sample data if API fails
+                allEvents = sampleEvents;
+                console.log('Using sample events:', allEvents);
+                return allEvents;
+            }
+        }
+
+        // Categorize events by status
+        function categorizeEvents(events) {
+            const now = new Date();
+            const categorized = {
+                upcoming: [],
+                past: []
+            };
+
+            events.forEach(event => {
+                if (!event.isActive) return; // Skip inactive events
+
+                const eventDate = new Date(event.date);
+                
+                // Set time to end of day for date comparison
+                const eventDateEndOfDay = new Date(eventDate);
+                eventDateEndOfDay.setHours(23, 59, 59, 999);
+
+                if (eventDateEndOfDay > now) {
+                    categorized.upcoming.push(event);
+                } else {
+                    categorized.past.push(event);
+                }
+            });
+
+            return categorized;
+        }
+
+        // Render events for a specific category
+        function renderEvents(events, containerId, category) {
+            const container = document.getElementById(containerId);
+            const loadingSpinner = document.getElementById(`${category}-loading`);
+
+            // Hide loading spinner
+            if (loadingSpinner) {
+                loadingSpinner.style.display = 'none';
+            }
+
+            if (events.length === 0) {
+                container.innerHTML = `
+                    <div class="no-events">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No ${category} events found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const eventsHtml = events.map(event => {
+                const eventDate = new Date(event.date);
+                const day = eventDate.getDate();
+                const month = eventDate.toLocaleString('default', { month: 'short' }).toUpperCase();
+                const year = eventDate.getFullYear();
+
+                // Determine event type for tags
+                let eventType = 'event';
+                let eventTypeLabel = 'Event';
+                if (event.title.toLowerCase().includes('workshop')) {
+                    eventType = 'workshop';
+                    eventTypeLabel = 'Workshop';
+                } else if (event.title.toLowerCase().includes('meeting')) {
+                    eventType = 'meeting';
+                    eventTypeLabel = 'Meeting';
+                } else if (event.title.toLowerCase().includes('seminar')) {
+                    eventType = 'seminar';
+                    eventTypeLabel = 'Seminar';
+                }
+
+                // Determine location type
+                let locationType = 'in-person';
+                let locationTypeLabel = 'In-Person';
+                if (event.location && event.location.toLowerCase().includes('zoom')) {
+                    locationType = 'virtual';
+                    locationTypeLabel = 'Virtual';
+                } else if (event.location && event.location.toLowerCase().includes('hybrid')) {
+                    locationType = 'hybrid';
+                    locationTypeLabel = 'Hybrid';
+                }
+
+                return `
+                    <div class="event-item ${category}" data-event-id="${event._id}">
+                        ${event.image ? `<div class="event-image"><img src="${event.image}" alt="${event.title}" onerror="this.style.display='none'"></div>` : ''}
+                        <div class="event-date-large">
+                            <span class="date-day">${day}</span>
+                            <span class="date-month">${month}</span>
+                            <span class="date-year">${year}</span>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-tag">
+                                <span class="tag ${eventType}">${eventTypeLabel}</span>
+                                <span class="tag ${locationType}">${locationTypeLabel}</span>
+                            </div>
+                            <h3>${event.title}</h3>
+                            <p class="event-description">${event.description}</p>
+
+                            <div class="event-info">
+                                ${event.time ? `<p><i class="fi fi-ts-clock"></i> ${event.time}</p>` : ''}
+                                ${event.location ? `<p><i class="fi fi-ts-marker"></i> ${event.location}</p>` : ''}
+                                ${event.organizer ? `<p><i class="fi fi-ts-user"></i> ${event.organizer}</p>` : ''}
+                                ${event.maxAttendees ? `<p><i class="fi fi-ts-users"></i> Up to ${event.maxAttendees} participants</p>` : ''}
+                            </div>
+
+                            <div class="event-actions">
+                                <button class="btn-rsvp" onclick="rsvpToEvent('${event._id}')">RSVP Now</button>
+                                <button class="btn-calendar" onclick="addToCalendar('${event._id}')">
+                                    <i class="fi fi-ts-calendar"></i> Add to Calendar
+                                </button>
+                                <button class="btn-share" onclick="shareEvent('${event._id}')">
+                                    <i class="fi fi-ts-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = eventsHtml;
+        }
+
+        // Show error message
+        function showErrorMessage(message) {
+            const containers = ['upcoming-events-container', 'ongoing-events-container', 'past-events-container'];
+            containers.forEach(containerId => {
+                const container = document.getElementById(containerId);
+                const loadingSpinner = document.getElementById(containerId.replace('-container', '-loading'));
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
+                container.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>${message}</p>
+                        <button class="btn btn-primary" onclick="loadEvents()">Try Again</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Load and display events
+        async function loadEvents() {
+            const events = await fetchEvents();
+            const categorizedEvents = categorizeEvents(events);
+
+            renderEvents(categorizedEvents.upcoming, 'upcoming-events-container', 'upcoming');
+            renderEvents(categorizedEvents.past, 'past-events-container', 'past');
+
+            // Update filter functionality
+            updateFilterButtons(categorizedEvents);
+            
+            // Refresh calendar with loaded events
+            renderCalendar();
+        }
+
+        // Update filter buttons with counts
+        function updateFilterButtons(categorizedEvents) {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                const filter = button.getAttribute('data-filter');
+                let count = 0;
+
+                switch (filter) {
+                    case 'all':
+                        count = allEvents.length;
+                        break;
+                    case 'upcoming':
+                        count = categorizedEvents.upcoming.length;
+                        break;
+                    case 'past':
+                        count = categorizedEvents.past.length;
+                        break;
+                    case 'workshop':
+                        count = allEvents.filter(event => event.title.toLowerCase().includes('workshop')).length;
+                        break;
+                }
+
+                // Add count to button text if count > 0
+                const baseText = button.textContent.replace(/\s*\(\d+\)$/, '');
+                button.textContent = count > 0 ? `${baseText} (${count})` : baseText;
+            });
+        }
+
+        // RSVP to event
+        function rsvpToEvent(eventId) {
+            const event = allEvents.find(e => e._id === eventId);
+            if (event) {
+                alert(`RSVP functionality for "${event.title}" will be implemented soon!`);
+            }
+        }
+
+        // Calendar functionality
+        let currentCalendarDate = new Date();
+
+        function initializeCalendar() {
+            renderCalendar();
+            attachCalendarEventListeners();
+            setupToggleButton();
+        }
+
+        function setupToggleButton() {
+            const toggleBtn = document.getElementById('toggleCalendarBtn');
+            const calendarContent = document.getElementById('calendarContent');
+            
+            toggleBtn.addEventListener('click', function() {
+                const isOpen = calendarContent.style.display !== 'none';
+                
+                if (isOpen) {
+                    calendarContent.style.display = 'none';
+                    toggleBtn.classList.remove('open');
+                    toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i> View Calendar';
+                } else {
+                    calendarContent.style.display = 'block';
+                    toggleBtn.classList.add('open');
+                    toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Calendar';
+                }
+            });
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            console.log('Rendering calendar for', year, month, '- Total events:', allEvents.length);
+            console.log('Events:', allEvents);
+            
+            // Update header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            const calendarDaysDiv = document.getElementById('calendarDays');
+            calendarDaysDiv.innerHTML = '';
+            
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayDiv = createDayElement(daysInPrevMonth - i, true, null);
+                calendarDaysDiv.appendChild(dayDiv);
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const eventDate = new Date(year, month, day);
+                const isToday = today.getDate() === day && 
+                               today.getMonth() === month && 
+                               today.getFullYear() === year;
+                
+                const eventsOnDay = getEventsOnDate(year, month, day);
+                const dayDiv = createDayElement(day, false, { date: eventDate, events: eventsOnDay, isToday });
+                calendarDaysDiv.appendChild(dayDiv);
+            }
+            
+            // Next month days
+            const totalCells = calendarDaysDiv.children.length;
+            const remainingCells = 42 - totalCells; // 6 rows × 7 days
+            for (let day = 1; day <= remainingCells; day++) {
+                const dayDiv = createDayElement(day, true, null);
+                calendarDaysDiv.appendChild(dayDiv);
+            }
+        }
+
+        function createDayElement(day, isOtherMonth, dayInfo) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            
+            if (isOtherMonth) {
+                dayDiv.classList.add('other-month');
+                dayDiv.textContent = day;
+            } else {
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = day;
+                dayDiv.appendChild(dayNumber);
+                
+                if (dayInfo.isToday) {
+                    dayDiv.classList.add('today');
+                }
+                
+                if (dayInfo.events.length > 0) {
+                    dayDiv.classList.add('has-events');
+                    const indicator = document.createElement('div');
+                    indicator.className = 'calendar-event-indicator';
+                    dayDiv.appendChild(indicator);
+                }
+                
+                dayDiv.onclick = function() {
+                    displayDayEvents(dayInfo.date, dayInfo.events);
+                };
+            }
+            
+            return dayDiv;
+        }
+
+        function getEventsOnDate(year, month, day) {
+            return allEvents.filter(event => {
+                if (!event.isActive) return false;
+                
+                const eventDate = new Date(event.date);
+                
+                // Handle timezone offset - use local date instead of UTC
+                const utcYear = eventDate.getUTCFullYear();
+                const utcMonth = eventDate.getUTCMonth();
+                const utcDay = eventDate.getUTCDate();
+                
+                // Also check with local timezone (fallback)
+                const localYear = eventDate.getFullYear();
+                const localMonth = eventDate.getMonth();
+                const localDay = eventDate.getDate();
+                
+                // Match either UTC or local time (handles both server and client timezone differences)
+                const utcMatch = utcYear === year && utcMonth === month && utcDay === day;
+                const localMatch = localYear === year && localMonth === month && localDay === day;
+                
+                return utcMatch || localMatch;
+            });
+        }
+
+        function displayDayEvents(date, events) {
+            const dateStr = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('selectedDate').textContent = dateStr;
+            
+            const eventsList = document.getElementById('calendarEventsDetail');
+            if (events.length === 0) {
+                eventsList.innerHTML = '<p style="color: var(--text-light);">No events scheduled for this date.</p>';
+            } else {
+                eventsList.innerHTML = events.map(event => `
+                    <div class="event-detail-item">
+                        <h4>${event.title}</h4>
+                        <p>${event.description}</p>
+                        ${event.time ? `<div class="event-detail-time"><i class="fas fa-clock"></i> ${event.time}</div>` : ''}
+                        ${event.location ? `<div class="event-detail-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>` : ''}
+                        ${event.organizer ? `<p><strong>Organizer:</strong> ${event.organizer}</p>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('calendarEventsList').style.display = 'block';
+        }
+
+        function attachCalendarEventListeners() {
+            document.getElementById('prevMonth').onclick = function() {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                renderCalendar();
+            };
+            
+            document.getElementById('nextMonth').onclick = function() {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                renderCalendar();
+            };
+        }
+
+        // Add to calendar (now opens the calendar)
+        function addToCalendar(eventId) {
+            const event = allEvents.find(e => e._id === eventId);
+            if (event) {
+                const eventDate = new Date(event.date);
+                currentCalendarDate = new Date(eventDate);
+                renderCalendar();
+                
+                // Scroll to calendar
+                document.querySelector('.calendar-section').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+                
+                // Display the event in the calendar
+                const eventsOnDay = getEventsOnDate(
+                    eventDate.getFullYear(), 
+                    eventDate.getMonth(), 
+                    eventDate.getDate()
+                );
+                displayDayEvents(eventDate, eventsOnDay);
+            }
+        }
+
+        // Share event
+        function shareEvent(eventId) {
+            const event = allEvents.find(e => e._id === eventId);
+            if (event && navigator.share) {
+                navigator.share({
+                    title: event.title,
+                    text: event.description,
+                    url: window.location.href
+                });
+            } else if (event) {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(`${event.title}\n${event.description}\n${url}`)
+                    .then(() => alert('Event details copied to clipboard!'))
+                    .catch(() => alert('Share functionality not available'));
+            }
+        }
+
+        // Load social media links from admin settings
+        async function loadSocialMediaLinks() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+                
+                if (data.socialMedia) {
+                    const socialLinks = data.socialMedia;
+                    const socialLinksContainer = document.getElementById('footerSocialLinks');
+                    
+                    if (socialLinksContainer) {
+                        let html = '';
+                        if (socialLinks.facebook) html += `<a href="${socialLinks.facebook}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>`;
+                        if (socialLinks.twitter) html += `<a href="${socialLinks.twitter}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>`;
+                        if (socialLinks.instagram) html += `<a href="${socialLinks.instagram}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>`;
+                        if (socialLinks.linkedin) html += `<a href="${socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>`;
+                        if (socialLinks.whatsapp) html += `<a href="${socialLinks.whatsapp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
+                        
+                        socialLinksContainer.innerHTML = html || '<!-- Social media links not configured -->>';
+                    }
+                }
+            } catch (error) {
+                console.log('Social media links not available');
+            }
+        }
+
+        // Initialize events loading when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadEvents();  // Wait for events to load before initializing calendar
+            attachCalendarEventListeners();  // Setup calendar navigation
+            setupToggleButton();  // Setup toggle button
+            loadSocialMediaLinks();  // Load social media links
+        });
+    </script>
+</body>
+</html>

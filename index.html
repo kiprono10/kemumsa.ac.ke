@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&family=Playfair+Display:wght@700;800&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-heart">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="logo-caduceus">
+                        <i class="fas fa-staff-snake"></i>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="association-name">KeMUMSA</h1>
+                    <p class="association-full">Kenya Methodist University<br>Medical Students Association</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active"><i class="fi fi-ts-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fi fi-ts-info"></i> About</a></li>
+                    <li><a href="events.html"><i class="fi fi-ts-calendar"></i> Events</a></li>
+                    <li><a href="members.html"><i class="fi fi-ts-users"></i> Members</a></li>
+                    <li><a href="contact.html"><i class="fi fi-ts-phone-call"></i> Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-login"><i class="fi fi-ts-user"></i> Login</button>
+                <button class="btn-join">Join Now</button>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <video class="hero-video-bg" autoplay muted loop playsinline>
+                <source src="outsourced-media/Kemu Hero Video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-content">
+                <span class="hero-badge">🏥 Leading Medical Students Association</span>
+                <h1 class="hero-title">Empowering Future <span class="highlight">Healthcare Leaders</span></h1>
+                <p class="hero-subtitle">Join Kenya Methodist University's premier medical students association. Connect, learn, and grow with over 500 passionate medical students committed to excellence in healthcare.</p>
+                <div class="hero-actions">
+                    <a href="members.html" class="btn btn-primary">Join Our Community</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-elements">
+                    <div class="floating-element">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="floating-element">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="floating-element">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section" id="statsSection">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fi fi-ts-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="0" id="membersCount">0</h3>
+                    <p class="stat-label">Active Members</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fi fi-ts-calendar"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="0" id="eventsCount">0</h3>
+                    <p class="stat-label">Events This Year</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fi fi-ts-graduation-cap"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="0" id="yearsCount">14</h3>
+                    <p class="stat-label">Years of Excellence</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fi fi-ts-award"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="0" id="storiesCount">0</h3>
+                    <p class="stat-label">Success Stories</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fi fi-ts-users-medical"></i>
+                </div>
+                <h3>Professional Development</h3>
+                <p>Enhance your medical skills through workshops, seminars, and hands-on training sessions led by experienced healthcare professionals.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fi fi-ts-network"></i>
+                </div>
+                <h3>Networking Opportunities</h3>
+                <p>Connect with peers, alumni, and industry leaders. Build relationships that will shape your career in healthcare.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fi fi-ts-book-open"></i>
+                </div>
+                <h3>Academic Support</h3>
+                <p>Access study groups, mentorship programs, and resources to excel in your medical studies and clinical practice.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fi fi-ts-hands-holding-heart"></i>
+                </div>
+                <h3>Community Service</h3>
+                <p>Make a difference in our community through medical outreach programs, health awareness campaigns, and volunteer work.</p>
+            </div>
+        </section>
+
+
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2 class="section-title">Ready to Join Our Community?</h2>
+                <p class="section-subtitle">Become part of Kenya's leading medical students association and start your journey towards becoming an exceptional healthcare professional.</p>
+                <div class="cta-actions">
+                    <a href="members.html" class="btn btn-primary">Join KeMUMSA Today</a>
+                    <a href="contact.html" class="btn btn-secondary">Contact Us</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fi fi-ts-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="events.html" class="nav-item">
+            <i class="fi fi-ts-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="members.html" class="nav-item">
+            <i class="fi fi-ts-users"></i>
+            <span>Members</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <i class="fi fi-ts-chat"></i>
+            <span>Chat</span>
+        </a>
+        <a href="about.html" class="nav-item">
+            <i class="fi fi-ts-info"></i>
+            <span>About</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>KeMUMSA</h3>
+                <p>Kenya Methodist University Medical Students Association</p>
+                <div class="social-links" id="footerSocialLinks">
+                    <!-- Social links will be loaded here -->
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="events.html">Events Calendar</a></li>
+                    <li><a href="members.html">Member Directory</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fi fi-ts-marker"></i> Kenya Methodist University, Meru</li>
+                    <li><i class="fi fi-ts-envelope"></i> kemumsa@kemu.ac.ke</li>
+                    <li><i class="fi fi-ts-phone"></i> +254 712 345 678</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Admin</h3>
+                <ul>
+                    <li><a href="javascript:openAdminLogin();">Admin Login</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 KeMUMSA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+        <div class="modal-content" style="width: 100%; max-width: 400px; background: white; padding: 2rem; border-radius: 8px;">
+            <span style="float: right; cursor: pointer; font-size: 1.5rem;" onclick="closeAdminLogin()">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" id="adminUsername" required style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="adminPassword">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="adminPassword" required style="width: 100%; padding: 0.5rem; padding-right: 2.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <button type="button" onclick="toggleAdminPassword()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #667eea; font-size: 1rem;">
+                            <i id="adminPasswordToggleIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="adminLoginError" style="color: #e74c3c; margin-bottom: 1rem; display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Login Styles -->
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.show {
+            display: flex;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="assets/css/js/main.js"></script>
+    
+    <script>
+        // Admin Login Functions
+        function openAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('show');
+        }
+        
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').classList.remove('show');
+            document.getElementById('adminLoginForm').reset();
+            document.getElementById('adminLoginError').style.display = 'none';
+        }
+        
+        function toggleAdminPassword() {
+            const passwordInput = document.getElementById('adminPassword');
+            const toggleIcon = document.getElementById('adminPasswordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('adminLoginError');
+            
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json().then(data => ({ data, status: response.status }));
+            })
+            .then(result => {
+                const { data } = result;
+                console.log('Response data:', data);
+                if (data.success) {
+                    localStorage.setItem('adminToken', data.token);
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 500);
+                } else {
+                    errorDiv.textContent = data.message || 'Invalid credentials';
+                    errorDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorDiv.textContent = 'Network error: ' + error.message + ' - Make sure server is running!';
+                errorDiv.style.display = 'block';
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('adminLoginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAdminLogin();
+            }
+        });
+
+        // Fetch and display statistics dynamically
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/statistics');
+                const data = await response.json();
+                
+                if (data.success && data.statistics) {
+                    const stats = data.statistics;
+                    
+                    // Update the stat cards with data from database
+                    document.getElementById('membersCount').textContent = stats.activeMembers;
+                    document.getElementById('membersCount').setAttribute('data-count', stats.activeMembers);
+                    
+                    document.getElementById('eventsCount').textContent = stats.eventsThisYear;
+                    document.getElementById('eventsCount').setAttribute('data-count', stats.eventsThisYear);
+                    
+                    document.getElementById('yearsCount').textContent = stats.yearsEstablished;
+                    document.getElementById('yearsCount').setAttribute('data-count', stats.yearsEstablished);
+                    
+                    document.getElementById('storiesCount').textContent = stats.successStories;
+                    document.getElementById('storiesCount').setAttribute('data-count', stats.successStories);
+                    
+                    console.log('Statistics loaded successfully:', stats);
+                } else {
+                    console.error('Failed to load statistics');
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        // Load social media links from admin settings
+        async function loadSocialMediaLinks() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+                
+                if (data.socialMedia) {
+                    const socialLinks = data.socialMedia;
+                    const socialLinksContainer = document.getElementById('footerSocialLinks');
+                    
+                    if (socialLinksContainer) {
+                        let html = '';
+                        if (socialLinks.facebook) html += `<a href="${socialLinks.facebook}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>`;
+                        if (socialLinks.twitter) html += `<a href="${socialLinks.twitter}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>`;
+                        if (socialLinks.instagram) html += `<a href="${socialLinks.instagram}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>`;
+                        if (socialLinks.linkedin) html += `<a href="${socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>`;
+                        if (socialLinks.whatsapp) html += `<a href="${socialLinks.whatsapp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
+                        
+                        socialLinksContainer.innerHTML = html || '<!-- Social media links not configured -->>';
+                    }
+                }
+            } catch (error) {
+                console.log('Social media links not available');
+            }
+        }
+
+        // Load statistics when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatistics();
+            loadSocialMediaLinks();
+        });
+    </script>

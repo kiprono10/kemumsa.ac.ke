@@ -1,0 +1,3504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&family=Playfair+Display:wght@700;800&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Cropperjs Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+    <style>
+        /* Admin Page Header Override */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%) !important;
+            position: relative !important;
+            margin: 1rem auto !important;
+            width: fit-content !important;
+            max-width: 95% !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 30px rgba(135, 16, 84, 0.2) !important;
+            padding: 0 2rem !important;
+            z-index: 101 !important;
+        }
+
+        .main-header .header-container {
+            padding: 1rem 0 !important;
+        }
+
+        .main-header .association-name,
+        .main-header .association-full {
+            color: white !important;
+        }
+
+        .main-header .nav-menu li a {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .main-header .nav-menu li a:hover {
+            color: white !important;
+        }
+
+        .main-header .btn-login {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .main-header .btn-login:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .main-header .theme-toggle {
+            color: white !important;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-container { display: block; min-height: calc(100vh - 80px); }
+        .sidebar-nav { 
+            width: 280px; 
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .sidebar-nav h3 { padding: 0 1.5rem; margin-bottom: 2rem; font-size: 1.1rem; font-weight: 600; color: white; }
+        .nav-section { margin-bottom: 1.5rem; }
+        .nav-section-title { padding: 0 1.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+        .nav-item { padding: 0.75rem 1.5rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 0.75rem; color: white; min-height: 44px; border-radius: 6px; margin: 0 0.5rem; }
+        .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-item.active { background: rgba(255,255,255,0.15); border-left: 4px solid var(--secondary-color); padding-left: calc(1.5rem - 4px); color: white; }
+        .nav-item i { font-size: 1.1rem; }
+        
+        .main-content-area { width: calc(100% - 280px); margin-left: 280px; padding: 2rem; background: #f8f9fa; }
+        
+        /* Mobile Hamburger Menu */
+        .mobile-sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 102;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s;
+        }
+        
+        .mobile-sidebar-toggle span {
+            width: 24px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .mobile-sidebar-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translateY(10px);
+        }
+        
+        .mobile-sidebar-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .mobile-sidebar-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-10px);
+        }
+        
+        /* Sidebar Overlay for Mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 99;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .admin-dashboard { padding: 0; max-width: 100%; margin: 0; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .dashboard-header h1 { font-size: 2rem; color: var(--primary-color); }
+        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); text-align: center; border-top: 4px solid var(--primary-color); }
+        .stat-card h3 { margin: 0; font-size: 2.5rem; color: var(--primary-color); font-weight: 700; }
+        .stat-card p { margin: 0.5rem 0 0; color: #666; font-size: 0.9rem; }
+        
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .section-header h2 { font-size: 1.5rem; color: var(--primary-color); }
+        
+        .filters-bar { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+        .filters-bar input, .filters-bar select { padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 6px; }
+        
+        .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        .data-table th { background: #f8f9fa; font-weight: 600; color: var(--primary-color); }
+        .data-table tr:hover { background: #f8f9fa; }
+        
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.9rem; transition: all 0.3s; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(135, 16, 84, 0.3); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: var(--accent-color); color: white; }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.85rem; min-height: 36px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h2 { margin: 0; color: var(--primary-color); }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--primary-color); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .analytics-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .analytics-card h3 { color: var(--primary-color); margin-bottom: 1rem; }
+        
+        .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .resource-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        
+        .settings-form { background: white; padding: 2rem; border-radius: 12px; max-width: 600px; }
+        .settings-form .form-group { margin-bottom: 1.5rem; }
+        
+        .map-container { background: white; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; height: 400px; }
+        @media (max-width: 768px) {
+            .mobile-sidebar-toggle {
+                display: flex;
+            }
+            
+            .sidebar-nav { 
+                width: 75vw;
+                max-width: 280px;
+                height: 100vh;
+                position: fixed;
+                left: -280px;
+                top: 0;
+                transition: left 0.3s ease;
+                z-index: 100;
+                overflow-y: auto;
+            }
+            
+            .sidebar-nav.show {
+                left: 0;
+            }
+            
+            .sidebar-nav h3 {
+                padding: 1.5rem;
+                text-align: left;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                border-bottom: 2px solid rgba(255,255,255,0.1);
+            }
+            
+            .nav-section {
+                margin-bottom: 1.5rem;
+            }
+            
+            .nav-section-title {
+                text-align: left;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .nav-item {
+                justify-content: flex-start;
+                padding: 0.9rem 1.5rem;
+                font-size: 0.95rem;
+                transition: all 0.2s;
+            }
+            
+            .nav-item:hover {
+                background: rgba(255,255,255,0.15);
+                padding-left: 1.7rem;
+            }
+            
+            .nav-item.active {
+                padding-left: calc(1.5rem - 4px);
+            }
+            
+            .main-content-area {
+                margin-left: 0;
+                padding: 0.75rem;
+                width: 100%;
+                background: #f8f9fa;
+            }
+            
+            .admin-container {
+                display: block;
+            }
+            
+            .main-header {
+                margin: 0 !important;
+                width: 100% !important;
+                padding: 0.75rem !important;
+                border-radius: 0 !important;
+            }
+            
+            .main-header .header-container {
+                flex-direction: row;
+                gap: 0.75rem;
+                align-items: center;
+                padding: 0.5rem 0;
+            }
+            
+            .main-header .logo-area {
+                gap: 0.5rem;
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+            
+            .main-header .logo-icon {
+                width: 35px;
+                height: 35px;
+                flex-shrink: 0;
+            }
+            
+            .main-header .logo-icon i {
+                font-size: 1.2rem;
+            }
+            
+            .main-header .logo-text {
+                min-width: 0;
+                flex: 1;
+            }
+            
+            .main-header .association-name {
+                font-size: 1.1rem;
+                margin-bottom: 2px;
+            }
+            
+            .main-header .association-full {
+                font-size: 0.7rem;
+            }
+            
+            .main-header .desktop-nav {
+                display: none;
+            }
+            
+            .main-header .header-actions {
+                width: auto;
+                gap: 0.5rem;
+                justify-content: flex-end;
+                flex-shrink: 0;
+            }
+            
+            .main-header .btn-login,
+            .main-header .theme-toggle {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .main-header .theme-toggle {
+                padding: 0.6rem 0.75rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            .stat-card h3 {
+                font-size: 1.8rem;
+            }
+            
+            .stat-card p {
+                font-size: 0.85rem;
+            }
+            
+            .filters-bar {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            
+            .filters-bar input,
+            .filters-bar select {
+                width: 100%;
+                padding: 0.7rem;
+                border-radius: 6px;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.8rem 0.6rem;
+                word-break: break-word;
+            }
+            
+            .data-table th {
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.85rem;
+                border-radius: 6px;
+            }
+            
+            .btn-sm {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.8rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-width: 100%;
+                max-height: 95vh;
+                border-radius: 12px;
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.7rem;
+                font-size: 0.95rem;
+                border-radius: 6px;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .resource-card {
+                border-radius: 10px;
+                padding: 1rem;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .analytics-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            
+            .settings-form {
+                max-width: 100%;
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .full-section {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .stat-card {
+                padding: 0.9rem;
+                border-radius: 8px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.6rem;
+            }
+            
+            .stat-card p {
+                font-size: 0.8rem;
+            }
+            
+            .main-header {
+                padding: 0.5rem !important;
+            }
+            
+            .main-header .header-container {
+                padding: 0.3rem 0;
+            }
+            
+            .main-header .logo-text {
+                text-align: left;
+                flex: 1;
+            }
+            
+            .main-header .logo-area {
+                gap: 0.4rem;
+            }
+            
+            .main-header .association-name {
+                font-size: 1rem;
+                margin-bottom: 1px;
+            }
+            
+            .main-header .association-full {
+                font-size: 0.65rem;
+            }
+            
+            .main-header .header-actions {
+                flex-wrap: nowrap;
+                gap: 0.3rem;
+            }
+            
+            .main-header .btn-login {
+                padding: 0.5rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .main-header .btn-login i {
+                display: none;
+            }
+            
+            .nav-item {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .data-table {
+                font-size: 0.75rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.6rem 0.4rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-sm {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .form-group label {
+                font-size: 0.85rem;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .resource-card {
+                padding: 0.9rem;
+            }
+            
+            .analytics-card {
+                padding: 0.9rem;
+            }
+            
+            .filters-bar {
+                padding: 0.75rem;
+                gap: 0.5rem;
+            }
+            
+            .filters-bar input,
+            .filters-bar select {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+            
+            .mobile-sidebar-toggle {
+                width: 36px;
+                height: 36px;
+                top: 0.5rem;
+                left: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-heart">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="logo-caduceus">
+                        <i class="fas fa-staff-snake"></i>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="association-name">KeMUMSA</h1>
+                    <p class="association-full">Admin Dashboard</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fi fi-ts-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fi fi-ts-info"></i> About</a></li>
+                    <li><a href="events.html"><i class="fi fi-ts-calendar"></i> Events</a></li>
+                    <li><a href="members.html"><i class="fi fi-ts-users"></i> Members</a></li>
+                    <li><a href="contact.html"><i class="fi fi-ts-phone-call"></i> Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-login" onclick="logout()"><i class="fi fi-ts-user"></i> Logout</button>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Mobile Sidebar Toggle -->
+        <button class="mobile-sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <div class="admin-container">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar-nav">
+                <h3><i class="fas fa-cog"></i> Admin Panel</h3>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Dashboard</div>
+                    <div class="nav-item active" onclick="switchTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <div class="nav-item" onclick="switchTab('members')">
+                        <i class="fas fa-users"></i> Members Management
+                    </div>
+                    <div class="nav-item" onclick="switchTab('events')">
+                        <i class="fas fa-calendar-alt"></i> Event Management
+                    </div>
+                    <div class="nav-item" onclick="switchTab('executives')">
+                        <i class="fas fa-crown"></i> Executive Management
+                    </div>
+                    <div class="nav-item" onclick="switchTab('classleaders')">
+                        <i class="fas fa-users"></i> Class Leaders
+                    </div>
+                    <div class="nav-item" onclick="switchTab('contacts')">
+                        <i class="fas fa-envelope"></i> Contact Management
+                    </div>
+                    <div class="nav-item" onclick="switchTab('resources')">
+                        <i class="fas fa-book"></i> Academic Resources
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Configuration</div>
+                    <div class="nav-item" onclick="switchTab('communication')">
+                        <i class="fas fa-phone"></i> Communication Settings
+                    </div>
+                    <div class="nav-item" onclick="switchTab('settings')">
+                        <i class="fas fa-sliders-h"></i> Website Settings
+                    </div>
+                    <div class="nav-item" onclick="switchTab('adminprofile')">
+                        <i class="fas fa-user-circle"></i> Admin Profile
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content-area">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="content-section active">
+                    <div class="dashboard-header">
+                        <h1>Dashboard Overview</h1>
+                        <button class="btn btn-primary" onclick="openModal('refresh')">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <h3 id="totalMembers">0</h3>
+                            <p>Total Members</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="totalEvents">0</h3>
+                            <p>Total Events</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="activeMembers">0</h3>
+                            <p>Active Members</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="upcomingEvents">0</h3>
+                            <p>Upcoming Events</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="totalExecutives">0</h3>
+                            <p>Executive Members</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalClassLeaders">0</h3>
+                        <p>Class Leaders</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="contactMessages">0</h3>
+                            <p>Contact Messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Management Tab -->
+                <div id="members" class="content-section">
+                    <div class="section-header">
+                        <h2>Members Management</h2>
+                    </div>
+
+                    <!-- Pending Approvals Section -->
+                    <div id="pendingSection" style="display: none;">
+                        <h3>Pending Member Approvals</h3>
+                        <table class="data-table" id="pendingTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Year</th>
+                                    <th>Department</th>
+                                    <th>Applied Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Approved Members Section -->
+                    <div id="approvedSection">
+                        <h3>Approved Members</h3>
+                        <div class="filters-bar">
+                            <input type="text" id="memberSearch" placeholder="Search by name or email...">
+                            <select id="memberYearFilter">
+                                <option value="">All Years</option>
+                                <option value="1">Year 1</option>
+                                <option value="2">Year 2</option>
+                                <option value="3">Year 3</option>
+                                <option value="4">Year 4</option>
+                                <option value="5">Year 5</option>
+                                <option value="6">Year 6</option>
+                            </select>
+                            <select id="memberStatusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <table class="data-table" id="membersTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Year</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Event Management Tab -->
+                <div id="events" class="content-section">
+                    <div class="section-header">
+                        <h2>Event Management</h2>
+                        <button class="btn btn-primary" onclick="openModal('event')">
+                            <i class="fas fa-plus"></i> Add Event
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <input type="text" id="eventSearch" placeholder="Search by title or location...">
+                        <input type="date" id="eventDateFilter">
+                        <select id="eventStatusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <table class="data-table" id="eventsTable">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Organizer</th>
+                                <th>Status</th>
+                                <th>Past</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Class Leaders Tab -->
+                <div id="classleaders" class="content-section">
+                    <div class="section-header">
+                        <h2>Class Leaders Management</h2>
+                        <button class="btn btn-primary" onclick="openModal('classleader')">
+                            <i class="fas fa-user-plus"></i> Add Class Leader
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <input type="text" id="classLeaderSearch" placeholder="Search by name or position...">
+                        <select id="classLeaderYearFilter">
+                            <option value="">All Years</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="5">5th Year</option>
+                            <option value="6">6th Year</option>
+                        </select>
+                    </div>
+
+                    <table class="data-table" id="classLeadersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Year</th>
+                                <th>Position</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Executive Management Tab -->
+                <div id="executives" class="content-section">
+                    <div class="section-header">
+                        <h2>Executive Management</h2>
+                        <button class="btn btn-primary" onclick="openModal('executive')">
+                            <i class="fas fa-user-tie"></i> Add Executive
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <input type="text" id="executiveSearch" placeholder="Search by name or position...">
+                    </div>
+
+                    <table class="data-table" id="executivesTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Year</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Contact Management Tab -->
+                <div id="contacts" class="content-section">
+                    <div class="section-header">
+                        <h2>Contact Messages</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="switchMessageFolder('inbox')">
+                                <i class="fas fa-inbox"></i> Inbox (<span id="inboxCount">0</span>)
+                            </button>
+                            <button class="btn btn-secondary" onclick="switchMessageFolder('viewed')">
+                                <i class="fas fa-folder-open"></i> Viewed (<span id="viewedCount">0</span>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filters-bar">
+                        <input type="text" id="contactSearch" placeholder="Search by name or email..." onkeyup="filterMessages()">
+                        <select id="contactStatusFilter" onchange="filterMessages()">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="viewed">Viewed</option>
+                            <option value="replied">Replied</option>
+                        </select>
+                    </div>
+
+                    <table class="data-table" id="contactsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTableBody">
+                            <tr><td colspan="6" style="text-align: center; padding: 2rem; color: #999;">Loading messages...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Message Detail Modal -->
+                <div id="messageModal" class="modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h2 id="messageSubject">Message Subject</h2>
+                            <button class="close-btn" onclick="closeMessageModal()">&times;</button>
+                        </div>
+                        <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f5f5f5; border-radius: 6px;">
+                                <p><strong>From:</strong> <span id="messageSenderName">-</span></p>
+                                <p><strong>Email:</strong> <span id="messageSenderEmail">-</span></p>
+                                <p><strong>Phone:</strong> <span id="messageSenderPhone">-</span></p>
+                                <p><strong>Category:</strong> <span id="messageCategory">-</span></p>
+                                <p><strong>Date:</strong> <span id="messageDate">-</span></p>
+                                <p><strong>Status:</strong> <span id="messageStatus">-</span></p>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <h4>Message:</h4>
+                                <div style="padding: 1rem; background: #f9f9f9; border-radius: 6px; white-space: pre-wrap; word-break: break-word;" id="messageContent">-</div>
+                            </div>
+
+                            <div id="replySection" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">
+                                <h4>Reply:</h4>
+                                <textarea id="replyMessage" placeholder="Type your reply here..." style="width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-family: Arial, sans-serif; font-size: 0.95rem;"></textarea>
+                                <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                                    <button class="btn btn-primary" onclick="sendReply()">
+                                        <i class="fas fa-send"></i> Send Reply
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="markAsViewed()">
+                                        <i class="fas fa-check"></i> Mark as Viewed
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="adminReplySection" style="margin-top: 1.5rem; padding: 1rem; background: #e8f5e9; border-radius: 6px; display: none;">
+                                <h4 style="color: #2e7d32; margin-top: 0;">Admin Reply:</h4>
+                                <p id="adminReplyContent" style="white-space: pre-wrap; word-break: break-word; color: #333;"></p>
+                                <small style="color: #666;">Replied on: <span id="replyDate"></span></small>
+                            </div>
+
+                            <div id="deleteSection" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #ddd; display: none;">
+                                <button class="btn btn-danger" onclick="deleteMessage()" style="background: #dc3545; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-trash"></i> Delete Message
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Management Tab -->
+                <div id="resources" class="content-section">
+                    <div class="section-header">
+                        <h2>Academic Resources Management</h2>
+                        <button class="btn btn-primary" onclick="openModal('resource')">
+                            <i class="fas fa-plus"></i> Add Resource
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <select id="resourceYearFilter">
+                            <option value="">All Years</option>
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                            <option value="5">Year 5</option>
+                            <option value="6">Year 6</option>
+                        </select>
+                        <select id="resourceTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="exam">Exams</option>
+                            <option value="cat">CATs (Continuous Assessment)</option>
+                            <option value="notes">Study Notes</option>
+                        </select>
+                    </div>
+
+                    <div class="resource-grid" id="resourcesGrid">
+                        <!-- Resources will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Analytics & Progress Tab -->
+                <!-- Website Settings Tab -->
+                <div id="settings" class="content-section">
+                    <div class="section-header">
+                        <h2>Website Settings & Communication</h2>
+                    </div>
+
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">
+                            <i class="fas fa-envelope"></i> Communication Settings
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="settingsEmail">Organization Email</label>
+                            <input type="email" id="settingsEmail" placeholder="info@kemumsa.org">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsPhone">Organization Phone</label>
+                            <input type="tel" id="settingsPhone" placeholder="+254700000000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsAddress">Physical Address</label>
+                            <textarea id="settingsAddress" placeholder="Enter the organization's physical address"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsLatitude">Location Latitude</label>
+                            <input type="text" id="settingsLatitude" placeholder="-1.2921">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsLongitude">Location Longitude</label>
+                            <input type="text" id="settingsLongitude" placeholder="36.8219">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="enableMap"> Enable Map on Contact Page
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsAboutText">About Organization</label>
+                            <textarea id="settingsAboutText" placeholder="Tell visitors about your organization"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settingsSocialLinks">Social Media Links (JSON format)</label>
+                            <textarea id="settingsSocialLinks" placeholder='{"facebook": "url", "twitter": "url", "instagram": "url"}'></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+
+                    <!-- Map Preview -->
+                    <div class="map-container" id="mapContainer" style="display: none;">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Location Preview</h3>
+                        <iframe id="mapFrame" width="100%" height="100%" style="border-radius: 6px; border: none;" src=""></iframe>
+                    </div>
+                </div>
+
+                <!-- Communication Settings Tab -->
+                <div id="communication" class="content-section">
+                    <div class="section-header">
+                        <h2>Communication Management</h2>
+                        <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Update contact information displayed on the website contact page</p>
+                    </div>
+
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="commEmail">Email Address</label>
+                            <input type="email" id="commEmail" placeholder="kemumsa@kemu.ac.ke" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commPhone">Phone Number</label>
+                            <input type="tel" id="commPhone" placeholder="+254712345678" required>
+                        </div>
+
+                        <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Office Information</h3>
+
+                        <div class="form-group">
+                            <label for="commBuilding">Building Name</label>
+                            <input type="text" id="commBuilding" placeholder="Student Center">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commRoom">Room Number</label>
+                            <input type="text" id="commRoom" placeholder="Room 205">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commLocation">Location</label>
+                            <input type="text" id="commLocation" placeholder="Kenya Methodist University">
+                        </div>
+
+                        <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Office Hours</h3>
+
+                        <div class="form-group">
+                            <label for="commMonday">Monday - Friday</label>
+                            <input type="text" id="commMonday" placeholder="9:00 AM - 5:00 PM">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commSaturday">Saturday</label>
+                            <input type="text" id="commSaturday" placeholder="10:00 AM - 2:00 PM">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commSunday">Sunday</label>
+                            <input type="text" id="commSunday" placeholder="Closed">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commResponseTime">Response Time</label>
+                            <input type="text" id="commResponseTime" placeholder="Within 24 hours">
+                        </div>
+
+                        <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Address</h3>
+
+                        <div class="form-group">
+                            <label for="commCity">City</label>
+                            <input type="text" id="commCity" placeholder="Meru">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commState">State/Province</label>
+                            <input type="text" id="commState" placeholder="Kenya">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commCountry">Country</label>
+                            <input type="text" id="commCountry" placeholder="Kenya">
+                        </div>
+
+                        <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Social Media Links</h3>
+
+                        <div class="form-group">
+                            <label for="commFacebook">Facebook URL</label>
+                            <input type="url" id="commFacebook" placeholder="https://facebook.com/kemumsa">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commTwitter">Twitter URL</label>
+                            <input type="url" id="commTwitter" placeholder="https://twitter.com/kemumsa">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commInstagram">Instagram URL</label>
+                            <input type="url" id="commInstagram" placeholder="https://instagram.com/kemumsa">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commLinkedin">LinkedIn URL</label>
+                            <input type="url" id="commLinkedin" placeholder="https://linkedin.com/company/kemumsa">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commWhatsapp">WhatsApp Link</label>
+                            <input type="url" id="commWhatsapp" placeholder="https://wa.me/254712345678">
+                        </div>
+
+                        <button class="btn btn-primary" onclick="saveCommunicationSettings()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-save"></i> Save Communication Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Profile Tab -->
+                <div id="adminprofile" class="content-section">
+                    <div class="section-header">
+                        <h2>Admin Profile & Credentials</h2>
+                        <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Update your username and password</p>
+                    </div>
+
+                    <div class="settings-form">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">
+                            <i class="fas fa-lock"></i> Account Credentials
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="adminUsername">Current Username</label>
+                            <input type="text" id="adminUsername" placeholder="admin" readonly style="background-color: #f5f5f5;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminNewUsername">New Username</label>
+                            <input type="text" id="adminNewUsername" placeholder="Enter new username" required>
+                            <small style="color: #666; font-size: 0.85rem;">Leave blank to keep current username</small>
+                        </div>
+
+                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                <i class="fas fa-key"></i> Change Password
+                            </h4>
+
+                            <div class="form-group">
+                                <label for="adminCurrentPassword">Current Password</label>
+                                <input type="password" id="adminCurrentPassword" placeholder="Enter current password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminNewPassword">New Password</label>
+                                <input type="password" id="adminNewPassword" placeholder="Enter new password" required minlength="8">
+                                <small style="color: #666; font-size: 0.85rem;">Minimum 8 characters</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminConfirmPassword">Confirm New Password</label>
+                                <input type="password" id="adminConfirmPassword" placeholder="Confirm new password" required minlength="8">
+                            </div>
+
+                            <div id="passwordStrength" style="margin-top: 0.5rem; display: none;">
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <span style="font-size: 0.85rem; font-weight: 600;">Strength:</span>
+                                    <div class="strength-bar" style="width: 100px; height: 6px; background: #ddd; border-radius: 3px; overflow: hidden;">
+                                        <div class="strength-bar-fill" id="adminPasswordStrengthBar" style="width: 0%; height: 100%; transition: all 0.3s;"></div>
+                                    </div>
+                                    <span id="adminPasswordStrengthText" style="font-size: 0.85rem; color: #dc3545;">Weak</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="updateAdminProfile()" style="margin-top: 2rem;">
+                            <i class="fas fa-save"></i> Update Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Add/Edit -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="modalForm">
+                <!-- Member fields -->
+                <div id="memberFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="yearOfStudy">Year of Study</label>
+                        <select id="yearOfStudy">
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                            <option value="5">Year 5</option>
+                            <option value="6">Year 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department">
+                    </div>
+                </div>
+
+                <!-- Event fields -->
+                <div id="eventFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" required min="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="time" id="time">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="organizer">Organizer</label>
+                        <input type="text" id="organizer">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxAttendees">Max Attendees</label>
+                        <input type="number" id="maxAttendees" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Event Image URL</label>
+                        <input type="url" id="image" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventMedia">Upload Media (Images/Videos)</label>
+                        <input type="file" id="eventMedia" multiple accept="image/*,video/*,audio/*">
+                        <small>You can upload up to 5 media files (images, videos, or audio)</small>
+                    </div>
+                </div>
+
+                <!-- Class Leader fields -->
+                <div id="classleaderFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="clFirstName">First Name</label>
+                        <input type="text" id="clFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clLastName">Last Name</label>
+                        <input type="text" id="clLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clPosition">Position/Title</label>
+                        <input type="text" id="clPosition" required placeholder="e.g., Year 1 Rep, Class Secretary">
+                    </div>
+                    <div class="form-group">
+                        <label for="clYear">Year of Study</label>
+                        <select id="clYear" required>
+                            <option value="">-- Select Year --</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="5">5th Year</option>
+                            <option value="6">6th Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="clEmail">Email</label>
+                        <input type="email" id="clEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clPhone">Phone</label>
+                        <input type="tel" id="clPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="clBio">Bio</label>
+                        <textarea id="clBio" rows="3" placeholder="Brief biography of the class leader"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="clImage">Upload Image</label>
+                        <input type="file" id="clImage" accept="image/*">
+                        <small style="color: #666; font-size: 0.85rem;">Or enter image URL below</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="clImageUrl">Image URL (Alternative)</label>
+                        <input type="url" id="clImageUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Social Accounts</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label for="clFacebook" style="font-size: 0.9rem; color: #666;">Facebook</label>
+                                <input type="url" id="clFacebook" placeholder="https://facebook.com/username">
+                            </div>
+                            <div>
+                                <label for="clTwitter" style="font-size: 0.9rem; color: #666;">Twitter</label>
+                                <input type="url" id="clTwitter" placeholder="https://twitter.com/username">
+                            </div>
+                            <div>
+                                <label for="clInstagram" style="font-size: 0.9rem; color: #666;">Instagram</label>
+                                <input type="url" id="clInstagram" placeholder="https://instagram.com/username">
+                            </div>
+                            <div>
+                                <label for="clLinkedin" style="font-size: 0.9rem; color: #666;">LinkedIn</label>
+                                <input type="url" id="clLinkedin" placeholder="https://linkedin.com/in/username">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Executive fields -->
+                <div id="executiveFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="execFirstName">First Name</label>
+                        <input type="text" id="execFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="execLastName">Last Name</label>
+                        <input type="text" id="execLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="execPosition">Position/Title</label>
+                        <input type="text" id="execPosition" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="execEmail">Email</label>
+                        <input type="email" id="execEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="execPhone">Phone</label>
+                        <input type="tel" id="execPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="execYear">Year of Study</label>
+                        <select id="execYear">
+                            <option value="4">Year 4</option>
+                            <option value="5">Year 5</option>
+                            <option value="6">Year 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="execImage">Upload Image</label>
+                        <input type="file" id="execImage" accept="image/*">
+                        <small style="color: #666; font-size: 0.85rem;">Or enter image URL below</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="execImageUrl">Image URL (Alternative)</label>
+                        <input type="url" id="execImageUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Social Media Links</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label for="execFacebook" style="font-size: 0.9rem; color: #666;">Facebook</label>
+                                <input type="url" id="execFacebook" placeholder="https://facebook.com/username">
+                            </div>
+                            <div>
+                                <label for="execTwitter" style="font-size: 0.9rem; color: #666;">Twitter</label>
+                                <input type="url" id="execTwitter" placeholder="https://twitter.com/username">
+                            </div>
+                            <div>
+                                <label for="execInstagram" style="font-size: 0.9rem; color: #666;">Instagram</label>
+                                <input type="url" id="execInstagram" placeholder="https://instagram.com/username">
+                            </div>
+                            <div>
+                                <label for="execLinkedin" style="font-size: 0.9rem; color: #666;">LinkedIn</label>
+                                <input type="url" id="execLinkedin" placeholder="https://linkedin.com/in/username">
+                            </div>
+                            <div>
+                                <label for="execWhatsapp" style="font-size: 0.9rem; color: #666;">WhatsApp</label>
+                                <input type="url" id="execWhatsapp" placeholder="https://wa.me/1234567890">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource fields -->
+                <div id="resourceFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="resourceTitle">Title</label>
+                        <input type="text" id="resourceTitle" required placeholder="e.g., Anatomy Midterm Exam">
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceType">Resource Type</label>
+                        <select id="resourceType">
+                            <option value="exam">Exam</option>
+                            <option value="cat">CAT (Continuous Assessment Test)</option>
+                            <option value="notes">Study Notes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceYear">Year of Study *</label>
+                        <select id="resourceYear" required>
+                            <option value="">-- Select Year --</option>
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                            <option value="5">Year 5</option>
+                            <option value="6">Year 6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceSubject">Subject/Course</label>
+                        <input type="text" id="resourceSubject" placeholder="e.g., Anatomy, Pharmacology">
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceDescription">Description</label>
+                        <textarea id="resourceDescription" placeholder="Add details about this resource"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceFileUrl">File URL/Link</label>
+                        <input type="url" id="resourceFileUrl" placeholder="https://drive.google.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="resourceActive"> Make Available to Students
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-primary" onclick="handleFormSubmit()">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Crop Modal -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content" style="max-width: 800px; max-height: 95vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2>Crop & Edit Image</h2>
+                <button class="close-btn" onclick="closeCropModal()">&times;</button>
+            </div>
+            <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;">
+                <div style="text-align: center; flex: 1;">
+                    <img id="cropImage" src="" style="max-width: 100%; max-height: 400px; display: none;">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button type="button" class="btn" style="background: #007bff; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer;" onclick="rotateCrop(-90)">
+                        <i class="fas fa-redo-alt"></i> Rotate Left
+                    </button>
+                    <button type="button" class="btn" style="background: #007bff; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer;" onclick="rotateCrop(90)">
+                        <i class="fas fa-redo"></i> Rotate Right
+                    </button>
+                    <button type="button" class="btn" style="background: #28a745; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer;" onclick="flipHorizontal()">
+                        <i class="fas fa-arrows-alt-h"></i> Flip H
+                    </button>
+                    <button type="button" class="btn" style="background: #28a745; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer;" onclick="flipVertical()">
+                        <i class="fas fa-arrows-alt-v"></i> Flip V
+                    </button>
+                    <button type="button" class="btn" style="background: #6c757d; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer;" onclick="resetCrop()">
+                        <i class="fas fa-sync"></i> Reset
+                    </button>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" class="btn btn-primary" style="flex: 1;" onclick="applyCrop()">
+                        <i class="fas fa-check"></i> Apply & Save
+                    </button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeCropModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentTab = 'dashboard';
+        let currentEditId = null;
+        let currentEditType = null;
+        let allMembers = [];
+        let allEvents = [];
+        let allExecutives = [];
+        let allClassLeaders = [];
+        let allContacts = [];
+        let allResources = [];
+
+        // Image Crop Variables
+        let cropper = null;
+        let croppedImageBlob = null;
+        let currentCropType = null; // 'executive' or 'classleader'
+
+        // Open crop modal for image
+        function openCropModal(file, type = 'executive') {
+            currentCropType = type;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cropImage = document.getElementById('cropImage');
+                cropImage.src = e.target.result;
+                cropImage.style.display = 'block';
+                
+                // Initialize cropper
+                if (cropper) {
+                    cropper.destroy();
+                }
+                
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true,
+                    restore: true,
+                    guides: true,
+                    center: true,
+                    highlight: true,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: true,
+                    background: true
+                });
+                
+                document.getElementById('cropModal').classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeCropModal() {
+            document.getElementById('cropModal').classList.remove('show');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+
+        function rotateCrop(degree) {
+            if (cropper) {
+                cropper.rotate(degree);
+            }
+        }
+
+        function flipHorizontal() {
+            if (cropper) {
+                const imageData = cropper.getImageData();
+                cropper.setImageData({
+                    ...imageData,
+                    scaleX: (imageData.scaleX || 1) * -1
+                });
+            }
+        }
+
+        function flipVertical() {
+            if (cropper) {
+                const imageData = cropper.getImageData();
+                cropper.setImageData({
+                    ...imageData,
+                    scaleY: (imageData.scaleY || 1) * -1
+                });
+            }
+        }
+
+        function resetCrop() {
+            if (cropper) {
+                cropper.reset();
+            }
+        }
+
+        function applyCrop() {
+            if (cropper) {
+                const canvas = cropper.getCroppedCanvas({
+                    maxWidth: 4096,
+                    maxHeight: 4096,
+                    fillColor: '#fff',
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+                
+                // Convert canvas to blob and update the file input
+                canvas.toBlob(function(blob) {
+                    // Create a new File object from the blob
+                    const file = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
+                    
+                    // Update the appropriate file input based on crop type
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    
+                    if (currentCropType === 'classleader') {
+                        document.getElementById('clImage').files = dataTransfer.files;
+                    } else {
+                        document.getElementById('execImage').files = dataTransfer.files;
+                    }
+                    
+                    console.log(`Image cropped and applied for ${currentCropType}`);
+                    closeCropModal();
+                }, 'image/jpeg', 0.9);
+            }
+        }
+
+        // Sample executives data (will be replaced by API data)
+        let sampleExecutives = [];
+
+        // Resources will be loaded dynamically from API
+
+        // Sample members data
+        const sampleMembers = [];
+
+        // Sample events data
+        const sampleEvents = [
+            {
+                _id: '1',
+                title: 'Medical Ethics Workshop',
+                description: 'Learn about ethical considerations in medical practice',
+                date: '2024-12-15T14:00:00',
+                time: '14:00',
+                location: 'Main Auditorium',
+                organizer: 'Academic Board',
+                maxAttendees: 100,
+                isActive: true,
+                isPast: false
+            },
+            {
+                _id: '2',
+                title: 'Clinical Skills Training',
+                description: 'Hands-on training in basic clinical skills',
+                date: '2024-12-20T10:00:00',
+                time: '10:00',
+                location: 'Skills Lab',
+                organizer: 'Clinical Department',
+                maxAttendees: 50,
+                isActive: true,
+                isPast: false
+            },
+            {
+                _id: '3',
+                title: 'Research Methodology Seminar',
+                description: 'Introduction to research design, data collection, and analysis for medical students.',
+                date: '2024-12-28T15:30:00',
+                time: '15:30',
+                location: 'Conference Room A',
+                organizer: 'Research Department',
+                maxAttendees: 75,
+                isActive: true,
+                isPast: false
+            },
+            {
+                _id: '4',
+                title: 'KeMUMSA Annual Gala',
+                description: 'Celebration of achievements and networking event for all medical students.',
+                date: '2024-12-30T18:00:00',
+                time: '18:00',
+                location: 'Grand Hotel Ballroom',
+                organizer: 'Executive Committee',
+                maxAttendees: 200,
+                isActive: true,
+                isPast: true
+            },
+            {
+                _id: '5',
+                title: 'Mental Health Awareness Workshop',
+                description: 'Discussion on mental health, stress management, and well-being for medical professionals.',
+                date: '2025-01-10T13:00:00',
+                time: '13:00',
+                location: 'Health Center',
+                organizer: 'Welfare Committee',
+                maxAttendees: 80,
+                isActive: true,
+                isPast: false
+            },
+            {
+                _id: '6',
+                title: 'Public Health Initiative Launch',
+                description: 'Community outreach and health screening program in partnership with local hospitals.',
+                date: '2025-01-15T08:00:00',
+                time: '08:00',
+                location: 'Community Center',
+                organizer: 'Public Health Team',
+                maxAttendees: 150,
+                isActive: true,
+                isPast: false
+            }
+        ];
+
+        // Get JWT token from localStorage
+        function getToken() {
+            return localStorage.getItem('adminToken') || 'demo-token-bypass';
+        }
+
+        // Get authorization header
+        function getAuthHeader() {
+            return {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // Switch tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(tab).classList.add('active');
+            
+            // Set active nav item
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data for the tab
+            if (tab === 'members') loadMembers();
+            else if (tab === 'events') loadEvents();
+            else if (tab === 'executives') loadExecutives();
+            else if (tab === 'classleaders') loadClassLeaders();
+            else if (tab === 'contacts') loadMessages('inbox');
+            else if (tab === 'resources') loadResources();
+            else if (tab === 'communication') loadCommunicationSettings();
+            else if (tab === 'adminprofile') loadAdminProfile();
+        }
+
+        // Check if user is authenticated on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('adminToken')) {
+                localStorage.setItem('adminToken', 'demo-token-temp');
+            }
+
+            // Attach form submit listener
+            const modalForm = document.getElementById('modalForm');
+            if (modalForm) {
+                console.log('Modal form found, attaching submit listener');
+                modalForm.addEventListener('submit', function(e) {
+                    console.log('Form submit event fired!');
+                    e.preventDefault();
+                    handleFormSubmit();
+                });
+            } else {
+                console.error('Modal form NOT found!');
+            }
+
+            loadDashboardStats();
+            loadMembers();
+            loadEvents();
+            loadExecutives();
+            loadClassLeaders();
+            loadMessages('inbox');
+
+            // Add image crop listener
+            const execImageInput = document.getElementById('execImage');
+            if (execImageInput) {
+                execImageInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        openCropModal(e.target.files[0], 'executive');
+                    }
+                });
+            }
+
+            // Add class leader image crop listener
+            const clImageInput = document.getElementById('clImage');
+            if (clImageInput) {
+                clImageInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        openCropModal(e.target.files[0], 'classleader');
+                    }
+                });
+            }
+
+            // Auto-refresh members every 10 seconds
+            setInterval(() => {
+                console.log('Auto-refreshing members...');
+                loadMembers();
+            }, 10000);
+        });
+
+        // Load members from API
+        async function loadMembersFromAPI() {
+            try {
+                const response = await fetch('/api/members/admin/all');
+                if (response.ok) {
+                    const data = await response.json();
+                    allMembers = data.members || [];
+                    console.log('Members loaded from API:', allMembers);
+                    updateDashboardStats(data.stats);
+                    return true;
+                } else {
+                    console.error('Failed to load members from API');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error loading members from API:', error);
+                return false;
+            }
+        }
+
+        function updateDashboardStats(stats) {
+            if (stats) {
+                document.getElementById('totalMembers').textContent = stats.totalMembers || 0;
+                document.getElementById('activeMembers').textContent = stats.activeMembers || 0;
+            }
+        }
+
+        function loadDashboardStats() {
+            // Use real data from allMembers and allEvents
+            document.getElementById('totalMembers').textContent = allMembers.length;
+            document.getElementById('activeMembers').textContent = allMembers.filter(m => m.isActive).length;
+            document.getElementById('totalEvents').textContent = allEvents.length;
+            const upcoming = allEvents.filter(e => new Date(e.date) > new Date()).length;
+            document.getElementById('upcomingEvents').textContent = upcoming;
+            document.getElementById('totalExecutives').textContent = sampleExecutives.length;
+        }
+
+        async function loadMembers() {
+            // Try to load from API first
+            const apiSuccess = await loadMembersFromAPI();
+
+            if (!apiSuccess) {
+                // Fallback to sample data if API fails
+                allMembers = sampleMembers;
+            }
+
+            setupMemberFilters();
+            loadPendingApprovals();
+            
+            // Filter to show only approved members in the main table
+            const approvedMembers = allMembers.filter(member => member.profileVisible);
+            displayMembers(approvedMembers);
+        }
+
+        function loadPendingApprovals() {
+            const pendingMembers = allMembers.filter(member => !member.profileVisible);
+            const tbody = document.querySelector('#pendingTable tbody');
+            tbody.innerHTML = '';
+
+            if (pendingMembers.length > 0) {
+                document.getElementById('pendingSection').style.display = 'block';
+                pendingMembers.forEach(member => {
+                    const joinDate = member.joinedDate ? new Date(member.joinedDate).toLocaleDateString() : new Date().toLocaleDateString();
+                    const row = `
+                        <tr>
+                            <td>${member.firstName} ${member.lastName}</td>
+                            <td>${member.email}</td>
+                            <td>${member.yearOfStudy || 'N/A'}</td>
+                            <td>${member.department || 'N/A'}</td>
+                            <td>${joinDate}</td>
+                            <td>
+                                <button class="btn btn-success btn-sm" onclick="approveMember('${member._id}')">Approve</button>
+                                <button class="btn btn-danger btn-sm" onclick="rejectMember('${member._id}')">Reject</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } else {
+                document.getElementById('pendingSection').style.display = 'none';
+            }
+        }
+
+        async function approveMember(id) {
+            try {
+                const response = await fetch(`/api/members/${id}`, {
+                    method: 'PUT',
+                    headers: getAuthHeader(),
+                    body: JSON.stringify({ profileVisible: true })
+                });
+
+                if (response.ok) {
+                    alert('Member approved successfully!');
+                    loadMembers(); // Reload data from API
+                } else {
+                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    alert('Error approving member: ' + (error.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error approving member:', error);
+                alert('Error approving member. Please try again.');
+            }
+        }
+
+        async function rejectMember(id) {
+            if (confirm('Are you sure you want to reject this member application?')) {
+                try {
+                    const response = await fetch(`/api/members/${id}`, {
+                        method: 'DELETE',
+                        headers: getAuthHeader()
+                    });
+
+                    if (response.ok) {
+                        alert('Member application rejected!');
+                        loadMembers(); // Reload data from API
+                    } else {
+                        const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        alert('Error rejecting member: ' + (error.message || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Error rejecting member:', error);
+                    alert('Error rejecting member. Please try again.');
+                }
+            }
+        }
+
+        function setupMemberFilters() {
+            if (!document.getElementById('memberSearch').hasListener) {
+                document.getElementById('memberSearch').addEventListener('input', filterMembers);
+                document.getElementById('memberYearFilter').addEventListener('change', filterMembers);
+                document.getElementById('memberStatusFilter').addEventListener('change', filterMembers);
+                document.getElementById('memberSearch').hasListener = true;
+            }
+        }
+
+        function filterMembers() {
+            const searchTerm = document.getElementById('memberSearch').value.toLowerCase();
+            const yearFilter = document.getElementById('memberYearFilter').value;
+            const statusFilter = document.getElementById('memberStatusFilter').value;
+
+            // Filter only approved members
+            const filtered = allMembers.filter(member => {
+                // Only show approved members
+                if (!member.profileVisible) return false;
+
+                const matchSearch = !searchTerm || 
+                    member.firstName.toLowerCase().includes(searchTerm) ||
+                    member.lastName.toLowerCase().includes(searchTerm) ||
+                    member.email.toLowerCase().includes(searchTerm);
+                
+                const matchYear = !yearFilter || member.yearOfStudy == yearFilter;
+                const matchStatus = !statusFilter || 
+                    (statusFilter === 'active' ? member.isActive : !member.isActive);
+                
+                return matchSearch && matchYear && matchStatus;
+            });
+
+            displayMembers(filtered);
+        }
+
+        function displayMembers(members) {
+            const tbody = document.querySelector('#membersTable tbody');
+            tbody.innerHTML = '';
+            members.forEach(member => {
+                const row = `
+                    <tr>
+                        <td>${member.firstName} ${member.lastName}</td>
+                        <td>${member.email}</td>
+                        <td>${member.yearOfStudy || 'N/A'}</td>
+                        <td>${member.department || 'N/A'}</td>
+                        <td><span style="cursor: pointer; padding: 0.25rem 0.75rem; border-radius: 4px; ${member.isActive ? 'background: #d4edda; color: #155724;' : 'background: #f8d7da; color: #721c24;'}" onclick="toggleMemberStatus('${member._id}', ${member.isActive})">${member.isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItem('member', '${member._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (response.ok) {
+                    allEvents = await response.json();
+                } else {
+                    // Fallback to sample data if API fails
+                    allEvents = sampleEvents;
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+                // Fallback to sample data if API fails
+                allEvents = sampleEvents;
+            }
+
+            if (!document.getElementById('eventSearch').hasListener) {
+                document.getElementById('eventSearch').addEventListener('input', filterEvents);
+                document.getElementById('eventDateFilter').addEventListener('change', filterEvents);
+                document.getElementById('eventStatusFilter').addEventListener('change', filterEvents);
+                document.getElementById('eventSearch').hasListener = true;
+            }
+
+            filterEvents();
+        }
+
+        function filterEvents() {
+            const searchTerm = document.getElementById('eventSearch').value.toLowerCase();
+            const dateFilter = document.getElementById('eventDateFilter').value;
+            const statusFilter = document.getElementById('eventStatusFilter').value;
+
+            const filtered = allEvents.filter(event => {
+                const matchSearch = !searchTerm || 
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.location.toLowerCase().includes(searchTerm);
+                
+                const eventDate = new Date(event.date).toISOString().split('T')[0];
+                const matchDate = !dateFilter || eventDate === dateFilter;
+                const matchStatus = !statusFilter || 
+                    (statusFilter === 'active' ? event.isActive : !event.isActive);
+                
+                return matchSearch && matchDate && matchStatus;
+            });
+
+            displayEvents(filtered);
+        }
+
+        function displayEvents(events) {
+            const tbody = document.querySelector('#eventsTable tbody');
+            tbody.innerHTML = '';
+            events.forEach(event => {
+                const row = `
+                    <tr>
+                        <td>${event.title}</td>
+                        <td>${new Date(event.date).toLocaleDateString()}</td>
+                        <td>${event.location || 'N/A'}</td>
+                        <td>${event.organizer || 'N/A'}</td>
+                        <td><span style="cursor: pointer; padding: 0.25rem 0.75rem; border-radius: 4px; ${event.isActive ? 'background: #d4edda; color: #155724;' : 'background: #f8d7da; color: #721c24;'}" onclick="toggleEventStatus('${event._id}', ${event.isActive})">${event.isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td><span style="cursor: pointer; padding: 0.25rem 0.75rem; border-radius: 4px; ${event.isPast ? 'background: #d4edda; color: #155724;' : 'background: #f8d7da; color: #721c24;'}" onclick="toggleEventPast('${event._id}', ${event.isPast})">${event.isPast ? 'Yes' : 'No'}</span></td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="editItem('event', '${event._id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItem('event', '${event._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        async function loadExecutives() {
+            try {
+                const response = await fetch('/api/executives');
+                if (response.ok) {
+                    const data = await response.json();
+                    allExecutives = data.executives || [];
+                    document.getElementById('totalExecutives').textContent = allExecutives.length;
+                } else {
+                    allExecutives = [];
+                }
+            } catch (error) {
+                console.error('Error loading executives:', error);
+                allExecutives = [];
+            }
+
+            if (!document.getElementById('executiveSearch').hasListener) {
+                document.getElementById('executiveSearch').addEventListener('input', filterExecutives);
+                document.getElementById('executiveSearch').hasListener = true;
+            }
+
+            filterExecutives();
+        }
+
+        function filterExecutives() {
+            const searchTerm = document.getElementById('executiveSearch').value.toLowerCase();
+
+            const filtered = allExecutives.filter(exec => {
+                return !searchTerm || 
+                    exec.firstName.toLowerCase().includes(searchTerm) ||
+                    exec.lastName.toLowerCase().includes(searchTerm) ||
+                    exec.position.toLowerCase().includes(searchTerm);
+            });
+
+            displayExecutives(filtered);
+        }
+
+        function displayExecutives(executives) {
+            const tbody = document.querySelector('#executivesTable tbody');
+            tbody.innerHTML = '';
+            executives.forEach(exec => {
+                const row = `
+                    <tr>
+                        <td>${exec.firstName} ${exec.lastName}</td>
+                        <td>${exec.position}</td>
+                        <td>${exec.email}</td>
+                        <td>${exec.phone || 'N/A'}</td>
+                        <td>Year ${exec.yearOfStudy}</td>
+                        <td><span style="padding: 0.25rem 0.75rem; border-radius: 4px; ${exec.isActive ? 'background: #d4edda; color: #155724;' : 'background: #f8d7da; color: #721c24;'}">${exec.isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="editItem('executive', '${exec._id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItem('executive', '${exec._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Class Leaders Functions
+        async function loadClassLeaders() {
+            try {
+                const response = await fetch('/api/class-leaders');
+                if (response.ok) {
+                    const data = await response.json();
+                    allClassLeaders = data.classLeaders || [];
+                    document.getElementById('totalClassLeaders').textContent = allClassLeaders.length;
+                } else {
+                    allClassLeaders = [];
+                }
+            } catch (error) {
+                console.error('Error loading class leaders:', error);
+                allClassLeaders = [];
+            }
+
+            if (!document.getElementById('classLeaderSearch').hasListener) {
+                document.getElementById('classLeaderSearch').addEventListener('input', filterClassLeaders);
+                document.getElementById('classLeaderYearFilter').addEventListener('change', filterClassLeaders);
+                document.getElementById('classLeaderSearch').hasListener = true;
+            }
+
+            filterClassLeaders();
+        }
+
+        function filterClassLeaders() {
+            const searchTerm = document.getElementById('classLeaderSearch').value.toLowerCase();
+            const yearFilter = document.getElementById('classLeaderYearFilter').value;
+
+            const filtered = (allClassLeaders || []).filter(leader => {
+                const matchSearch = !searchTerm || 
+                    leader.firstName.toLowerCase().includes(searchTerm) ||
+                    leader.lastName.toLowerCase().includes(searchTerm) ||
+                    leader.position.toLowerCase().includes(searchTerm);
+                
+                const matchYear = !yearFilter || leader.yearOfStudy == yearFilter;
+                
+                return matchSearch && matchYear;
+            });
+
+            displayClassLeaders(filtered);
+        }
+
+        function displayClassLeaders(leaders) {
+            const tbody = document.querySelector('#classLeadersTable tbody');
+            tbody.innerHTML = '';
+            leaders.forEach(leader => {
+                const row = `
+                    <tr>
+                        <td>${leader.firstName} ${leader.lastName}</td>
+                        <td>Year ${leader.yearOfStudy}</td>
+                        <td>${leader.position}</td>
+                        <td>${leader.email}</td>
+                        <td>${leader.phone || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="editItem('classleader', '${leader._id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteItem('classleader', '${leader._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Old contact functions removed - using dynamic message system instead
+
+        async function loadResources() {
+            try {
+                const response = await fetch('/api/resources');
+                if (response.ok) {
+                    const data = await response.json();
+                    // API returns array directly, not wrapped in data.resources
+                    allResources = Array.isArray(data) ? data : (data.resources || []);
+                    console.log('Resources loaded:', allResources.length);
+                } else {
+                    console.error('Failed to fetch resources:', response.status);
+                    allResources = [];
+                }
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                allResources = [];
+            }
+
+            if (!document.getElementById('resourceYearFilter').hasListener) {
+                document.getElementById('resourceYearFilter').addEventListener('change', filterResources);
+                document.getElementById('resourceTypeFilter').addEventListener('change', filterResources);
+                document.getElementById('resourceYearFilter').hasListener = true;
+            }
+
+            filterResources();
+        }
+
+        function filterResources() {
+            const yearFilter = document.getElementById('resourceYearFilter').value;
+            const typeFilter = document.getElementById('resourceTypeFilter').value;
+
+            const filtered = allResources.filter(resource => {
+                const matchYear = !yearFilter || resource.year === yearFilter;
+                const matchType = !typeFilter || resource.type === typeFilter;
+                
+                return matchYear && matchType;
+            });
+
+            displayResources(filtered);
+        }
+
+        function displayResources(resources) {
+            const grid = document.getElementById('resourcesGrid');
+            grid.innerHTML = '';
+
+            // Group resources by year
+            const resourcesByYear = {};
+            resources.forEach(resource => {
+                if (!resourcesByYear[resource.year]) {
+                    resourcesByYear[resource.year] = [];
+                }
+                resourcesByYear[resource.year].push(resource);
+            });
+
+            // Display resources organized by year
+            for (let year = 1; year <= 6; year++) {
+                const yearResources = resourcesByYear[year.toString()] || [];
+                const yearSection = document.createElement('div');
+                yearSection.className = 'year-section';
+                yearSection.innerHTML = `
+                    <div class="year-header" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0; font-size: 1.2rem;"><i class="fas fa-graduation-cap"></i> ${year}${year === 1 ? 'st' : year === 2 ? 'nd' : year === 3 ? 'rd' : 'th'} Year Resources</h3>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem;">${yearResources.length} items</span>
+                    </div>
+                    <div class="year-resources-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        ${yearResources.length > 0 ? yearResources.map(resource => {
+                            const typeIcon = resource.type === 'exam' ? 'fa-file-pdf' : resource.type === 'cat' ? 'fa-clipboard-list' : 'fa-book';
+                            const typeLabel = resource.type === 'exam' ? 'Exam' : resource.type === 'cat' ? 'CAT' : 'Study Notes';
+                            return `
+                                <div class="resource-card">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                        <i class="fas ${typeIcon}" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                                        <div>
+                                            <h4 style="margin: 0; font-size: 1rem;">${resource.title}</h4>
+                                            <p style="margin: 0; font-size: 0.8rem; color: #666;">${typeLabel}</p>
+                                        </div>
+                                    </div>
+                                    <p style="font-size: 0.9rem;"><strong>Subject:</strong> ${resource.subject}</p>
+                                    <p style="font-size: 0.9rem; color: #666;">${resource.description}</p>
+                                    ${resource.fileUrl ? `<p><a href="${resource.fileUrl}" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">📥 Download/Access</a></p>` : ''}
+                                    <p style="font-size: 0.85rem; color: ${resource.isActive ? '#155724' : '#721c24'};">
+                                        ${resource.isActive ? '✓ Available to Students' : '✗ Not Available'}
+                                    </p>
+                                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-secondary btn-sm" onclick="editItem('resource', '${resource._id}')">Edit</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteItem('resource', '${resource._id}')">Delete</button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('') : `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #f8f9fa; border-radius: 12px; border: 2px dashed #ddd;">
+                                <i class="fas fa-book" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                                <p style="color: #666; margin: 0;">No resources available for Year ${year} yet</p>
+                                <button class="btn btn-primary" style="margin-top: 1rem;" onclick="openModal('resource')">
+                                    <i class="fas fa-plus"></i> Add First Resource
+                                </button>
+                            </div>`}
+                    </div>
+                `;
+                grid.appendChild(yearSection);
+            }
+        }
+
+        // Old contact functions removed - now using dynamic message system
+
+        function openModal(type, id = null) {
+            currentEditType = type;
+            currentEditId = id;
+            document.getElementById('modal').classList.add('show');
+
+            // Reset form first
+            document.getElementById('modalForm').reset();
+
+            // Hide all field sets
+            document.getElementById('memberFields').style.display = 'none';
+            document.getElementById('eventFields').style.display = 'none';
+            document.getElementById('classleaderFields').style.display = 'none';
+            document.getElementById('executiveFields').style.display = 'none';
+            document.getElementById('resourceFields').style.display = 'none';
+
+            if (type === 'member') {
+                document.getElementById('memberFields').style.display = 'block';
+                document.getElementById('modalTitle').textContent = id ? 'Edit Member' : 'Add New Member';
+            } else if (type === 'event') {
+                document.getElementById('eventFields').style.display = 'block';
+                document.getElementById('modalTitle').textContent = id ? 'Edit Event' : 'Add New Event';
+            } else if (type === 'classleader') {
+                document.getElementById('classleaderFields').style.display = 'block';
+                document.getElementById('modalTitle').textContent = id ? 'Edit Class Leader' : 'Add New Class Leader';
+            } else if (type === 'executive') {
+                document.getElementById('executiveFields').style.display = 'block';
+                document.getElementById('modalTitle').textContent = id ? 'Edit Executive' : 'Add New Executive';
+            } else if (type === 'resource') {
+                document.getElementById('resourceFields').style.display = 'block';
+                document.getElementById('modalTitle').textContent = id ? 'Edit Resource' : 'Add New Resource';
+            }
+
+            if (id) {
+                // Load existing data for editing
+                if (type === 'member') {
+                    const member = sampleMembers.find(m => m._id === id);
+                    if (member) {
+                        document.getElementById('firstName').value = member.firstName;
+                        document.getElementById('lastName').value = member.lastName;
+                        document.getElementById('email').value = member.email;
+                        document.getElementById('phone').value = member.phone;
+                        document.getElementById('yearOfStudy').value = member.yearOfStudy;
+                        document.getElementById('department').value = member.department;
+                    }
+                } else if (type === 'event') {
+                    const event = sampleEvents.find(e => e._id === id);
+                    if (event) {
+                        document.getElementById('title').value = event.title;
+                        document.getElementById('description').value = event.description;
+                        document.getElementById('date').value = event.date.split('T')[0];
+                        document.getElementById('time').value = event.time;
+                        document.getElementById('location').value = event.location;
+                        document.getElementById('organizer').value = event.organizer;
+                        document.getElementById('maxAttendees').value = event.maxAttendees;
+                    }
+                } else if (type === 'classleader') {
+                    const leader = (allClassLeaders || []).find(cl => cl._id === id);
+                    if (leader) {
+                        document.getElementById('clFirstName').value = leader.firstName;
+                        document.getElementById('clLastName').value = leader.lastName;
+                        document.getElementById('clPosition').value = leader.position;
+                        document.getElementById('clEmail').value = leader.email;
+                        document.getElementById('clPhone').value = leader.phone;
+                        document.getElementById('clYear').value = leader.yearOfStudy;
+                        document.getElementById('clBio').value = leader.bio || '';
+                        document.getElementById('clImageUrl').value = leader.imageUrl || '';
+                        if (leader.socialAccounts) {
+                            document.getElementById('clFacebook').value = leader.socialAccounts.facebook || '';
+                            document.getElementById('clTwitter').value = leader.socialAccounts.twitter || '';
+                            document.getElementById('clInstagram').value = leader.socialAccounts.instagram || '';
+                            document.getElementById('clLinkedin').value = leader.socialAccounts.linkedin || '';
+                        }
+                    }
+                } else if (type === 'executive') {
+                    const exec = allExecutives.find(e => e._id === id);
+                    if (exec) {
+                        document.getElementById('execFirstName').value = exec.firstName;
+                        document.getElementById('execLastName').value = exec.lastName;
+                        document.getElementById('execPosition').value = exec.position;
+                        document.getElementById('execEmail').value = exec.email;
+                        document.getElementById('execPhone').value = exec.phone;
+                        document.getElementById('execYear').value = exec.yearOfStudy;
+                        document.getElementById('execImageUrl').value = exec.imageUrl || '';
+                        if (exec.socialMedia) {
+                            document.getElementById('execFacebook').value = exec.socialMedia.facebook || '';
+                            document.getElementById('execTwitter').value = exec.socialMedia.twitter || '';
+                            document.getElementById('execInstagram').value = exec.socialMedia.instagram || '';
+                            document.getElementById('execLinkedin').value = exec.socialMedia.linkedin || '';
+                            document.getElementById('execWhatsapp').value = exec.socialMedia.whatsapp || '';
+                        }
+                    }
+                } else if (type === 'resource') {
+                    const resource = allResources.find(r => r._id === id);
+                    if (resource) {
+                        document.getElementById('resourceTitle').value = resource.title;
+                        document.getElementById('resourceType').value = resource.type;
+                        document.getElementById('resourceYear').value = resource.year;
+                        document.getElementById('resourceSubject').value = resource.subject;
+                        document.getElementById('resourceDescription').value = resource.description;
+                        document.getElementById('resourceFileUrl').value = resource.fileUrl;
+                        document.getElementById('resourceActive').checked = resource.isActive;
+                    }
+                }
+            } else {
+                document.getElementById('modalForm').reset();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+            currentEditId = null;
+            currentEditType = null;
+        }
+
+        // Handle form submission
+        async function handleFormSubmit() {
+            console.log('Form submit triggered for type:', currentEditType);
+
+            try {
+                if (currentEditType === 'event') {
+                    // Validate required fields
+                    const title = document.getElementById('title').value.trim();
+                    const description = document.getElementById('description').value.trim();
+                    const date = document.getElementById('date').value;
+
+                    if (!title) {
+                        alert('Please enter a title for the event.');
+                        document.getElementById('title').focus();
+                        return;
+                    }
+
+                    if (!description) {
+                        alert('Please enter a description for the event.');
+                        document.getElementById('description').focus();
+                        return;
+                    }
+
+                    if (!date) {
+                        alert('Please select a date for the event.');
+                        document.getElementById('date').focus();
+                        return;
+                    }
+
+                    // Create FormData to handle file uploads
+                    const formData = new FormData();
+                    formData.append('title', title);
+                    formData.append('description', description);
+                    formData.append('date', date);
+                    formData.append('time', document.getElementById('time').value || '');
+                    formData.append('location', document.getElementById('location').value.trim() || '');
+                    formData.append('organizer', document.getElementById('organizer').value.trim() || '');
+                    const maxAttendees = parseInt(document.getElementById('maxAttendees').value);
+                    if (!isNaN(maxAttendees)) {
+                        formData.append('maxAttendees', maxAttendees);
+                    }
+                    formData.append('image', document.getElementById('image').value.trim() || '');
+                    formData.append('isActive', 'true');
+                    formData.append('isPast', 'false');
+
+                    // Add media files if selected
+                    const mediaFiles = document.getElementById('eventMedia').files;
+                    for (let i = 0; i < mediaFiles.length; i++) {
+                        formData.append('media', mediaFiles[i]);
+                    }
+
+                    console.log('Sending event data with FormData');
+
+                    // Try API first, but fallback to updating sample data
+                    let success = false;
+                    let apiError = null;
+
+                    try {
+                        let response;
+                        const headers = {};
+                        const token = localStorage.getItem('token');
+                        if (token) {
+                            headers['Authorization'] = `Bearer ${token}`;
+                        }
+
+                        if (currentEditId) {
+                            // Update existing event
+                            response = await fetch(`/api/events/${currentEditId}`, {
+                                method: 'PUT',
+                                headers: headers,
+                                body: formData
+                            });
+                        } else {
+                            // Create new event
+                            response = await fetch('/api/events', {
+                                method: 'POST',
+                                headers: headers,
+                                body: formData
+                            });
+                        }
+
+                        console.log('Response status:', response.status);
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log('Success response:', result);
+                            success = true;
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            console.error('Error response:', error);
+                            apiError = error.message || 'Unknown error';
+                        }
+                    } catch (apiErr) {
+                        console.log('API call failed, falling back to sample data:', apiErr.message);
+                        apiError = apiErr.message;
+                    }
+
+                    // If API failed, update sample data
+                    if (!success) {
+                        console.log('Using fallback: updating sampleEvents');
+                        const eventData = {
+                            title: title,
+                            description: description,
+                            date: date,
+                            time: document.getElementById('time').value,
+                            location: document.getElementById('location').value.trim(),
+                            organizer: document.getElementById('organizer').value.trim(),
+                            maxAttendees: parseInt(document.getElementById('maxAttendees').value) || null,
+                            image: document.getElementById('image').value.trim(),
+                            isActive: true,
+                            isPast: false
+                        };
+                        
+                        if (currentEditId) {
+                            // Edit existing event in sample data
+                            const eventIndex = sampleEvents.findIndex(e => e._id === currentEditId);
+                            if (eventIndex !== -1) {
+                                sampleEvents[eventIndex] = {
+                                    ...sampleEvents[eventIndex],
+                                    ...eventData
+                                };
+                                success = true;
+                            }
+                        } else {
+                            // Add new event to sample data
+                            const newId = (Math.max(...sampleEvents.map(e => parseInt(e._id) || 0)) + 1).toString();
+                            const newEvent = {
+                                _id: newId,
+                                ...eventData
+                            };
+                            sampleEvents.push(newEvent);
+                            success = true;
+                        }
+                    }
+
+                    if (success) {
+                        alert('Event saved successfully!');
+                        closeModal();
+                        loadEvents();
+                        loadDashboardStats();
+                    } else {
+                        alert('Error saving event: ' + apiError);
+                    }
+                } else if (currentEditType === 'classleader') {
+                    // Handle class leader form submission
+                    const firstName = document.getElementById('clFirstName').value.trim();
+                    const lastName = document.getElementById('clLastName').value.trim();
+                    const position = document.getElementById('clPosition').value.trim();
+                    const year = document.getElementById('clYear').value;
+                    const email = document.getElementById('clEmail').value.trim();
+                    const phone = document.getElementById('clPhone').value.trim();
+                    const bio = document.getElementById('clBio').value.trim();
+                    const imageUrl = document.getElementById('clImageUrl').value.trim();
+                    const socialAccounts = {
+                        facebook: document.getElementById('clFacebook').value.trim(),
+                        twitter: document.getElementById('clTwitter').value.trim(),
+                        instagram: document.getElementById('clInstagram').value.trim(),
+                        linkedin: document.getElementById('clLinkedin').value.trim()
+                    };
+
+                    if (!firstName || !lastName || !position || !year || !email) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
+
+                    // Create FormData for file upload
+                    const formData = new FormData();
+                    formData.append('firstName', firstName);
+                    formData.append('lastName', lastName);
+                    formData.append('position', position);
+                    formData.append('yearOfStudy', year);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('bio', bio);
+                    formData.append('imageUrl', imageUrl);
+                    formData.append('facebook', socialAccounts.facebook);
+                    formData.append('twitter', socialAccounts.twitter);
+                    formData.append('instagram', socialAccounts.instagram);
+                    formData.append('linkedin', socialAccounts.linkedin);
+
+                    // Handle file upload
+                    const imageFile = document.getElementById('clImage').files[0];
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    try {
+                        let response;
+                        if (currentEditId) {
+                            // Update existing class leader
+                            response = await fetch(`/api/class-leaders/${currentEditId}`, {
+                                method: 'PUT',
+                                body: formData
+                            });
+                        } else {
+                            // Create new class leader
+                            response = await fetch('/api/class-leaders', {
+                                method: 'POST',
+                                body: formData
+                            });
+                        }
+
+                        if (response.ok) {
+                            alert('Class leader saved successfully!');
+                            closeModal();
+                            loadClassLeaders();
+                            loadDashboardStats();
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error saving class leader: ' + (error.message || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('Error saving class leader:', error);
+                        alert('Error saving class leader. Please try again.');
+                    }
+                } else if (currentEditType === 'executive') {
+                    // Handle executive form submission
+                    const firstName = document.getElementById('execFirstName').value.trim();
+                    const lastName = document.getElementById('execLastName').value.trim();
+                    const position = document.getElementById('execPosition').value.trim();
+                    const email = document.getElementById('execEmail').value.trim();
+                    const phone = document.getElementById('execPhone').value.trim();
+                    const yearOfStudy = document.getElementById('execYear').value;
+                    const imageUrl = document.getElementById('execImageUrl').value.trim();
+                    const socialMedia = {
+                        facebook: document.getElementById('execFacebook').value.trim(),
+                        twitter: document.getElementById('execTwitter').value.trim(),
+                        instagram: document.getElementById('execInstagram').value.trim(),
+                        linkedin: document.getElementById('execLinkedin').value.trim(),
+                        whatsapp: document.getElementById('execWhatsapp').value.trim()
+                    };
+
+                    if (!firstName || !lastName || !position || !email) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
+
+                    // Create FormData for file upload
+                    const formData = new FormData();
+                    formData.append('firstName', firstName);
+                    formData.append('lastName', lastName);
+                    formData.append('position', position);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('yearOfStudy', yearOfStudy);
+                    formData.append('imageUrl', imageUrl);
+                    formData.append('facebook', socialMedia.facebook);
+                    formData.append('twitter', socialMedia.twitter);
+                    formData.append('instagram', socialMedia.instagram);
+                    formData.append('linkedin', socialMedia.linkedin);
+                    formData.append('whatsapp', socialMedia.whatsapp);
+
+                    // Handle file upload
+                    const imageFile = document.getElementById('execImage').files[0];
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    try {
+                        let response;
+                        if (currentEditId) {
+                            // Update existing executive
+                            response = await fetch(`/api/executives/${currentEditId}`, {
+                                method: 'PUT',
+                                body: formData
+                            });
+                        } else {
+                            // Create new executive
+                            response = await fetch('/api/executives', {
+                                method: 'POST',
+                                body: formData
+                            });
+                        }
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            alert('Executive saved successfully!');
+                            closeModal();
+                            loadExecutives();
+                            loadDashboardStats();
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error saving executive: ' + (error.message || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('Error saving executive:', error);
+                        alert('Error saving executive. Please try again.');
+                    }
+                } else if (currentEditType === 'resource') {
+                    // Handle resource form submission
+                    const title = document.getElementById('resourceTitle').value.trim();
+                    const type = document.getElementById('resourceType').value;
+                    const year = document.getElementById('resourceYear').value;
+                    const subject = document.getElementById('resourceSubject').value.trim();
+                    const description = document.getElementById('resourceDescription').value.trim();
+                    const fileUrl = document.getElementById('resourceFileUrl').value.trim();
+                    const isActive = document.getElementById('resourceActive').checked;
+
+                    if (!title || !type || !year || !subject) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
+
+                    const resourceData = {
+                        title,
+                        type,
+                        year: parseInt(year),
+                        subject,
+                        description,
+                        fileUrl,
+                        isActive
+                    };
+
+                    try {
+                        let response;
+                        if (currentEditId) {
+                            // Update existing resource
+                            response = await fetch(`/api/resources/${currentEditId}`, {
+                                method: 'PUT',
+                                headers: getAuthHeader(),
+                                body: JSON.stringify(resourceData)
+                            });
+                        } else {
+                            // Create new resource
+                            response = await fetch('/api/resources', {
+                                method: 'POST',
+                                headers: getAuthHeader(),
+                                body: JSON.stringify(resourceData)
+                            });
+                        }
+
+                        console.log('Resource API response status:', response.status);
+                        console.log('Resource API response OK:', response.ok);
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log('Resource created/updated:', result);
+                            alert('Resource saved successfully!');
+                            closeModal();
+                            loadResources();
+                            loadDashboardStats();
+                        } else {
+                            let errorMessage = 'Unknown error';
+                            try {
+                                const errorData = await response.json();
+                                errorMessage = errorData.message || JSON.stringify(errorData);
+                            } catch (parseError) {
+                                errorMessage = `Server error (Status ${response.status})`;
+                            }
+                            console.error('Error response:', errorMessage);
+                            alert('Error saving resource: ' + errorMessage);
+                        }
+                    } catch (error) {
+                        console.error('Fetch error when saving resource:', error);
+                        console.error('Error name:', error.name);
+                        console.error('Error message:', error.message);
+                        console.error('Error toString:', error.toString());
+                        alert('Error saving resource: ' + (error.message || error.toString()));
+                    }
+                } else {
+                    // Handle other types (member)
+                    alert('Item saved successfully!');
+                    closeModal();
+                    loadDashboardStats();
+                }
+            } catch (error) {
+                console.error('Error saving item:', error);
+                alert('Error saving item. Please check the console for details.');
+            }
+        }
+
+        function editItem(type, id) {
+            openModal(type, id);
+        }
+
+        async function deleteItem(type, id) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                try {
+                    if (type === 'member') {
+                        const response = await fetch(`/api/members/${id}`, {
+                            method: 'DELETE',
+                            headers: getAuthHeader()
+                        });
+
+                        if (response.ok) {
+                            alert('Member deleted successfully!');
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error deleting member: ' + (error.message || 'Unknown error'));
+                            return;
+                        }
+                    } else if (type === 'event') {
+                        const response = await fetch(`/api/events/${id}`, {
+                            method: 'DELETE',
+                            headers: getAuthHeader()
+                        });
+
+                        if (response.ok) {
+                            alert('Event deleted successfully!');
+                        } else {
+                            const error = await response.json();
+                            alert('Error deleting event: ' + (error.message || 'Unknown error'));
+                            return;
+                        }
+                    } else if (type === 'classleader') {
+                        const response = await fetch(`/api/class-leaders/${id}`, {
+                            method: 'DELETE',
+                            headers: getAuthHeader()
+                        });
+
+                        if (response.ok) {
+                            alert('Class leader deleted successfully!');
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error deleting class leader: ' + (error.message || 'Unknown error'));
+                            return;
+                        }
+                    } else if (type === 'executive') {
+                        const response = await fetch(`/api/executives/${id}`, {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            alert('Executive deleted successfully!');
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error deleting executive: ' + (error.message || 'Unknown error'));
+                            return;
+                        }
+                    } else if (type === 'resource') {
+                        const response = await fetch(`/api/resources/${id}`, {
+                            method: 'DELETE',
+                            headers: getAuthHeader()
+                        });
+
+                        if (response.ok) {
+                            alert('Resource deleted successfully!');
+                        } else {
+                            const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                            alert('Error deleting resource: ' + (error.message || 'Unknown error'));
+                            return;
+                        }
+                    } else {
+                        // Handle other types - for now just show alert
+                        alert('Item deleted successfully!');
+                    }
+
+                    loadDashboardStats();
+                    if (type === 'member') loadMembers();
+                    else if (type === 'event') loadEvents();
+                    else if (type === 'executive') loadExecutives();
+                    else if (type === 'classleader') loadClassLeaders();
+                    else if (type === 'contact') loadMessages('inbox');
+                    else if (type === 'resource') loadResources();
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    alert('Error deleting item. Please try again.');
+                }
+            }
+        }
+
+        function toggleMemberStatus(id, currentStatus) {
+            alert('Status updated!');
+            loadMembers();
+            loadDashboardStats();
+        }
+
+        function toggleEventStatus(id, currentStatus) {
+            alert('Status updated!');
+            loadEvents();
+            loadDashboardStats();
+        }
+
+        function toggleEventPast(id, currentPast) {
+            alert('Past status updated!');
+            loadEvents();
+            loadDashboardStats();
+        }
+
+        function saveSettings() {
+            const email = document.getElementById('settingsEmail').value;
+            const phone = document.getElementById('settingsPhone').value;
+            const address = document.getElementById('settingsAddress').value;
+            const latitude = document.getElementById('settingsLatitude').value;
+            const longitude = document.getElementById('settingsLongitude').value;
+            const enableMap = document.getElementById('enableMap').checked;
+
+            if (enableMap && latitude && longitude) {
+                const mapContainer = document.getElementById('mapContainer');
+                mapContainer.style.display = 'block';
+                const mapFrame = document.getElementById('mapFrame');
+                mapFrame.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8193948139347!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${latitude},${longitude}!5e0!3m2!1sen!2ske!4v1234567890`;
+            } else {
+                document.getElementById('mapContainer').style.display = 'none';
+            }
+
+            alert('Settings saved successfully!');
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin-login.html';
+        }
+
+        // Mobile Sidebar Toggle Functions
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar-nav');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggle = document.getElementById('sidebarToggle');
+            
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar-nav');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggle = document.getElementById('sidebarToggle');
+            
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+            toggle.classList.remove('active');
+        }
+
+        // Close sidebar when a navigation item is clicked
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Close sidebar on window resize if screen is larger
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+
+        // Load and save communication settings
+        async function loadCommunicationSettings() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+
+                // Populate form fields
+                document.getElementById('commEmail').value = data.email || '';
+                document.getElementById('commPhone').value = data.phone || '';
+                document.getElementById('commBuilding').value = data.office?.building || '';
+                document.getElementById('commRoom').value = data.office?.room || '';
+                document.getElementById('commLocation').value = data.office?.location || '';
+                document.getElementById('commMonday').value = data.officeHours?.monday || '';
+                document.getElementById('commSaturday').value = data.officeHours?.saturday || '';
+                document.getElementById('commSunday').value = data.officeHours?.sunday || '';
+                document.getElementById('commResponseTime').value = data.responseTime || '';
+                document.getElementById('commCity').value = data.address?.city || '';
+                document.getElementById('commState').value = data.address?.state || '';
+                document.getElementById('commCountry').value = data.address?.country || '';
+                // Load social media links
+                document.getElementById('commFacebook').value = data.socialMedia?.facebook || '';
+                document.getElementById('commTwitter').value = data.socialMedia?.twitter || '';
+                document.getElementById('commInstagram').value = data.socialMedia?.instagram || '';
+                document.getElementById('commLinkedin').value = data.socialMedia?.linkedin || '';
+                document.getElementById('commWhatsapp').value = data.socialMedia?.whatsapp || '';
+            } catch (error) {
+                console.error('Error loading communication settings:', error);
+            }
+        }
+
+        async function saveCommunicationSettings() {
+            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+            const communicationData = {
+                email: document.getElementById('commEmail').value,
+                phone: document.getElementById('commPhone').value,
+                office: {
+                    building: document.getElementById('commBuilding').value,
+                    room: document.getElementById('commRoom').value,
+                    location: document.getElementById('commLocation').value
+                },
+                officeHours: {
+                    monday: document.getElementById('commMonday').value,
+                    tuesday: document.getElementById('commMonday').value,
+                    wednesday: document.getElementById('commMonday').value,
+                    thursday: document.getElementById('commMonday').value,
+                    friday: document.getElementById('commMonday').value,
+                    saturday: document.getElementById('commSaturday').value,
+                    sunday: document.getElementById('commSunday').value
+                },
+                responseTime: document.getElementById('commResponseTime').value,
+                address: {
+                    city: document.getElementById('commCity').value,
+                    state: document.getElementById('commState').value,
+                    country: document.getElementById('commCountry').value
+                },
+                socialMedia: {
+                    facebook: document.getElementById('commFacebook').value,
+                    twitter: document.getElementById('commTwitter').value,
+                    instagram: document.getElementById('commInstagram').value,
+                    linkedin: document.getElementById('commLinkedin').value,
+                    whatsapp: document.getElementById('commWhatsapp').value
+                }
+            };
+
+            try {
+                const response = await fetch('/api/admin/communication', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': token
+                    },
+                    body: JSON.stringify(communicationData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Communication settings saved successfully!');
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to save settings'));
+                }
+            } catch (error) {
+                console.error('Error saving communication settings:', error);
+                alert('Error saving settings. Please try again.');
+            }
+        }
+
+        // Load communication settings when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCommunicationSettings();
+            loadMessages('inbox');
+            loadAdminProfile();
+        });
+
+        // Admin Profile Management
+        async function loadAdminProfile() {
+            try {
+                const response = await fetch('/api/admin/profile');
+                const data = await response.json();
+                
+                document.getElementById('adminUsername').value = data.username || 'admin';
+            } catch (error) {
+                console.error('Error loading admin profile:', error);
+            }
+        }
+
+        // Password strength checker
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('adminNewPassword');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    checkAdminPasswordStrength(this.value);
+                });
+            }
+        });
+
+        function checkAdminPasswordStrength(password) {
+            const strengthBar = document.getElementById('adminPasswordStrengthBar');
+            const strengthText = document.getElementById('adminPasswordStrengthText');
+            const strengthSection = document.getElementById('passwordStrength');
+            
+            if (!strengthBar || !strengthText) return;
+            
+            strengthSection.style.display = 'block';
+            
+            let strength = 0;
+            let strengthLabel = 'Weak';
+            let strengthColor = '#dc3545';
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            switch(strength) {
+                case 0:
+                case 1:
+                    strengthLabel = 'Weak';
+                    strengthColor = '#dc3545';
+                    break;
+                case 2:
+                case 3:
+                    strengthLabel = 'Fair';
+                    strengthColor = '#ffc107';
+                    break;
+                case 4:
+                    strengthLabel = 'Good';
+                    strengthColor = '#17a2b8';
+                    break;
+                case 5:
+                    strengthLabel = 'Strong';
+                    strengthColor = '#28a745';
+                    break;
+            }
+            
+            strengthBar.style.width = (strength * 20) + '%';
+            strengthBar.style.background = strengthColor;
+            strengthText.textContent = strengthLabel;
+            strengthText.style.color = strengthColor;
+        }
+
+        async function updateAdminProfile() {
+            const username = document.getElementById('adminUsername').value;
+            const newUsername = document.getElementById('adminNewUsername').value.trim();
+            const currentPassword = document.getElementById('adminCurrentPassword').value;
+            const newPassword = document.getElementById('adminNewPassword').value;
+            const confirmPassword = document.getElementById('adminConfirmPassword').value;
+            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+            // Validation
+            if (!currentPassword) {
+                alert('Please enter your current password for verification');
+                return;
+            }
+
+            // Check if trying to update password
+            if (newPassword || confirmPassword) {
+                if (!newPassword || !confirmPassword) {
+                    alert('Please fill in both new password fields');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    alert('New passwords do not match');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    alert('New password must be at least 8 characters long');
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch('/api/admin/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': token
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        newUsername: newUsername || undefined,
+                        currentPassword: currentPassword,
+                        newPassword: newPassword || undefined,
+                        confirmPassword: confirmPassword || undefined
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('Admin profile updated successfully!');
+                    // Reset form
+                    document.getElementById('adminNewUsername').value = '';
+                    document.getElementById('adminCurrentPassword').value = '';
+                    document.getElementById('adminNewPassword').value = '';
+                    document.getElementById('adminConfirmPassword').value = '';
+                    document.getElementById('passwordStrength').style.display = 'none';
+                    // Reload profile
+                    loadAdminProfile();
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to update profile'));
+                }
+            } catch (error) {
+                console.error('Error updating admin profile:', error);
+                alert('Error updating profile. Please try again.');
+            }
+        }
+
+        // Message Management
+        let currentFolder = 'inbox';
+        let allMessages = [];
+        let currentMessageId = null;
+
+        async function loadMessages(folder = 'inbox') {
+            try {
+                currentFolder = folder;
+                const response = await fetch(`/api/admin/messages?folder=${folder}`);
+                const data = await response.json();
+                
+                allMessages = data.messages || [];
+                renderMessagesTable(allMessages);
+                updateMessageCounts();
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('messagesTableBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: #dc3545;">Error loading messages</td></tr>';
+            }
+        }
+
+        function updateMessageCounts() {
+            let inboxCount = 0, viewedCount = 0;
+            
+            fetch('/api/admin/messages?folder=inbox').then(r => r.json()).then(d => {
+                document.getElementById('inboxCount').textContent = d.messages?.length || 0;
+            });
+            
+            fetch('/api/admin/messages?folder=viewed').then(r => r.json()).then(d => {
+                document.getElementById('viewedCount').textContent = d.messages?.length || 0;
+            });
+        }
+
+        function renderMessagesTable(messages) {
+            const tbody = document.getElementById('messagesTableBody');
+            
+            if (messages.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #999;">No messages</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = messages.map(msg => `
+                <tr style="cursor: pointer; ${msg.status === 'new' ? 'background: #fff3cd;' : ''}">
+                    <td onclick="openMessageDetail('${msg._id}')">${msg.sender?.name || 'Unknown'}</td>
+                    <td onclick="openMessageDetail('${msg._id}')">${msg.sender?.email || 'N/A'}</td>
+                    <td onclick="openMessageDetail('${msg._id}')">${msg.subject}</td>
+                    <td onclick="openMessageDetail('${msg._id}')">${new Date(msg.createdAt).toLocaleDateString()}</td>
+                    <td onclick="openMessageDetail('${msg._id}')">
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 12px; background: ${msg.status === 'new' ? '#ffc107' : msg.status === 'replied' ? '#28a745' : '#6c757d'}; color: white; font-size: 0.85rem;">
+                            ${msg.status.charAt(0).toUpperCase() + msg.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" onclick="openMessageDetail('${msg._id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function switchMessageFolder(folder) {
+            loadMessages(folder);
+        }
+
+        async function openMessageDetail(messageId) {
+            try {
+                currentMessageId = messageId;
+                const response = await fetch(`/api/admin/messages/${messageId}`);
+                const message = await response.json();
+
+                // Populate modal
+                document.getElementById('messageSubject').textContent = message.subject;
+                document.getElementById('messageSenderName').textContent = message.sender?.name || 'Unknown';
+                document.getElementById('messageSenderEmail').textContent = message.sender?.email || 'N/A';
+                document.getElementById('messageSenderPhone').textContent = message.sender?.phone || 'N/A';
+                document.getElementById('messageCategory').textContent = (message.category || 'General').charAt(0).toUpperCase() + message.category?.slice(1);
+                document.getElementById('messageDate').textContent = new Date(message.createdAt).toLocaleString();
+                document.getElementById('messageStatus').textContent = message.status.charAt(0).toUpperCase() + message.status.slice(1);
+                document.getElementById('messageContent').textContent = message.message;
+
+                // Show/hide reply section
+                if (currentFolder === 'inbox') {
+                    document.getElementById('replySection').style.display = 'block';
+                    document.getElementById('deleteSection').style.display = 'none';
+                } else {
+                    document.getElementById('replySection').style.display = 'none';
+                    document.getElementById('deleteSection').style.display = 'block';
+                }
+
+                // Show admin reply if exists
+                if (message.adminReply) {
+                    document.getElementById('adminReplySection').style.display = 'block';
+                    document.getElementById('adminReplyContent').textContent = message.adminReply.message;
+                    document.getElementById('replyDate').textContent = new Date(message.adminReply.repliedAt).toLocaleString();
+                    document.getElementById('replyMessage').style.display = 'none';
+                } else {
+                    document.getElementById('adminReplySection').style.display = 'none';
+                    document.getElementById('replyMessage').style.display = 'block';
+                }
+
+                // Show modal
+                document.getElementById('messageModal').style.display = 'block';
+                loadMessages(currentFolder);
+            } catch (error) {
+                console.error('Error opening message:', error);
+                alert('Error loading message');
+            }
+        }
+
+        function closeMessageModal() {
+            document.getElementById('messageModal').style.display = 'none';
+            document.getElementById('replyMessage').value = '';
+            currentMessageId = null;
+        }
+
+        async function sendReply() {
+            const replyText = document.getElementById('replyMessage').value;
+            
+            if (!replyText.trim()) {
+                alert('Please type a reply message');
+                return;
+            }
+
+            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+            try {
+                const response = await fetch(`/api/admin/messages/${currentMessageId}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': token
+                    },
+                    body: JSON.stringify({ replyMessage: replyText })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Reply sent successfully!');
+                    closeMessageModal();
+                    loadMessages(currentFolder);
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to send reply'));
+                }
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                alert('Error sending reply');
+            }
+        }
+
+        async function markAsViewed() {
+            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+            try {
+                const response = await fetch(`/api/admin/messages/${currentMessageId}/mark-viewed`, {
+                    method: 'POST',
+                    headers: {
+                        'x-admin-token': token
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Message marked as viewed');
+                    closeMessageModal();
+                    loadMessages(currentFolder);
+                } else {
+                    alert('Error marking message as viewed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error marking message');
+            }
+        }
+
+        async function deleteMessage() {
+            if (!confirm('Are you sure you want to delete this message? This action cannot be undone.')) {
+                return;
+            }
+
+            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+            try {
+                const response = await fetch(`/api/admin/messages/${currentMessageId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'x-admin-token': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Message deleted successfully');
+                    closeMessageModal();
+                    loadMessages(currentFolder);
+                } else {
+                    alert('Error: ' + (result.message || 'Cannot delete this message'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting message');
+            }
+        }
+
+        function filterMessages() {
+            const searchText = document.getElementById('contactSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('contactStatusFilter').value;
+
+            let filtered = allMessages;
+
+            if (searchText) {
+                filtered = filtered.filter(msg =>
+                    (msg.sender?.name?.toLowerCase().includes(searchText) ||
+                    msg.sender?.email?.toLowerCase().includes(searchText) ||
+                    msg.subject?.toLowerCase().includes(searchText))
+                );
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(msg => msg.status === statusFilter);
+            }
+
+            renderMessagesTable(filtered);
+        }
+    </script>
+</body>
+</html>

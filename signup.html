@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join KeMUMSA | Sign Up</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #871054;
+            --primary-light: #a83b6e;
+            --primary-dark: #4d1c12;
+            --secondary-color: #d4af37;
+            --accent-color: #2e8b57;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background-light: #f8f9fa;
+            --white: #ffffff;
+            --gray-light: #e9ecef;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .signup-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            font-size: 2rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .signup-header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .signup-header p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        .signup-body {
+            padding: 40px 30px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .signup-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .signup-body::-webkit-scrollbar-track {
+            background: var(--gray-light);
+            border-radius: 10px;
+        }
+
+        .signup-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group label i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: var(--background-light);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(135, 16, 84, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 150px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .signup-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .signup-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .signup-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .login-link {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .login-link a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-spinner.show {
+            display: inline-block;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            width: 60px;
+            background: var(--gray-light);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        .back-link i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                border-radius: 16px;
+            }
+
+            .signup-header {
+                padding: 30px 25px;
+            }
+
+            .signup-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .logo-badge {
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+            }
+
+            .signup-body {
+                padding: 30px 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .back-link {
+                top: 20px;
+                left: 20px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back
+    </a>
+
+    <div class="signup-container">
+        <!-- Header -->
+        <div class="signup-header">
+            <div class="logo-badge">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1>Join KeMUMSA</h1>
+            <p>Create Your Member Account Today</p>
+        </div>
+
+        <!-- Body -->
+        <div class="signup-body">
+            <!-- Alert Messages -->
+            <div id="errorAlert" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage"></span>
+            </div>
+
+            <div id="successAlert" class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span id="successMessage"></span>
+            </div>
+
+            <!-- Signup Form -->
+            <form id="signupForm">
+                <!-- Personal Information Section -->
+                <div class="section-title">Personal Information</div>
+
+                <!-- Name Fields -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">
+                            <i class="fi fi-ts-user"></i>
+                            First Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName" 
+                            placeholder="John"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">
+                            <i class="fi fi-ts-user"></i>
+                            Last Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="lastName" 
+                            name="lastName" 
+                            placeholder="Doe"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fi fi-ts-envelope"></i>
+                        Email Address <span style="color: #dc3545; font-size: 0.9rem;">(@stu.kemu.ac.ke)</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="your-email@stu.kemu.ac.ke"
+                        pattern=".*@stu\.kemu\.ac\.ke$"
+                        title="Email must be from KEMU student domain (e.g., your-name@stu.kemu.ac.ke)"
+                        required
+                    >
+                </div>
+
+                <!-- Phone Field -->
+                <div class="form-group">
+                    <label for="phone">
+                        <i class="fi fi-ts-phone"></i>
+                        Phone Number
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="+254 700 000000"
+                        required
+                    >
+                </div>
+
+                <!-- Academic Information Section -->
+                <div class="section-title">Academic Information</div>
+
+                <!-- Year of Study & Department -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="yearOfStudy">
+                            <i class="fi fi-ts-graduation-cap"></i>
+                            Year of Study
+                        </label>
+                        <select id="yearOfStudy" name="yearOfStudy" required>
+                            <option value="">Select Year</option>
+                            <option value="1">First Year</option>
+                            <option value="2">Second Year</option>
+                            <option value="3">Third Year</option>
+                            <option value="4">Fourth Year</option>
+                            <option value="5">Fifth Year</option>
+                            <option value="6">Sixth Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">
+                            <i class="fi fi-ts-briefcase"></i>
+                            Area of Speciality
+                        </label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Area of Speciality</option>
+                            <optgroup label="Surgical Specialties">
+                                <option value="General Surgery">General Surgery</option>
+                                <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
+                                <option value="Neurosurgery">Neurosurgery</option>
+                                <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+                                <option value="Urology">Urology</option>
+                                <option value="Otorhinolaryngology (ENT)">Otorhinolaryngology (ENT)</option>
+                                <option value="Ophthalmology">Ophthalmology</option>
+                                <option value="Plastic & Reconstructive Surgery">Plastic & Reconstructive Surgery</option>
+                                <option value="Vascular Surgery">Vascular Surgery</option>
+                                <option value="Thoracic Surgery">Thoracic Surgery</option>
+                                <option value="Colorectal Surgery">Colorectal Surgery</option>
+                                <option value="Pediatric Surgery">Pediatric Surgery</option>
+                            </optgroup>
+                            <optgroup label="Internal Medicine & Medical Specialties">
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Pulmonology (Respiratory Medicine)">Pulmonology (Respiratory Medicine)</option>
+                                <option value="Gastroenterology">Gastroenterology</option>
+                                <option value="Hepatology">Hepatology</option>
+                                <option value="Nephrology">Nephrology</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Rheumatology">Rheumatology</option>
+                                <option value="Hematology & Oncology">Hematology & Oncology</option>
+                                <option value="Infectious Disease">Infectious Disease</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Psychiatry">Psychiatry</option>
+                            </optgroup>
+                            <optgroup label="Obstetrics & Gynecology">
+                                <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                                <option value="Maternal-Fetal Medicine">Maternal-Fetal Medicine</option>
+                                <option value="Reproductive Medicine & Infertility">Reproductive Medicine & Infertility</option>
+                                <option value="Gynecologic Oncology">Gynecologic Oncology</option>
+                            </optgroup>
+                            <optgroup label="Pediatrics & Child Health">
+                                <option value="Pediatrics">Pediatrics</option>
+                                <option value="Pediatric Cardiology">Pediatric Cardiology</option>
+                                <option value="Pediatric Gastroenterology">Pediatric Gastroenterology</option>
+                                <option value="Pediatric Hematology & Oncology">Pediatric Hematology & Oncology</option>
+                                <option value="Neonatology">Neonatology</option>
+                                <option value="Pediatric Nephrology">Pediatric Nephrology</option>
+                            </optgroup>
+                            <optgroup label="Diagnostic & Therapeutic">
+                                <option value="Radiology">Radiology</option>
+                                <option value="Pathology">Pathology</option>
+                                <option value="Nuclear Medicine">Nuclear Medicine</option>
+                                <option value="Anesthesiology">Anesthesiology</option>
+                                <option value="Radiation Oncology">Radiation Oncology</option>
+                            </optgroup>
+                            <optgroup label="Emergency & Critical Care">
+                                <option value="Emergency Medicine">Emergency Medicine</option>
+                                <option value="Intensive Care Medicine">Intensive Care Medicine</option>
+                                <option value="Trauma Surgery">Trauma Surgery</option>
+                            </optgroup>
+                            <optgroup label="Other Specialties">
+                                <option value="Dermatology">Dermatology</option>
+                                <option value="Physical Medicine & Rehabilitation">Physical Medicine & Rehabilitation</option>
+                                <option value="Occupational Medicine">Occupational Medicine</option>
+                                <option value="Sports Medicine">Sports Medicine</option>
+                                <option value="Palliative Care">Palliative Care</option>
+                                <option value="Family Medicine">Family Medicine</option>
+                                <option value="Public Health">Public Health</option>
+                                <option value="Medical Genetics">Medical Genetics</option>
+                                <option value="Forensic Medicine">Forensic Medicine</option>
+                                <option value="Tropical Medicine">Tropical Medicine</option>
+                            </optgroup>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Student ID -->
+                <div class="form-group">
+                    <label for="studentId">
+                        <i class="fi fi-ts-id-card"></i>
+                        Student ID / Reg Number
+                    </label>
+                    <input 
+                        type="text" 
+                        id="studentId" 
+                        name="studentId" 
+                        placeholder="BMS-1-1231-3/2020"
+                        pattern="^[A-Z]+-\d+-\d+-\d+/\d{4}$"
+                        title="Student ID must follow the format: DEPT-YEAR-NUMBER-DIGIT/YEAR (e.g., BMS-1-1231-3/2020)"
+                        required
+                    >
+                    <small style="color: #666; font-size: 0.85rem;">Format: DEPT-YEAR-NUMBER-DIGIT/YEAR (e.g., BMS-1-1231-3/2020)</small>
+                </div>
+
+                <!-- Account Security Section -->
+                <div class="section-title">Create Password</div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fi fi-ts-lock"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="••••••••"
+                        required
+                        minlength="8"
+                    >
+                    <div class="password-strength">
+                        <span>Strength:</span>
+                        <div class="strength-bar">
+                            <div class="strength-bar-fill" id="strengthBar"></div>
+                        </div>
+                        <span id="strengthText">Weak</span>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fi fi-ts-lock"></i>
+                        Confirm Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="section-title">Terms & Conditions</div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="termsAgreed" required>
+                    <label for="termsAgreed">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="newsletter">
+                    <label for="newsletter">Send me updates and newsletters from KeMUMSA</label>
+                </div>
+
+                <!-- Signup Button -->
+                <button type="submit" class="signup-btn" id="signupBtn">
+                    <span id="signupBtnText">Create Account</span>
+                    <span class="loading-spinner" id="spinner"></span>
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login Here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show Alert
+        function showAlert(type, message) {
+            const alertElement = document.getElementById(`${type}Alert`);
+            const messageElement = document.getElementById(`${type}Message`);
+            
+            messageElement.textContent = message;
+            alertElement.classList.add('show');
+            
+            if (type === 'error') {
+                setTimeout(() => {
+                    alertElement.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Hide Alert
+        function hideAlert(type) {
+            const alertElement = document.getElementById(`${type}Alert`);
+            alertElement.classList.remove('show');
+        }
+
+        // Password Strength Checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            let strengthLabel = 'Weak';
+            let strengthColor = '#dc3545';
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            switch(strength) {
+                case 0:
+                case 1:
+                    strengthLabel = 'Weak';
+                    strengthColor = '#dc3545';
+                    break;
+                case 2:
+                case 3:
+                    strengthLabel = 'Fair';
+                    strengthColor = '#ffc107';
+                    break;
+                case 4:
+                    strengthLabel = 'Good';
+                    strengthColor = '#17a2b8';
+                    break;
+                case 5:
+                    strengthLabel = 'Strong';
+                    strengthColor = '#28a745';
+                    break;
+            }
+            
+            strengthBar.style.width = (strength * 20) + '%';
+            strengthBar.style.background = strengthColor;
+            strengthText.textContent = strengthLabel;
+            strengthText.style.color = strengthColor;
+        });
+
+        // Signup Form Handler
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const yearOfStudy = document.getElementById('yearOfStudy').value;
+            const department = document.getElementById('department').value;
+            const studentId = document.getElementById('studentId').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const termsAgreed = document.getElementById('termsAgreed').checked;
+            const newsletter = document.getElementById('newsletter').checked;
+            
+            const signupBtn = document.getElementById('signupBtn');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('signupBtnText');
+            
+            // Hide previous alerts
+            hideAlert('error');
+            hideAlert('success');
+            
+            // Validation
+            if (!firstName || !lastName) {
+                showAlert('error', 'Please enter your full name');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@stu\.kemu\.ac\.ke$/;
+            if (!emailRegex.test(email)) {
+                showAlert('error', 'Email must be from KEMU student domain (e.g., your-name@stu.kemu.ac.ke)');
+                return;
+            }
+
+            const phoneRegex = /^[\d\s\-\+\(\)]{7,}$/;
+            if (!phoneRegex.test(phone)) {
+                showAlert('error', 'Please enter a valid phone number');
+                return;
+            }
+
+            if (!yearOfStudy) {
+                showAlert('error', 'Please select your year of study');
+                return;
+            }
+
+            if (!department) {
+                showAlert('error', 'Please select your area of speciality');
+                return;
+            }
+
+            if (!studentId) {
+                showAlert('error', 'Please enter your student ID');
+                return;
+            }
+
+            const studentIdRegex = /^[A-Z]+-\d+-\d+-\d+\/\d{4}$/;
+            if (!studentIdRegex.test(studentId)) {
+                showAlert('error', 'Student ID must follow the format: DEPT-YEAR-NUMBER-DIGIT/YEAR (e.g., BMS-1-1231-3/2020)');
+                return;
+            }
+
+            if (password.length < 8) {
+                showAlert('error', 'Password must be at least 8 characters long');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('error', 'Passwords do not match');
+                return;
+            }
+
+            if (!termsAgreed) {
+                showAlert('error', 'You must agree to the Terms of Service');
+                return;
+            }
+
+            // Set loading state
+            signupBtn.disabled = true;
+            spinner.classList.add('show');
+            btnText.textContent = 'Creating Account...';
+            
+            try {
+                // Simulate API call - Replace with actual signup endpoint
+                const response = await fetch('/api/members', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        yearOfStudy: parseInt(yearOfStudy),
+                        department,
+                        studentId,
+                        password,
+                        newsletter
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success || response.status === 201) {
+                    // Store member data
+                    localStorage.setItem('memberData', JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        yearOfStudy,
+                        department,
+                        studentId,
+                        newsletter,
+                        memberId: data.user?._id
+                    }));
+                    localStorage.setItem('memberToken', data.token || 'token-' + Date.now());
+                    localStorage.setItem('memberApproved', 'false'); // Set approval status to false
+                    
+                    showAlert('success', 'Account created successfully! Waiting for admin approval...');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'pending-approval.html';
+                    }, 2000);
+                } else {
+                    showAlert('error', data.message || 'Signup failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                // For demo purposes, allow signup to proceed
+                localStorage.setItem('memberData', JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    yearOfStudy,
+                    department,
+                    studentId,
+                    newsletter
+                }));
+                localStorage.setItem('memberToken', 'demo-token-' + Date.now());
+                localStorage.setItem('memberApproved', 'false'); // Set approval status to false
+                
+                showAlert('success', 'Demo mode: Account created! Waiting for admin approval...');
+                setTimeout(() => {
+                    window.location.href = 'pending-approval.html';
+                }, 2000);
+            } finally {
+                // Reset button state
+                signupBtn.disabled = false;
+                spinner.classList.remove('show');
+                btnText.textContent = 'Create Account';
+            }
+        });
+
+        // Clear alerts when user starts typing
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                hideAlert('error');
+            });
+        });
+    </script>
+</body>
+</html>

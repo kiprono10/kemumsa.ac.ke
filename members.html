@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&family=Playfair+Display:wght@700;800&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-heart">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="logo-caduceus">
+                        <i class="fas fa-staff-snake"></i>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="association-name">KeMUMSA</h1>
+                    <p class="association-full">Kenya Methodist University<br>Medical Students Association</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fi fi-ts-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fi fi-ts-info"></i> About</a></li>
+                    <li><a href="events.html"><i class="fi fi-ts-calendar"></i> Events</a></li>
+                    <li><a href="members.html" class="active"><i class="fi fi-ts-users"></i> Members</a></li>
+                    <li><a href="contact.html"><i class="fi fi-ts-phone-call"></i> Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-login"><i class="fi fi-ts-user"></i> Login</button>
+                <button class="btn-join">Join Now</button>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Member Community</h1>
+            <p class="page-subtitle">Connect, collaborate, and grow with fellow medical students</p>
+        </section>
+
+        <!-- Member Stats -->
+        <section class="member-stats">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Total Members</h3>
+                        <p class="stat-value" id="totalMembersValue">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Public Profiles</h3>
+                        <p class="stat-value" id="visibleMembersValue">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-circle-dot"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Active Now</h3>
+                        <p class="stat-value" id="activeNowValue">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Year Groups</h3>
+                        <p class="stat-value" id="yearGroupsValue">6</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Member Directory -->
+        <section class="member-directory">
+            <div class="directory-header">
+                <h2 class="section-title">Member Directory</h2>
+                <div class="directory-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search members..." class="search-input">
+                        <button class="search-btn"><i class="fi fi-ts-search"></i></button>
+                    </div>
+                    <div class="filter-dropdown">
+                        <select class="filter-select">
+                            <option value="all">All Years</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="5">5th Year</option>
+                            <option value="6">6th Year</option>
+                            <option value="alumni">Alumni</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="members-grid" id="membersGrid">
+                <!-- Member cards will be loaded dynamically here -->
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>Loading members...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academic Resources Section (for logged-in members) -->
+        <section class="academic-resources" id="academicResources" style="display: none; margin: 60px 0;">
+            <div class="container">
+                <h2 class="section-title">Your Academic Resources</h2>
+                <p class="section-subtitle" id="resourcesSubtitle">Access exams, CATs, and study notes for your year of study</p>
+                
+                <div class="resources-filters" style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="filter-btn active" onclick="filterResourcesByType('all')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: #871054; color: white; border-radius: 20px; cursor: pointer;">All Resources</button>
+                    <button class="filter-btn" onclick="filterResourcesByType('exam')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">📋 Exams</button>
+                    <button class="filter-btn" onclick="filterResourcesByType('cat')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">✓ CATs</button>
+                    <button class="filter-btn" onclick="filterResourcesByType('notes')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">📚 Study Notes</button>
+                </div>
+
+                <div class="resources-grid" id="resourcesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                    <!-- Resources will be loaded dynamically -->
+                </div>
+
+                <div id="noResourcesMsg" style="text-align: center; padding: 2rem; color: #999;">
+                    <i class="fas fa-book" style="font-size: 2.5rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    <p>No resources available for your year yet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Class Leaders Section -->
+        <section class="class-leaders-section" id="classLeadersSection" style="margin: 60px 0; background: linear-gradient(135deg, rgba(135, 16, 84, 0.05) 0%, rgba(135, 16, 84, 0.02) 100%); padding: 40px 20px; border-radius: 16px;">
+            <div class="container">
+                <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Class Leaders 2026</h2>
+                <div class="class-leaders-filter" style="text-align: center; margin-bottom: 2rem;">
+                    <select class="class-filter-select" style="padding: 0.75rem 1rem; border: 2px solid #871054; border-radius: 6px; font-size: 1rem; cursor: pointer;">
+                        <option value="all">All Years</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                        <option value="5">5th Year</option>
+                        <option value="6">6th Year</option>
+                    </select>
+                </div>
+                <div class="class-leaders-grid" id="classLeadersGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-loading" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                        <p style="color: #999;">Loading class leaders...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fi fi-ts-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="events.html" class="nav-item">
+            <i class="fi fi-ts-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="members.html" class="nav-item active">
+            <i class="fi fi-ts-users"></i>
+            <span>Members</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <i class="fi fi-ts-chat"></i>
+            <span>Chat</span>
+        </a>
+        <a href="#join" class="nav-item">
+            <i class="fi fi-ts-user-plus"></i>
+            <span>Join</span>
+        </a>
+    </nav>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fi fi-ts-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="events.html" class="nav-item">
+            <i class="fi fi-ts-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="members.html" class="nav-item active">
+            <i class="fi fi-ts-users"></i>
+            <span>Members</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <i class="fi fi-ts-chat"></i>
+            <span>Chat</span>
+        </a>
+        <a href="about.html" class="nav-item">
+            <i class="fi fi-ts-info"></i>
+            <span>About</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>KeMUMSA</h3>
+                <p>Kenya Methodist University Medical Students Association</p>
+                <div class="social-links" id="footerSocialLinks">
+                    <!-- Social links will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="events.html">Events Calendar</a></li>
+                    <li><a href="#">Resources</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fi fi-ts-marker"></i> Kenya Methodist University, Meru</li>
+                    <li><i class="fi fi-ts-envelope"></i> kemumsa@kemu.ac.ke</li>
+                    <li><i class="fi fi-ts-phone"></i> +254 712 345 678</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KeMUMSA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/css/js/main.js"></script>
+    
+    <script>
+        // Global variables for dynamic data
+        let allMembers = [];
+        let currentUserYear = null;
+
+        // Academic Resources Data
+        const academicResources = [
+            {
+                _id: '1',
+                title: 'Anatomy Midterm Exam',
+                type: 'exam',
+                year: '1',
+                subject: 'Anatomy',
+                description: 'Midterm examination covering chapters 1-5',
+                date: '2024-12-15',
+                fileUrl: 'https://drive.google.com/file/d/anatomy-exam',
+                isActive: true
+            },
+            {
+                _id: '2',
+                title: 'Biochemistry CAT 1',
+                type: 'cat',
+                year: '1',
+                subject: 'Biochemistry',
+                description: 'Continuous assessment test 1',
+                date: '2024-12-10',
+                fileUrl: 'https://drive.google.com/file/d/biochemistry-cat',
+                isActive: true
+            },
+            {
+                _id: '3',
+                title: 'Physiology Study Notes',
+                type: 'notes',
+                year: '1',
+                subject: 'Physiology',
+                description: 'Comprehensive study notes for Year 1 Physiology',
+                date: '2024-12-20',
+                fileUrl: 'https://drive.google.com/file/d/physiology-notes',
+                isActive: true
+            },
+            {
+                _id: '4',
+                title: 'Pharmacology Final Exam',
+                type: 'exam',
+                year: '2',
+                subject: 'Pharmacology',
+                description: 'Final exam covering all pharmacology topics',
+                date: '2024-12-22',
+                fileUrl: 'https://drive.google.com/file/d/pharma-exam',
+                isActive: true
+            },
+            {
+                _id: '5',
+                title: 'Pathology CAT 2',
+                type: 'cat',
+                year: '2',
+                subject: 'Pathology',
+                description: 'Second continuous assessment test',
+                date: '2024-12-18',
+                fileUrl: 'https://drive.google.com/file/d/pathology-cat',
+                isActive: true
+            },
+            {
+                _id: '6',
+                title: 'Clinical Medicine Notes',
+                type: 'notes',
+                year: '3',
+                subject: 'Clinical Medicine',
+                description: 'Study notes for clinical medicine module',
+                date: '2024-12-25',
+                fileUrl: 'https://drive.google.com/file/d/clinical-notes',
+                isActive: true
+            }
+        ];
+
+        let currentResourceFilter = 'all';
+
+        // Fetch members from API
+        async function fetchMembers() {
+            try {
+                const response = await fetch('/api/members');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch members');
+                }
+                const data = await response.json();
+                allMembers = data.members || [];
+                console.log('Members fetched:', allMembers);
+                
+                // Update stats if available from API
+                if (data.stats) {
+                    updateStats(data.stats);
+                }
+                
+                renderMembers();
+            } catch (error) {
+                console.error('Error fetching members:', error);
+                const container = document.getElementById('membersGrid');
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545; margin-bottom: 15px;"></i>
+                        <p style="color: #999; font-size: 1.1rem;">Unable to load members</p>
+                        <small style="color: #bbb;">Please try refreshing the page</small>
+                    </div>
+                `;
+            }
+        }
+
+        function getVisibleMembers() {
+            return allMembers.filter(member => member.profileVisible === true);
+        }
+
+        // Render members
+        function renderMembers(membersToDisplay) {
+            // Default to all members if no filter specified
+            if (!membersToDisplay) {
+                membersToDisplay = allMembers.length > 0 ? allMembers : getVisibleMembers();
+            }
+            
+            const container = document.getElementById('membersGrid');
+            
+            console.log('renderMembers called with:', membersToDisplay);
+            console.log('Total allMembers:', allMembers.length);
+            console.log('Visible members:', membersToDisplay.length);
+
+            if (membersToDisplay.length === 0) {
+                console.log('No visible members - showing empty state');
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-users" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                        <p style="color: #999; font-size: 1.1rem;">No public profiles available yet</p>
+                        <small style="color: #bbb;">Members with public profiles will appear here</small>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = membersToDisplay.map(member => {
+                // Generate avatar with initials or use profile picture
+                let avatarHTML;
+                if (member.profilePicture) {
+                    avatarHTML = `<img src="${member.profilePicture}" alt="${member.firstName} ${member.lastName}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                } else {
+                    const initials = ((member.firstName || 'M')[0] + (member.lastName || 'U')[0]).toUpperCase();
+                    avatarHTML = `
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #871054, #c41a7b); color: white; font-weight: bold; font-size: 1.3rem;">
+                            ${initials}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="member-card">
+                        <div class="member-avatar" style="position: relative; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 1rem; border: 3px solid #871054;">
+                            ${avatarHTML}
+                            <div class="member-status ${member.status || 'offline'}" style="position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; background: ${member.status === 'online' ? '#28a745' : member.status === 'away' ? '#ffc107' : '#999'};"></div>
+                        </div>
+                        <div class="member-info">
+                            <h3>${member.firstName} ${member.lastName}</h3>
+                            <p class="member-role">Member</p>
+                            <p class="member-year">${member.yearOfStudy}${getOrdinalSuffix(member.yearOfStudy)} Year</p>
+                            <div class="member-interests">
+                                ${member.interests && member.interests.length > 0 ? member.interests.map(interest => `<span class="interest-tag">${interest}</span>`).join('') : `<span class="interest-tag">${member.department || 'Medicine'}</span>`}
+                            </div>
+                            <div class="member-actions">
+                                <button class="btn-view" onclick="viewProfile('${member._id}')"><i class="fi fi-ts-eye"></i> View Profile</button>
+                                <button class="btn-message" onclick="messageUser('${member._id}')"><i class="fi fi-ts-envelope"></i> Message</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get ordinal suffix for year
+        function getOrdinalSuffix(num) {
+            const j = num % 10;
+            const k = num % 100;
+            if (j === 1 && k !== 11) return 'st';
+            if (j === 2 && k !== 12) return 'nd';
+            if (j === 3 && k !== 13) return 'rd';
+            return 'th';
+        }
+
+        // Update stats with smooth animation
+        function updateStats(stats = null) {
+            if (stats) {
+                console.log('updateStats called with:', stats);
+                
+                // Ensure all values are valid numbers with strict validation
+                const totalMembers = (!isNaN(stats.totalMembers) && stats.totalMembers !== null) ? parseInt(stats.totalMembers) : 0;
+                const visibleMembers = (!isNaN(stats.visibleMembers) && stats.visibleMembers !== null) ? parseInt(stats.visibleMembers) : 0;
+                const activeNow = (!isNaN(stats.activeNow) && stats.activeNow !== null) ? parseInt(stats.activeNow) : 0;
+
+                console.log('Validated values:', { totalMembers, visibleMembers, activeNow });
+
+                // Update with animation
+                animateStatUpdate('totalMembersValue', totalMembers);
+                animateStatUpdate('visibleMembersValue', visibleMembers);
+                animateStatUpdate('activeNowValue', activeNow);
+                // Year Groups is always 6 (years 1-6), no need to update from API
+
+                console.log('Stats animation triggered');
+            } else {
+                // Fallback to client-side calculation
+                const visibleMembers = getVisibleMembers();
+                const totalCount = allMembers.length;
+                const visibleCount = visibleMembers.length;
+                const activeNowCount = visibleMembers.filter(m => m.status === 'online').length;
+                const yearsCount = new Set(visibleMembers.map(m => m.yearOfStudy)).size || 6;
+
+                // Ensure all values are valid numbers
+                const finalTotal = !isNaN(totalCount) ? totalCount : 0;
+                const finalVisible = !isNaN(visibleCount) ? visibleCount : 0;
+                const finalActive = !isNaN(activeNowCount) ? activeNowCount : 0;
+
+                animateStatUpdate('totalMembersValue', finalTotal);
+                animateStatUpdate('visibleMembersValue', finalVisible);
+                animateStatUpdate('activeNowValue', finalActive);
+                // Year Groups is always 6 (years 1-6), no need to update
+
+                console.log('Stats calculated fallback:', { finalTotal, finalVisible, finalActive });
+            }
+        }
+
+        // Animate stat number changes
+        function animateStatUpdate(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.error(`Element with ID "${elementId}" not found`);
+                return;
+            }
+
+            // Ensure value is a valid number, convert to string
+            let displayValue = 0;
+            if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
+                displayValue = parseInt(newValue) || 0;
+            }
+            
+            // Directly set the value
+            element.textContent = displayValue.toString();
+            console.log(`${elementId}: set to ${displayValue}`);
+        }
+
+        // Filter by year
+        document.querySelector('.filter-select').addEventListener('change', function(e) {
+            const selectedYear = e.target.value;
+
+            if (selectedYear === 'all') {
+                renderMembers(getVisibleMembers());
+            } else {
+                const filtered = getVisibleMembers().filter(member =>
+                    member.yearOfStudy === parseInt(selectedYear)
+                );
+                renderMembers(filtered);
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                renderMembers(getVisibleMembers());
+                return;
+            }
+            
+            const filtered = getVisibleMembers().filter(member => 
+                member.firstName.toLowerCase().includes(searchTerm) ||
+                member.lastName.toLowerCase().includes(searchTerm) ||
+                member.role.toLowerCase().includes(searchTerm)
+            );
+            
+            renderMembers(filtered);
+        });
+
+        // View profile
+        function viewProfile(memberId) {
+            alert(`Opening profile for member ${memberId}. In production, this would open a profile page or modal.`);
+        }
+
+        // Message user
+        function messageUser(memberId) {
+            alert(`Opening messaging for member ${memberId}. In production, this would open a messaging interface.`);
+        }
+
+        // Show academic resources for logged-in users
+        function showAcademicResources(userYear) {
+            currentUserYear = userYear;
+            const resourcesSection = document.getElementById('academicResources');
+            resourcesSection.style.display = 'block';
+            document.getElementById('resourcesSubtitle').textContent = `Access exams, CATs, and study notes for Year ${userYear} students`;
+            loadUserResources();
+        }
+
+        // Load resources for user's year
+        function loadUserResources() {
+            const userResources = academicResources.filter(r => r.year === currentUserYear.toString() && r.isActive);
+            displayResources(userResources);
+        }
+
+        // Filter resources by type
+        function filterResourcesByType(type) {
+            // Update active button styling
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.color = '#871054';
+            });
+            event.target.style.background = '#871054';
+            event.target.style.color = 'white';
+
+            currentResourceFilter = type;
+            let resourcesToShow = academicResources.filter(r => r.year === currentUserYear.toString() && r.isActive);
+            
+            if (type !== 'all') {
+                resourcesToShow = resourcesToShow.filter(r => r.type === type);
+            }
+            
+            displayResources(resourcesToShow);
+        }
+
+        // Display resources
+        function displayResources(resources) {
+            const grid = document.getElementById('resourcesGrid');
+            const noMsg = document.getElementById('noResourcesMsg');
+
+            if (resources.length === 0) {
+                grid.style.display = 'none';
+                noMsg.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noMsg.style.display = 'none';
+
+            grid.innerHTML = resources.map(resource => {
+                const typeIcon = resource.type === 'exam' ? 'fa-file-pdf' : resource.type === 'cat' ? 'fa-clipboard-list' : 'fa-book';
+                const typeLabel = resource.type === 'exam' ? 'Exam' : resource.type === 'cat' ? 'CAT' : 'Study Notes';
+                const typeColor = resource.type === 'exam' ? '#dc3545' : resource.type === 'cat' ? '#007bff' : '#28a745';
+
+                return `
+                    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-left: 4px solid ${typeColor}; transition: all 0.3s;">
+                        <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="flex-shrink: 0;">
+                                <i class="fas ${typeIcon}" style="font-size: 1.8rem; color: ${typeColor};"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0 0 0.5rem; color: #333; font-size: 1.1rem;">${resource.title}</h3>
+                                <p style="margin: 0 0 0.3rem; font-size: 0.9rem; color: #666;">
+                                    <strong>${typeLabel}</strong> • ${resource.subject}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <p style="margin: 0.75rem 0; color: #555; font-size: 0.95rem;">${resource.description}</p>
+                        
+                        <p style="margin: 0.75rem 0; font-size: 0.9rem; color: #999;">
+                            <i class="fas fa-calendar"></i> ${new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                        </p>
+                        
+                        ${resource.fileUrl ? `
+                            <a href="${resource.fileUrl}" target="_blank" style="display: inline-block; margin-top: 1rem; padding: 0.6rem 1.2rem; background: ${typeColor}; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.3s;">
+                                <i class="fas fa-download"></i> Access Resource
+                            </a>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Immediately set stats to 0 to avoid NaN display
+            document.getElementById('totalMembersValue').textContent = '0';
+            document.getElementById('visibleMembersValue').textContent = '0';
+            document.getElementById('activeNowValue').textContent = '0';
+            document.getElementById('yearGroupsValue').textContent = '0';
+            
+            // Show loading state immediately
+            const membersGrid = document.getElementById('membersGrid');
+            membersGrid.innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner" style="font-size: 2rem; color: #871054; margin-bottom: 15px; display: block; animation: spin 1s linear infinite;"></i>
+                    <p style="color: #999;">Loading members...</p>
+                </div>
+            `;
+            
+            // Show loading state for class leaders
+            const classLeadersGrid = document.getElementById('classLeadersGrid');
+            if (classLeadersGrid) {
+                classLeadersGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-spinner" style="font-size: 2rem; color: #871054; margin-bottom: 15px; display: block; animation: spin 1s linear infinite;"></i>
+                        <p style="color: #999;">Loading class leaders...</p>
+                    </div>
+                `;
+            }
+            
+            // Load all data in parallel for faster performance
+            Promise.all([
+                fetchMembers(),
+                fetchClassLeaders()
+            ]).then(() => {
+                // Check if user is logged in (from login page or demo)
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                if (loggedInUser) {
+                    try {
+                        const userData = JSON.parse(loggedInUser);
+                        if (userData.yearOfStudy || userData.year) {
+                            const userYear = userData.yearOfStudy || userData.year;
+                            showAcademicResources(userYear);
+                        }
+                    } catch (e) {
+                        console.log('User data not available');
+                    }
+                }
+            }).catch(error => {
+                console.error('Error loading data:', error);
+            });
+
+            // Add CSS animation for spinner
+            if (!document.getElementById('spinnerStyle')) {
+                const style = document.createElement('style');
+                style.id = 'spinnerStyle';
+                style.textContent = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+
+        // Fetch and display class leaders
+        async function fetchClassLeaders() {
+            try {
+                const response = await fetch('/api/class-leaders');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch class leaders');
+                }
+                const data = await response.json();
+                renderClassLeaders(data.classLeaders || []);
+            } catch (error) {
+                console.error('Error fetching class leaders:', error);
+                const grid = document.getElementById('classLeadersGrid');
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                        <p style="color: #999;">No class leaders assigned yet</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render class leaders
+        function renderClassLeaders(classLeaders = []) {
+            const grid = document.getElementById('classLeadersGrid');
+            
+            if (!classLeaders || classLeaders.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                        <p style="color: #999;">No class leaders assigned yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = classLeaders.map(leader => `
+                <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 15px rgba(135, 16, 84, 0.08); transition: all 0.3s ease; text-align: center; overflow: hidden;">
+                    <!-- Profile Image -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 1.5rem; overflow: hidden; border: 4px solid #871054; background: linear-gradient(135deg, #871054, #c41a7b); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            ${leader.imageUrl ? `<img src="${leader.imageUrl}" alt="${leader.firstName} ${leader.lastName}" style="width: 100%; height: 100%; object-fit: cover;">` : `<i class="fas fa-user"></i>`}
+                        </div>
+                    </div>
+                    
+                    <!-- Name and Position -->
+                    <h3 style="margin: 0 0 0.5rem; color: #333; font-size: 1.3rem; font-weight: 600;">${leader.firstName} ${leader.lastName}</h3>
+                    <p style="margin: 0 0 0.75rem; color: #871054; font-weight: 600; font-size: 1rem;">${leader.position}</p>
+                    <p style="margin: 0 0 1.5rem; color: #666; font-size: 0.95rem;">
+                        <i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>
+                        Year ${leader.yearOfStudy} Medicine
+                    </p>
+                    
+                    <!-- Social Links -->
+                    ${leader.socialMedia && (leader.socialMedia.facebook || leader.socialMedia.twitter || leader.socialMedia.instagram || leader.socialMedia.linkedin || leader.socialMedia.whatsapp) ? `
+                    <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                        ${leader.socialMedia.facebook ? `<a href="${leader.socialMedia.facebook}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #1877f2; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Facebook"><i class="fab fa-facebook"></i></a>` : ''}
+                        ${leader.socialMedia.twitter ? `<a href="${leader.socialMedia.twitter}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #1da1f2; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Twitter"><i class="fab fa-twitter"></i></a>` : ''}
+                        ${leader.socialMedia.instagram ? `<a href="${leader.socialMedia.instagram}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #e4405f; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Instagram"><i class="fab fa-instagram"></i></a>` : ''}
+                        ${leader.socialMedia.linkedin ? `<a href="${leader.socialMedia.linkedin}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #0077b5; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="LinkedIn"><i class="fab fa-linkedin"></i></a>` : ''}
+                        ${leader.socialMedia.whatsapp ? `<a href="${leader.socialMedia.whatsapp}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #25d366; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+                    </div>
+                    ` : `
+                    <p style="color: #999; font-size: 0.9rem; font-style: italic;">Social links not available</p>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // Filter class leaders by year
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('class-filter-select')) {
+                const selectedYear = e.target.value;
+                filterClassLeadersByYear(selectedYear);
+            }
+        });
+
+        // Filter function
+        async function filterClassLeadersByYear(year) {
+            try {
+                const url = year === 'all' ? '/api/class-leaders' : `/api/class-leaders?year=${year}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                renderClassLeaders(data.classLeaders || []);
+            } catch (error) {
+                console.error('Error filtering class leaders:', error);
+            }
+        }
+
+        // Load social media links from admin settings
+        async function loadSocialMediaLinks() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+                
+                if (data.socialMedia) {
+                    const socialLinks = data.socialMedia;
+                    const socialLinksContainer = document.getElementById('footerSocialLinks');
+                    
+                    if (socialLinksContainer) {
+                        let html = '';
+                        if (socialLinks.facebook) html += `<a href="${socialLinks.facebook}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>`;
+                        if (socialLinks.twitter) html += `<a href="${socialLinks.twitter}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>`;
+                        if (socialLinks.instagram) html += `<a href="${socialLinks.instagram}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>`;
+                        if (socialLinks.linkedin) html += `<a href="${socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>`;
+                        if (socialLinks.whatsapp) html += `<a href="${socialLinks.whatsapp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
+                        
+                        socialLinksContainer.innerHTML = html || '<!-- Social media links not configured -->>';
+                    }
+                }
+            } catch (error) {
+                console.log('Social media links not available');
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadClassLeaders();
+            loadSocialMediaLinks();
+        });

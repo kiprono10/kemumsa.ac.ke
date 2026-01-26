@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | KeMUMSA</title>
+    <link rel="icon" href="outsourced-media/Logo.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&family=Playfair+Display:wght@700;800&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.1.0/uicons-thin-straight/css/uicons-thin-straight.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/mobile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-heart">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="logo-caduceus">
+                        <i class="fas fa-staff-snake"></i>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="association-name">KeMUMSA</h1>
+                    <p class="association-full">Kenya Methodist University<br>Medical Students Association</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fi fi-ts-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fi fi-ts-info"></i> About</a></li>
+                    <li><a href="events.html"><i class="fi fi-ts-calendar"></i> Events</a></li>
+                    <li><a href="members.html"><i class="fi fi-ts-users"></i> Members</a></li>
+                    <li><a href="contact.html" class="active"><i class="fi fi-ts-phone-call"></i> Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn-login"><i class="fi fi-ts-user"></i> Login</button>
+                <button class="btn-join">Join Now</button>
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="page-subtitle">We're here to help! Reach out to us through any of these channels</p>
+        </section>
+
+        <!-- Contact Methods -->
+        <section class="contact-methods" id="contactMethods">
+            <!-- Contact cards will be loaded dynamically here -->
+            <div style="text-align: center; padding: 40px; color: #999;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p>Loading contact information...</p>
+            </div>
+        </section>
+
+        <!-- Contact Form -->
+        <section id="contact-form" class="contact-form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="section-title">Send Us a Message</h2>
+                    <p class="section-subtitle">Fill out the form below and we'll get back to you as soon as possible</p>
+                </div>
+                
+                <form id="contactForm" class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Full Name *</label>
+                            <input type="text" id="contactName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address *</label>
+                            <input type="email" id="contactEmail" placeholder="you@example.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone" placeholder="+254 7XX XXX XXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">Subject *</label>
+                            <select id="contactSubject" required>
+                                <option value="">Select a subject</option>
+                                <option value="membership">Membership Inquiry</option>
+                                <option value="events">Event Information</option>
+                                <option value="academic">Academic Support</option>
+                                <option value="partnership">Partnership/Collaboration</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="feedback">Feedback/Suggestion</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactMessage">Message *</label>
+                        <textarea id="contactMessage" placeholder="Please type your message here..." rows="6" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="newsletter" checked>
+                            <span>Subscribe to our newsletter for updates and announcements</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fi fi-ts-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How do I become a member of KeMUMSA?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can become a member by filling out the application form on our Members page. The process is free for all KeMU medical students. Once submitted, you'll receive a confirmation email within 24 hours.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Are there any membership fees?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No, membership is completely free for all Kenya Methodist University medical students. Some special events or workshops may have minimal fees to cover materials, but most activities are free for members.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How can I get involved in organizing events?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We welcome members to join our event planning committees! Send us a message through the contact form expressing your interest, and our events team will get in touch with you about upcoming opportunities.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can alumni still participate in KeMUMSA activities?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! We have an alumni network that participates in mentorship programs, guest lectures, and networking events. Alumni can register through a special alumni membership category.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Where can I find study materials and resources?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Study materials and resources are available to registered members through our member portal. Once you're a member, you'll receive login credentials to access our digital library and resource center.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="map-section">
+            <h2 class="section-title">Find Our Office</h2>
+            <div class="map-placeholder" id="mapInfo">
+                <div class="map-overlay">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>KeMUMSA Office Location</h3>
+                    <p id="mapAddress">Loading location...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fi fi-ts-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="events.html" class="nav-item">
+            <i class="fi fi-ts-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="members.html" class="nav-item">
+            <i class="fi fi-ts-users"></i>
+            <span>Members</span>
+        </a>
+        <a href="contact.html" class="nav-item active">
+            <i class="fi fi-ts-chat"></i>
+            <span>Chat</span>
+        </a>
+        <a href="#contact-form" class="nav-item">
+            <i class="fi fi-ts-envelope"></i>
+            <span>Email</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>KeMUMSA</h3>
+                <p>Kenya Methodist University Medical Students Association</p>
+                <div class="social-links" id="footerSocialLinks">
+                    <!-- Social links will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="events.html">Events Calendar</a></li>
+                    <li><a href="members.html">Member Directory</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info" id="footerContactInfo">
+                    <li><i class="fi fi-ts-marker"></i> <span id="footerLocation">Kenya Methodist University, Meru</span></li>
+                    <li><i class="fi fi-ts-envelope"></i> <span id="footerEmail">kemumsa@kemu.ac.ke</span></li>
+                    <li><i class="fi fi-ts-phone"></i> <span id="footerPhone">+254 712 345 678</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KeMUMSA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/css/js/main.js"></script>
+    
+    <script>
+        // Fetch communication settings from API
+        async function loadCommunicationInfo() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+                
+                renderContactCards(data);
+                updateMapInfo(data);
+                updateFooterInfo(data);
+            } catch (error) {
+                console.error('Error loading communication info:', error);
+                // Show default info if API fails
+                showDefaultContactInfo();
+            }
+        }
+
+        function renderContactCards(data) {
+            const container = document.getElementById('contactMethods');
+            const { email, phone, office, officeHours, responseTime, address } = data;
+            
+            const officeLocation = office ? `${office.building}, ${office.room}, ${office.location}` : 'Not specified';
+            const mondayHours = officeHours?.monday || '9:00 AM - 5:00 PM';
+            
+            container.innerHTML = `
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>For general inquiries and information</p>
+                    <a href="mailto:${email}" class="contact-link">${email}</a>
+                    <p class="response-time">Response time: ${responseTime || 'Within 24 hours'}</p>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-phone"></i>
+                    </div>
+                    <h3>Call Us</h3>
+                    <p>For urgent matters and immediate assistance</p>
+                    <a href="tel:${phone}" class="contact-link">${phone}</a>
+                    <p class="response-time">Available: Mon-Fri, ${mondayHours}</p>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-marker"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p>Our office location at the university</p>
+                    <address class="contact-address">
+                        KeMUMSA Office<br>
+                        ${officeLocation}<br>
+                        ${address?.city}, ${address?.state}
+                    </address>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-calendar"></i>
+                    </div>
+                    <h3>Office Hours</h3>
+                    <p>When you can find us at the office</p>
+                    <div class="office-hours">
+                        <p><strong>Monday - Friday:</strong> ${officeHours?.monday || '9:00 AM - 5:00 PM'}</p>
+                        <p><strong>Saturday:</strong> ${officeHours?.saturday || '10:00 AM - 2:00 PM'}</p>
+                        <p><strong>Sunday:</strong> ${officeHours?.sunday || 'Closed'}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateMapInfo(data) {
+            const mapAddress = document.getElementById('mapAddress');
+            const { office, address } = data;
+            const officeLocation = office ? `${office.building}, ${office.room}` : 'Office';
+            const city = address?.city || 'Meru';
+            const location = address?.state || 'Kenya';
+            
+            mapAddress.textContent = `${officeLocation}, ${city}, ${location}`;
+        }
+
+        function updateFooterInfo(data) {
+            const { email, phone, address, office } = data;
+            
+            document.getElementById('footerEmail').textContent = email;
+            document.getElementById('footerPhone').textContent = phone;
+            
+            const city = address?.city || 'Meru';
+            const state = address?.state || 'Kenya';
+            document.getElementById('footerLocation').textContent = `${city}, ${state}`;
+        }
+
+        function showDefaultContactInfo() {
+            const container = document.getElementById('contactMethods');
+            container.innerHTML = `
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>For general inquiries and information</p>
+                    <a href="mailto:kemumsa@kemu.ac.ke" class="contact-link">kemumsa@kemu.ac.ke</a>
+                    <p class="response-time">Response time: Within 24 hours</p>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-phone"></i>
+                    </div>
+                    <h3>Call Us</h3>
+                    <p>For urgent matters and immediate assistance</p>
+                    <a href="tel:+254712345678" class="contact-link">+254 712 345 678</a>
+                    <p class="response-time">Available: Mon-Fri, 9AM-5PM</p>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-marker"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p>Our office location at the university</p>
+                    <address class="contact-address">
+                        KeMUMSA Office<br>
+                        Student Center, Room 205<br>
+                        Kenya Methodist University<br>
+                        Meru, Kenya
+                    </address>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fi fi-ts-calendar"></i>
+                    </div>
+                    <h3>Office Hours</h3>
+                    <p>When you can find us at the office</p>
+                    <div class="office-hours">
+                        <p><strong>Monday - Friday:</strong> 9:00 AM - 5:00 PM</p>
+                        <p><strong>Saturday:</strong> 10:00 AM - 2:00 PM</p>
+                        <p><strong>Sunday:</strong> Closed</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load communication info when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCommunicationInfo();
+            setupContactForm();
+        });
+
+        // Setup contact form submission
+        function setupContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await submitContactForm();
+                });
+            }
+        }
+
+        // Submit contact form and save to database
+        async function submitContactForm() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+            const newsletter = document.getElementById('newsletter').checked;
+
+            try {
+                const response = await fetch('/api/admin/messages/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sender: {
+                            name,
+                            email,
+                            phone
+                        },
+                        subject,
+                        message,
+                        category: subject,
+                        newsletter
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const successMessage = `Thank you for your message! We will get back to you soon.
+
+📋 To receive responses from us:
+1. Login to your Member Dashboard (if you have an account)
+2. Go to "My Messages" section
+3. You'll see admin replies there
+
+If you don't have a member account yet, you can sign up at the Sign Up page.
+
+Your email (${email}) will be used to track your message.`;
+                    
+                    alert(successMessage);
+                    document.getElementById('contactForm').reset();
+                } else {
+                    alert('Error sending message: ' + (result.message || 'Please try again'));
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Error submitting message. Please try again.');
+            }
+        }
+
+        // Load social media links from admin settings
+        async function loadSocialMediaLinks() {
+            try {
+                const response = await fetch('/api/admin/communication');
+                const data = await response.json();
+                
+                if (data.socialMedia) {
+                    const socialLinks = data.socialMedia;
+                    const socialLinksContainer = document.getElementById('footerSocialLinks');
+                    
+                    if (socialLinksContainer) {
+                        let html = '';
+                        if (socialLinks.facebook) html += `<a href="${socialLinks.facebook}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>`;
+                        if (socialLinks.twitter) html += `<a href="${socialLinks.twitter}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>`;
+                        if (socialLinks.instagram) html += `<a href="${socialLinks.instagram}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>`;
+                        if (socialLinks.linkedin) html += `<a href="${socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>`;
+                        if (socialLinks.whatsapp) html += `<a href="${socialLinks.whatsapp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
+                        
+                        socialLinksContainer.innerHTML = html || '<!-- Social media links not configured -->>';
+                    }
+                }
+            } catch (error) {
+                console.log('Social media links not available');
+            }
+        }
+
+        // Load communication data on page load
+        document.addEventListener('DOMContentLoaded', loadSocialMediaLinks);
+    </script>
+</body>
+</html>
+</html>
