@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -10,6 +10,28 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// PostgreSQL connection
+const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/kemumsa', {
+  dialect: 'postgres',
+  logging: false,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
+
+// Test database connection
+sequelize.authenticate()
+  .then(() => {
+    console.log('PostgreSQL connected successfully');
+  })
+  .catch(err => {
+    console.error('PostgreSQL connection error:', err.message);
+    console.log('Please make sure PostgreSQL is running and DATABASE_URL is configured');
+  });
 
 // Middleware
 // app.use(helmet()); // Temporarily disabled
@@ -52,18 +74,9 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/kemumsa', {
-  maxPoolSize: 5
-})
-.then(() => {
-  console.log('MongoDB connected successfully');
-})
-.catch(err => {
-  console.error('MongoDB connection error:', err.message);
-  console.log('Please make sure MongoDB is running locally on port 27017');
-  // Continue even if MongoDB fails initially
-});
+// Export sequelize for use in models
+global.sequelize = sequelize;
+global.Sequelize = Sequelize;
 
 // Import routes
 let memberRoutes, eventRoutes, adminRoutes, classLeaderRoutes, executiveRoutes, resourceRoutes;
@@ -92,8 +105,8 @@ app.get('/api/statistics', async (req, res) => {
     const Event = require('./models/Event');
     
     // Get counts from database
-    const activeMembers = await Member.countDocuments({ profileVisible: true });
-    const totalEvents = await Event.countDocuments({ isActive: true });
+    const activeMembers = await Member.count({ where: { profileVisible: true } });
+    const totalEvents = await Event.count({ where: { isActive: true } });
     const yearsEstablished = 14; // Static value - KeMUMSA founded in 2010
     
     // Calculate success stories (members who have been here for multiple years or completed events)
