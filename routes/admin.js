@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Communication = require('../models/Communication');
-const Message = require('../models/Message');
-const Member = require('../models/Member');
-const Admin = require('../models/Admin');
+const { Communication, Message, Member, Admin } = require('../models');
 
 // Admin login endpoint
 router.post('/login', async (req, res) => {
@@ -82,18 +79,12 @@ router.get('/communication', async (req, res) => {
 router.post('/communication', async (req, res) => {
   try {
     const { email, phone, office, officeHours, responseTime, address, socialMedia, additionalInfo } = req.body;
-    
-    // Optional token verification (for now, accept all requests)
-    // const token = req.headers['x-admin-token'];
-    // if (!token) {
-    //   return res.status(401).json({ message: 'Unauthorized' });
-    // }
 
     let communication = await Communication.findOne();
     
     if (!communication) {
       // Create new communication document
-      communication = new Communication({
+      communication = await Communication.create({
         email,
         phone,
         office,
@@ -105,17 +96,18 @@ router.post('/communication', async (req, res) => {
       });
     } else {
       // Update existing communication document
-      if (email) communication.email = email;
-      if (phone) communication.phone = phone;
-      if (office) communication.office = office;
-      if (officeHours) communication.officeHours = officeHours;
-      if (responseTime) communication.responseTime = responseTime;
-      if (address) communication.address = address;
-      if (socialMedia) communication.socialMedia = socialMedia;
-      if (additionalInfo) communication.additionalInfo = additionalInfo;
+      await communication.update({
+        email: email || communication.email,
+        phone: phone || communication.phone,
+        office: office || communication.office,
+        officeHours: officeHours || communication.officeHours,
+        responseTime: responseTime || communication.responseTime,
+        address: address || communication.address,
+        socialMedia: socialMedia || communication.socialMedia,
+        additionalInfo: additionalInfo || communication.additionalInfo
+      });
     }
     
-    await communication.save();
     res.json({ success: true, message: 'Communication settings updated', communication });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -127,10 +119,13 @@ router.get('/messages', async (req, res) => {
   try {
     const folder = req.query.folder || 'inbox';
     
-    const messages = await Message.find({
-      folder: folder,
-      isDeleted: false
-    }).sort({ createdAt: -1 });
+    const messages = await Message.findAll({
+      where: {
+        folder: folder,
+        isDeleted: false
+      },
+      order: [['createdAt', 'DESC']]
+    });
     
     res.json({
       success: true,
@@ -146,7 +141,7 @@ router.get('/messages', async (req, res) => {
 // Get single message
 router.get('/messages/:id', async (req, res) => {
   try {
-    const message = await Message.findById(req.params.id);
+    const message = await Message.findByPk(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -154,10 +149,11 @@ router.get('/messages/:id', async (req, res) => {
     
     // Mark as viewed
     if (message.status === 'new') {
-      message.status = 'viewed';
-      message.folder = 'viewed';
-      message.viewedAt = Date.now();
-      await message.save();
+      await message.update({
+        status: 'viewed',
+        folder: 'viewed',
+        viewedAt: new Date()
+      });
     }
     
     res.json(message);
@@ -180,21 +176,21 @@ router.post('/messages/:id/reply', async (req, res) => {
       return res.status(400).json({ message: 'Reply message is required' });
     }
 
-    const message = await Message.findById(req.params.id);
+    const message = await Message.findByPk(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    message.adminReply = {
-      message: replyMessage,
-      repliedAt: Date.now(),
-      repliedBy: 'Admin'
-    };
-    message.status = 'replied';
-    message.folder = 'viewed';
-    
-    await message.save();
+    await message.update({
+      adminReply: {
+        message: replyMessage,
+        repliedAt: new Date(),
+        repliedBy: 'Admin'
+      },
+      status: 'replied',
+      folder: 'viewed'
+    });
     
     res.json({
       success: true,
@@ -214,7 +210,7 @@ router.delete('/messages/:id', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const message = await Message.findById(req.params.id);
+    const message = await Message.findByPk(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -225,9 +221,10 @@ router.delete('/messages/:id', async (req, res) => {
       return res.status(403).json({ message: 'Can only delete messages from viewed folder' });
     }
 
-    message.isDeleted = true;
-    message.deletedAt = Date.now();
-    await message.save();
+    await message.update({
+      isDeleted: true,
+      deletedAt: new Date()
+    });
     
     res.json({
       success: true,
@@ -241,16 +238,17 @@ router.delete('/messages/:id', async (req, res) => {
 // Move message to viewed
 router.post('/messages/:id/mark-viewed', async (req, res) => {
   try {
-    const message = await Message.findById(req.params.id);
+    const message = await Message.findByPk(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    message.status = 'viewed';
-    message.folder = 'viewed';
-    message.viewedAt = Date.now();
-    await message.save();
+    await message.update({
+      status: 'viewed',
+      folder: 'viewed',
+      viewedAt: new Date()
+    });
     
     res.json({
       success: true,
@@ -270,7 +268,7 @@ router.post('/messages/submit', async (req, res) => {
       return res.status(400).json({ message: 'Required fields missing' });
     }
 
-    const newMessage = new Message({
+    const newMessage = await Message.create({
       sender,
       subject,
       message,
@@ -280,12 +278,10 @@ router.post('/messages/submit', async (req, res) => {
       folder: 'inbox'
     });
 
-    await newMessage.save();
-
     res.json({
       success: true,
       message: 'Message submitted successfully',
-      messageId: newMessage._id
+      messageId: newMessage.id
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -365,8 +361,8 @@ router.post('/profile/update', async (req, res) => {
 
     // Update username if provided
     if (newUsername && newUsername.trim()) {
-      const existingAdmin = await Admin.findOne({ username: newUsername });
-      if (existingAdmin && existingAdmin._id.toString() !== admin._id.toString()) {
+      const existingAdmin = await Admin.findOne({ where: { username: newUsername } });
+      if (existingAdmin && existingAdmin.id !== admin.id) {
         return res.status(400).json({ 
           success: false, 
           message: 'Username already taken' 
@@ -380,46 +376,8 @@ router.post('/profile/update', async (req, res) => {
       admin.password = newPassword;
     }
 
-    admin.updatedAt = new Date();
-    await admin.save();
-
-    res.json({
-      success: true,
-      message: 'Admin profile updated successfully',
-      admin: {
-        username: admin.username,
-        email: admin.email,
-        role: admin.role
-      }
+    await admin.update({ 
+      username: admin.username,
+      password: admin.password,
+      updatedAt: new Date()
     });
-  } catch (error) {
-    console.error('Error updating admin profile:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: error.message 
-    });
-  }
-});
-
-// Verify admin password (for validation before making changes)
-router.post('/verify-password', async (req, res) => {
-  try {
-    const { password } = req.body;
-
-    let admin = await Admin.findOne();
-    
-    // If no admin exists, use hardcoded credentials
-    if (!admin) {
-      const isValid = password === 'admin123';
-      return res.json({ valid: isValid });
-    }
-
-    const isValid = admin.password === password;
-    res.json({ valid: isValid });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-module.exports = router;
-

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Executive = require('../models/Executive');
+const { Executive } = require('../models');
 const multer = require('multer');
 const path = require('path');
 
@@ -32,7 +32,10 @@ const upload = multer({
 // Get all executives
 router.get('/', async (req, res) => {
     try {
-        const executives = await Executive.find({ isActive: true }).sort({ position: 1 });
+        const executives = await Executive.findAll({ 
+          where: { isActive: true },
+          order: [['position', 'ASC']]
+        });
         res.json({
             success: true,
             executives,
@@ -49,7 +52,7 @@ router.get('/', async (req, res) => {
 // Get single executive
 router.get('/:id', async (req, res) => {
     try {
-        const executive = await Executive.findById(req.params.id);
+        const executive = await Executive.findByPk(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -83,7 +86,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             });
         }
 
-        const existingExecutive = await Executive.findOne({ email: email.toLowerCase() });
+        const existingExecutive = await Executive.findOne({ where: { email: email.toLowerCase() } });
         if (existingExecutive) {
             return res.status(400).json({
                 success: false,
@@ -97,7 +100,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             finalImageUrl = `/assets/images/executives/${req.file.filename}`;
         }
 
-        const executive = new Executive({
+        const executive = await Executive.create({
             firstName,
             lastName,
             position,
@@ -114,8 +117,6 @@ router.post('/', upload.single('image'), async (req, res) => {
             },
             isActive: true
         });
-
-        await executive.save();
 
         res.status(201).json({
             success: true,
@@ -135,7 +136,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     try {
         const { firstName, lastName, position, email, phone, yearOfStudy, isActive, imageUrl, facebook, twitter, instagram, linkedin, whatsapp } = req.body;
 
-        const executive = await Executive.findById(req.params.id);
+        const executive = await Executive.findByPk(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -144,7 +145,9 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         }
 
         if (email && email !== executive.email) {
-            const existingExecutive = await Executive.findOne({ email: email.toLowerCase(), _id: { $ne: req.params.id } });
+            const existingExecutive = await Executive.findOne({ 
+              where: { email: email.toLowerCase(), id: { [require('sequelize').Op.ne]: req.params.id } }
+            });
             if (existingExecutive) {
                 return res.status(400).json({
                     success: false,
@@ -161,23 +164,25 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             finalImageUrl = imageUrl;
         }
 
-        if (firstName) executive.firstName = firstName;
-        if (lastName) executive.lastName = lastName;
-        if (position) executive.position = position;
-        if (email) executive.email = email;
-        if (phone) executive.phone = phone;
-        if (yearOfStudy) executive.yearOfStudy = parseInt(yearOfStudy);
-        if (isActive !== undefined) executive.isActive = isActive;
-        executive.imageUrl = finalImageUrl;
-        executive.socialMedia = {
+        const updateData = {
+          firstName: firstName || executive.firstName,
+          lastName: lastName || executive.lastName,
+          position: position || executive.position,
+          email: email || executive.email,
+          phone: phone || executive.phone,
+          yearOfStudy: yearOfStudy ? parseInt(yearOfStudy) : executive.yearOfStudy,
+          isActive: isActive !== undefined ? isActive : executive.isActive,
+          imageUrl: finalImageUrl,
+          socialMedia: {
             facebook: facebook || executive.socialMedia?.facebook,
             twitter: twitter || executive.socialMedia?.twitter,
             instagram: instagram || executive.socialMedia?.instagram,
             linkedin: linkedin || executive.socialMedia?.linkedin,
             whatsapp: whatsapp || executive.socialMedia?.whatsapp
+          }
         };
 
-        await executive.save();
+        await executive.update(updateData);
 
         res.json({
             success: true,
@@ -195,7 +200,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete executive
 router.delete('/:id', async (req, res) => {
     try {
-        const executive = await Executive.findByIdAndDelete(req.params.id);
+        const executive = await Executive.findByPk(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -203,9 +208,8 @@ router.delete('/:id', async (req, res) => {
             });
         }
 
-        res.json({
-            success: true,
-            message: 'Executive deleted successfully'
+        await executive.destroy();
+        
         });
     } catch (error) {
         res.status(500).json({

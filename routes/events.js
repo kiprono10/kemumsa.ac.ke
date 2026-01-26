@@ -1,5 +1,5 @@
 const express = require('express');
-const Event = require('../models/Event');
+const { Event } = require('../models');
 const { authenticateAdmin } = require('../middleware/auth');
 const router = express.Router();
 const multer = require('multer');
@@ -43,7 +43,7 @@ const upload = multer({
 // GET all events
 router.get('/', async (req, res) => {
   try {
-    const events = await Event.find();
+    const events = await Event.findAll();
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
 // GET a single event by ID
 router.get('/:id', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findByPk(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
     res.json(event);
   } catch (error) {
@@ -72,7 +72,7 @@ router.post('/', upload.array('media', 5), async (req, res) => {
       maxAttendees = parseInt(req.body.maxAttendees);
     }
     
-    const event = new Event({
+    const newEvent = await Event.create({
       title: req.body.title,
       description: req.body.description,
       date: new Date(req.body.date),
@@ -84,7 +84,6 @@ router.post('/', upload.array('media', 5), async (req, res) => {
       media: media
     });
 
-    const newEvent = await event.save();
     res.status(201).json(newEvent);
   } catch (error) {
     // Clean up uploaded files if save fails
@@ -103,29 +102,31 @@ router.post('/', upload.array('media', 5), async (req, res) => {
 // PUT update an event
 router.put('/:id', upload.array('media', 5), async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findByPk(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    if (req.body.title != null) event.title = req.body.title;
-    if (req.body.description != null) event.description = req.body.description;
-    if (req.body.date != null) event.date = new Date(req.body.date);
-    if (req.body.time != null) event.time = req.body.time;
-    if (req.body.location != null) event.location = req.body.location;
-    if (req.body.organizer != null) event.organizer = req.body.organizer;
-    if (req.body.image != null) event.image = req.body.image;
-    if (req.body.isActive != null) event.isActive = req.body.isActive === 'true';
-    
-    if (req.body.maxAttendees != null && req.body.maxAttendees !== 'null' && req.body.maxAttendees !== '') {
-      event.maxAttendees = parseInt(req.body.maxAttendees);
-    }
+    await event.update({
+      title: req.body.title || event.title,
+      description: req.body.description || event.description,
+      date: req.body.date ? new Date(req.body.date) : event.date,
+      time: req.body.time || event.time,
+      location: req.body.location || event.location,
+      organizer: req.body.organizer || event.organizer,
+      image: req.body.image || event.image,
+      isActive: req.body.isActive !== undefined ? req.body.isActive === 'true' : event.isActive,
+      maxAttendees: req.body.maxAttendees && req.body.maxAttendees !== 'null' && req.body.maxAttendees !== '' 
+        ? parseInt(req.body.maxAttendees) 
+        : event.maxAttendees
+    });
 
     // Add new media files if uploaded
     if (req.files && req.files.length > 0) {
       const newMedia = req.files.map(file => `/assets/uploads/events/${file.filename}`);
-      event.media = [...(event.media || []), ...newMedia];
+      const updatedMedia = [...(event.media || []), ...newMedia];
+      await event.update({ media: updatedMedia });
     }
 
-    const updatedEvent = await event.save();
+    const updatedEvent = await Event.findByPk(req.params.id);
     res.json(updatedEvent);
   } catch (error) {
     // Clean up uploaded files if save fails
@@ -144,7 +145,7 @@ router.put('/:id', upload.array('media', 5), async (req, res) => {
 // DELETE an event
 router.delete('/:id', async (req, res) => {
   try {
-    const event = await Event.findByIdAndDelete(req.params.id);
+    const event = await Event.findByPk(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
     
     // Clean up uploaded media files
@@ -157,9 +158,7 @@ router.delete('/:id', async (req, res) => {
       });
     }
     
-    res.json({ message: 'Event deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    await event.destroy();
   }
 });
 

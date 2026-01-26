@@ -1,5 +1,5 @@
 const express = require('express');
-const Member = require('../models/Member');
+const { Member } = require('../models');
 const { authenticateAdmin } = require('../middleware/auth');
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const member = await Member.findOne({ email });
+    const member = await Member.findOne({ where: { email } });
     if (!member) {
       return res.status(401).json({ 
         success: false,
@@ -39,14 +39,14 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const token = `member-token-${member._id}-${Date.now()}`;
+    const token = `member-token-${member.id}-${Date.now()}`;
     
     res.json({
       success: true,
       message: 'Login successful',
       token,
       user: {
-        _id: member._id,
+        id: member.id,
         firstName: member.firstName,
         lastName: member.lastName,
         email: member.email,
@@ -67,13 +67,14 @@ router.post('/login', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     // Single optimized query - only fetch visible members with needed fields
-    const members = await Member.find(
-      { profileVisible: true, isActive: true },
-      { firstName: 1, lastName: 1, email: 1, yearOfStudy: 1, department: 1, status: 1, interests: 1, profilePicture: 1, profileVisible: 1 }
-    ).lean();
+    const members = await Member.findAll({
+      where: { profileVisible: true, isActive: true },
+      attributes: ['id', 'firstName', 'lastName', 'email', 'yearOfStudy', 'department', 'status', 'interests', 'profilePicture', 'profileVisible'],
+      raw: true
+    });
 
     // Get count of all active members (for stats)
-    const totalMembers = await Member.countDocuments({ isActive: true });
+    const totalMembers = await Member.count({ where: { isActive: true } });
     
     // Calculate stats from the members array we already have
     const visibleMembers = members.length;
@@ -110,8 +111,12 @@ router.get('/', async (req, res) => {
 // GET all members for admin (including pending approvals)
 router.get('/admin/all', async (req, res) => {
   try {
-    // Single optimized query with lean() for faster processing
-    const members = await Member.find({ isActive: true }).lean();
+    // Single optimized query for admin
+    const members = await Member.findAll({
+      where: { isActive: true },
+      raw: true
+    });
+    
     const totalMembers = members.length;
     const approvedMembers = members.filter(m => m.profileVisible).length;
     const pendingMembers = members.filter(m => !m.profileVisible).length;
@@ -134,7 +139,7 @@ router.get('/admin/all', async (req, res) => {
 // GET a single member by ID
 router.get('/:id', async (req, res) => {
   try {
-    const member = await Member.findById(req.params.id);
+    const member = await Member.findByPk(req.params.id);
     if (!member) return res.status(404).json({ message: 'Member not found' });
     res.json(member);
   } catch (error) {
@@ -157,7 +162,7 @@ router.post('/', async (req, res) => {
     }
 
     // Check if email already exists
-    const existingMember = await Member.findOne({ email });
+    const existingMember = await Member.findOne({ where: { email } });
     if (existingMember) {
       return res.status(400).json({ 
         success: false,
@@ -165,7 +170,7 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const member = new Member({
+    const newMember = await Member.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -182,13 +187,12 @@ router.post('/', async (req, res) => {
       isActive: true
     });
 
-    const newMember = await member.save();
     res.status(201).json({
       success: true,
       message: 'Member created successfully',
-      token: `member-token-${newMember._id}-${Date.now()}`,
+      token: `member-token-${newMember.id}-${Date.now()}`,
       user: {
-        _id: newMember._id,
+        id: newMember.id,
         firstName: newMember.firstName,
         lastName: newMember.lastName,
         email: newMember.email,
@@ -209,26 +213,13 @@ router.post('/', async (req, res) => {
 // PUT update a member
 router.put('/:id', async (req, res) => {
   try {
-    const member = await Member.findById(req.params.id);
+    const member = await Member.findByPk(req.params.id);
     if (!member) return res.status(404).json({ message: 'Member not found' });
 
-    if (req.body.firstName != null) member.firstName = req.body.firstName;
-    if (req.body.lastName != null) member.lastName = req.body.lastName;
-    if (req.body.email != null) member.email = req.body.email;
-    if (req.body.phone != null) member.phone = req.body.phone;
-    if (req.body.yearOfStudy != null) member.yearOfStudy = req.body.yearOfStudy;
-    if (req.body.department != null) member.department = req.body.department;
-    if (req.body.studentId != null) member.studentId = req.body.studentId;
-    if (req.body.password != null) member.password = req.body.password;
-    if (req.body.isActive != null) member.isActive = req.body.isActive;
-    if (req.body.profilePicture != null) member.profilePicture = req.body.profilePicture;
-    if (req.body.profileVisible != null) member.profileVisible = req.body.profileVisible;
-    if (req.body.newsletter != null) member.newsletter = req.body.newsletter;
-    if (req.body.interests != null) member.interests = req.body.interests;
-    if (req.body.status != null) member.status = req.body.status;
-
-    const updatedMember = await member.save();
-    res.json(updatedMember);
+    // Update only provided fields
+    await member.update(req.body);
+    
+    res.json(member);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -243,7 +234,7 @@ router.post('/verify-password', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Member ID and password are required' });
     }
 
-    const member = await Member.findById(memberId);
+    const member = await Member.findByPk(memberId);
     if (!member) {
       return res.status(404).json({ success: false, message: 'Member not found' });
     }
@@ -262,8 +253,10 @@ router.post('/verify-password', async (req, res) => {
 // DELETE a member
 router.delete('/:id', async (req, res) => {
   try {
-    const member = await Member.findByIdAndDelete(req.params.id);
+    const member = await Member.findByPk(req.params.id);
     if (!member) return res.status(404).json({ message: 'Member not found' });
+    
+    await member.destroy();
     res.json({ message: 'Member deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });

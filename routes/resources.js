@@ -1,12 +1,15 @@
 const express = require('express');
-const Resource = require('../models/Resource');
+const { Resource } = require('../models');
 const { authenticateAdmin } = require('../middleware/auth');
 const router = express.Router();
 
 // GET all resources (public for members)
 router.get('/', async (req, res) => {
   try {
-    const resources = await Resource.find({ isActive: true }).sort({ createdAt: -1 });
+    const resources = await Resource.findAll({ 
+      where: { isActive: true },
+      order: [['createdAt', 'DESC']]
+    });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -17,7 +20,10 @@ router.get('/', async (req, res) => {
 router.get('/year/:year', async (req, res) => {
   try {
     const year = parseInt(req.params.year);
-    const resources = await Resource.find({ year: year, isActive: true }).sort({ createdAt: -1 });
+    const resources = await Resource.findAll({ 
+      where: { year, isActive: true },
+      order: [['createdAt', 'DESC']]
+    });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -28,7 +34,10 @@ router.get('/year/:year', async (req, res) => {
 router.get('/type/:type', async (req, res) => {
   try {
     const type = req.params.type;
-    const resources = await Resource.find({ type: type, isActive: true }).sort({ createdAt: -1 });
+    const resources = await Resource.findAll({ 
+      where: { type, isActive: true },
+      order: [['createdAt', 'DESC']]
+    });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -38,7 +47,7 @@ router.get('/type/:type', async (req, res) => {
 // GET a single resource by ID
 router.get('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findById(req.params.id);
+    const resource = await Resource.findByPk(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
     res.json(resource);
   } catch (error) {
@@ -49,7 +58,7 @@ router.get('/:id', async (req, res) => {
 // POST create a new resource (admin only)
 router.post('/', async (req, res) => {
   try {
-    const resource = new Resource({
+    const newResource = await Resource.create({
       title: req.body.title,
       type: req.body.type,
       year: req.body.year,
@@ -60,7 +69,6 @@ router.post('/', async (req, res) => {
       isActive: req.body.isActive !== undefined ? req.body.isActive : true
     });
 
-    const newResource = await resource.save();
     res.status(201).json(newResource);
   } catch (error) {
     console.error('Error creating resource:', error);
@@ -71,19 +79,22 @@ router.post('/', async (req, res) => {
 // PUT update a resource (admin only)
 router.put('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findById(req.params.id);
+    const resource = await Resource.findByPk(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
 
-    if (req.body.title != null) resource.title = req.body.title;
-    if (req.body.type != null) resource.type = req.body.type;
-    if (req.body.year != null) resource.year = req.body.year;
-    if (req.body.subject != null) resource.subject = req.body.subject;
-    if (req.body.description != null) resource.description = req.body.description;
-    if (req.body.fileUrl != null) resource.fileUrl = req.body.fileUrl;
-    if (req.body.date != null) resource.date = req.body.date;
-    if (req.body.isActive != null) resource.isActive = req.body.isActive;
+    const updateData = {
+      title: req.body.title || resource.title,
+      type: req.body.type || resource.type,
+      year: req.body.year || resource.year,
+      subject: req.body.subject || resource.subject,
+      description: req.body.description || resource.description,
+      fileUrl: req.body.fileUrl || resource.fileUrl,
+      date: req.body.date || resource.date,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : resource.isActive
+    };
 
-    const updatedResource = await resource.save();
+    await resource.update(updateData);
+    const updatedResource = await Resource.findByPk(req.params.id);
     res.json(updatedResource);
   } catch (error) {
     console.error('Error updating resource:', error);
@@ -94,8 +105,9 @@ router.put('/:id', async (req, res) => {
 // DELETE a resource (admin only)
 router.delete('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findByIdAndDelete(req.params.id);
+    const resource = await Resource.findByPk(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
+    await resource.destroy();
     res.json({ message: 'Resource deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -105,12 +117,11 @@ router.delete('/:id', async (req, res) => {
 // PATCH toggle active status (admin only)
 router.patch('/:id/toggle', async (req, res) => {
   try {
-    const resource = await Resource.findById(req.params.id);
+    const resource = await Resource.findByPk(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
 
-    resource.isActive = !resource.isActive;
-    const updatedResource = await resource.save();
-    res.json(updatedResource);
+    await resource.update({ isActive: !resource.isActive });
+    const updatedResource = await Resource.findByPk(req.params.id);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
