@@ -11,20 +11,12 @@ services:
       - key: PORT
         value: 3000
       - key: MONGODB_URI
-        value: ${DATABASE_URL}
+        fromDatabase:
+          name: kemumsa_db
+          property: connectionString
       - key: JWT_SECRET
-        value: ${JWT_SECRET}
+        sync: false
 
 databases:
   - name: kemumsa_db
-    engine: mongodb
     plan: free
-    ipAllowList: []
-
-envVarGroups:
-  - name: production
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3000
