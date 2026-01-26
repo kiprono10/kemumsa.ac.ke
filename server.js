@@ -1,5 +1,4 @@
 const express = require('express');
-const { Sequelize } = require('sequelize');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -7,26 +6,19 @@ const jwt = require('jsonwebtoken');
 const compression = require('compression');
 require('dotenv').config();
 
+// Import database models
+const { sequelize, Member, Event, syncDatabase } = require('./models');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
-// PostgreSQL connection
-const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/kemumsa', {
-  dialect: 'postgres',
-  logging: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
 
 // Test database connection
 sequelize.authenticate()
   .then(() => {
     console.log('PostgreSQL connected successfully');
+    // Sync database (create tables if they don't exist)
+    return syncDatabase({ alter: false });
   })
   .catch(err => {
     console.error('PostgreSQL connection error:', err.message);
@@ -74,10 +66,6 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Export sequelize for use in models
-global.sequelize = sequelize;
-global.Sequelize = Sequelize;
-
 // Import routes
 let memberRoutes, eventRoutes, adminRoutes, classLeaderRoutes, executiveRoutes, resourceRoutes;
 try {
@@ -101,10 +89,7 @@ app.get('/api/health', (req, res) => {
 // Statistics endpoint for home page
 app.get('/api/statistics', async (req, res) => {
   try {
-    const Member = require('./models/Member');
-    const Event = require('./models/Event');
-    
-    // Get counts from database
+    // Get counts from database using Sequelize
     const activeMembers = await Member.count({ where: { profileVisible: true } });
     const totalEvents = await Event.count({ where: { isActive: true } });
     const yearsEstablished = 14; // Static value - KeMUMSA founded in 2010

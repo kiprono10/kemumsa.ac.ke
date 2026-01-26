@@ -1,81 +1,84 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const ClassLeaderSchema = new mongoose.Schema({
+module.exports = (sequelize) => {
+  const ClassLeader = sequelize.define('ClassLeader', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     firstName: {
-        type: String,
-        required: [true, 'First name is required'],
-        trim: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
     },
     lastName: {
-        type: String,
-        required: [true, 'Last name is required'],
-        trim: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
     },
     position: {
-        type: String,
-        required: [true, 'Position is required'],
-        trim: true,
-        example: 'Year 1 Representative, Class Secretary'
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true,
+      comment: 'Year 1 Representative, Class Secretary'
     },
     yearOfStudy: {
-        type: Number,
-        required: [true, 'Year of study is required'],
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
         min: 1,
         max: 6
+      }
     },
     email: {
-        type: String,
-        required: [true, 'Email is required'],
-        lowercase: true,
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
+      type: DataTypes.STRING,
+      allowNull: false,
+      lowercase: true,
+      validate: {
+        isEmail: true
+      }
     },
     phone: {
-        type: String,
-        trim: true
+      type: DataTypes.STRING,
+      trim: true
     },
     bio: {
-        type: String,
-        trim: true,
-        maxlength: 500
+      type: DataTypes.TEXT,
+      trim: true
     },
     imageUrl: {
-        type: String,
-        trim: true
+      type: DataTypes.STRING,
+      trim: true
     },
     socialAccounts: {
-        facebook: {
-            type: String,
-            trim: true
-        },
-        twitter: {
-            type: String,
-            trim: true
-        },
-        instagram: {
-            type: String,
-            trim: true
-        },
-        linkedin: {
-            type: String,
-            trim: true
-        }
+      type: DataTypes.JSON,
+      defaultValue: {
+        facebook: null,
+        twitter: null,
+        instagram: null,
+        linkedin: null
+      }
     },
     isActive: {
-        type: Boolean,
-        default: true
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
     createdAt: {
-        type: Date,
-        default: Date.now
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     },
     updatedAt: {
-        type: Date,
-        default: Date.now
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
-}, { timestamps: true });
+  }, {
+    timestamps: true,
+    indexes: [
+      { fields: ['yearOfStudy', 'isActive'] },
+      { fields: ['email'] }
+    ]
+  });
 
-// Index for faster queries
-ClassLeaderSchema.index({ yearOfStudy: 1, isActive: 1 });
-ClassLeaderSchema.index({ email: 1 });
-
-module.exports = mongoose.model('ClassLeader', ClassLeaderSchema);
+  return ClassLeader;
+};

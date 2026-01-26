@@ -1,79 +1,91 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const memberSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true
-  },
-  phone: {
-    type: String,
-    trim: true
-  },
-  yearOfStudy: {
-    type: Number,
-    min: 1,
-    max: 6
-  },
-  department: {
-    type: String,
-    trim: true
-  },
-  studentId: {
-    type: String,
-    trim: true
-  },
-  password: {
-    type: String,
-    trim: true
-  },
-  profilePicture: {
-    type: String,
-    trim: true
-  },
-  profileVisible: {
-    type: Boolean,
-    default: true
-  },
-  newsletter: {
-    type: Boolean,
-    default: false
-  },
-  interests: {
-    type: [String],
-    default: []
-  },
-  status: {
-    type: String,
-    enum: ['online', 'away', 'offline'],
-    default: 'offline'
-  },
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  joinedDate: {
-    type: Date,
-    default: Date.now
-  }
-});
+module.exports = (sequelize) => {
+  const Member = sequelize.define('Member', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate: {
+        isEmail: true
+      }
+    },
+    phone: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    yearOfStudy: {
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 1,
+        max: 6
+      }
+    },
+    department: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    studentId: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    profilePicture: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    profileVisible: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    newsletter: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    interests: {
+      type: DataTypes.JSON,
+      defaultValue: []
+    },
+    status: {
+      type: DataTypes.ENUM('online', 'away', 'offline'),
+      defaultValue: 'offline'
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    joinedDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
+  }, {
+    timestamps: true,
+    indexes: [
+      { fields: ['profileVisible', 'isActive'] },
+      { fields: ['isActive'] },
+      { fields: ['yearOfStudy'] }
+    ]
+  });
 
-// Add indexes for frequently queried fields to improve performance
-memberSchema.index({ profileVisible: 1, isActive: 1 });
-memberSchema.index({ isActive: 1 });
-memberSchema.index({ yearOfStudy: 1 });
-// Note: email already has a unique index from the schema definition
-
-module.exports = mongoose.model('Member', memberSchema);
+  return Member;
+};

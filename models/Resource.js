@@ -1,54 +1,62 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const resourceSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['exam', 'cat', 'notes'],
-    trim: true
-  },
-  year: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 6
-  },
-  subject: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    trim: true
-  },
-  fileUrl: {
-    type: String,
-    trim: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+module.exports = (sequelize) => {
+  const Resource = sequelize.define('Resource', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    type: {
+      type: DataTypes.ENUM('exam', 'cat', 'notes'),
+      allowNull: false,
+      trim: true
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 6
+      }
+    },
+    subject: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    description: {
+      type: DataTypes.TEXT,
+      trim: true
+    },
+    fileUrl: {
+      type: DataTypes.STRING,
+      trim: true
+    },
+    date: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
+  }, {
+    timestamps: true
+  });
 
-
-
-module.exports = mongoose.model('Resource', resourceSchema);
+  return Resource;
+};

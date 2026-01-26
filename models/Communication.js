@@ -1,51 +1,74 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const communicationSchema = new mongoose.Schema({
+module.exports = (sequelize) => {
+  const Communication = sequelize.define('Communication', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     email: {
-        type: String,
-        required: true,
-        match: /.+\@.+\..+/
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
     },
     phone: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false
     },
     office: {
-        building: String,
-        room: String,
-        location: String
+      type: DataTypes.JSON,
+      defaultValue: {
+        building: null,
+        room: null,
+        location: null
+      }
     },
     officeHours: {
-        monday: String,
-        tuesday: String,
-        wednesday: String,
-        thursday: String,
-        friday: String,
-        saturday: String,
-        sunday: String
+      type: DataTypes.JSON,
+      defaultValue: {
+        monday: null,
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        saturday: null,
+        sunday: null
+      }
     },
     responseTime: {
-        type: String,
-        default: 'Within 24 hours'
+      type: DataTypes.STRING,
+      defaultValue: 'Within 24 hours'
     },
     address: {
-        street: String,
-        city: String,
-        state: String,
-        country: String
+      type: DataTypes.JSON,
+      defaultValue: {
+        street: null,
+        city: null,
+        state: null,
+        country: null
+      }
     },
     socialMedia: {
-        facebook: String,
-        twitter: String,
-        instagram: String,
-        linkedin: String,
-        whatsapp: String
+      type: DataTypes.JSON,
+      defaultValue: {
+        facebook: null,
+        twitter: null,
+        instagram: null,
+        linkedin: null,
+        whatsapp: null
+      }
     },
-    additionalInfo: String,
+    additionalInfo: DataTypes.TEXT,
     updatedAt: {
-        type: Date,
-        default: Date.now
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
-}, { timestamps: true });
+  }, {
+    timestamps: true
+  });
 
-module.exports = mongoose.model('Communication', communicationSchema);
+  return Communication;
+};

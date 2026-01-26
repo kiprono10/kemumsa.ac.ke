@@ -1,51 +1,60 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const messageSchema = new mongoose.Schema({
-    sender: {
-        name: String,
-        email: String,
-        phone: String,
-        memberId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Member'
-        }
+module.exports = (sequelize) => {
+  const Message = sequelize.define('Message', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
     },
-    subject: String,
-    message: String,
+    sender: {
+      type: DataTypes.JSON,
+      defaultValue: {
+        name: null,
+        email: null,
+        phone: null,
+        memberId: null
+      }
+    },
+    subject: DataTypes.STRING,
+    message: DataTypes.TEXT,
     category: {
-        type: String,
-        enum: ['membership', 'events', 'academic', 'partnership', 'general', 'feedback', 'other'],
-        default: 'general'
+      type: DataTypes.ENUM('membership', 'events', 'academic', 'partnership', 'general', 'feedback', 'other'),
+      defaultValue: 'general'
     },
     status: {
-        type: String,
-        enum: ['new', 'viewed', 'replied'],
-        default: 'new'
+      type: DataTypes.ENUM('new', 'viewed', 'replied'),
+      defaultValue: 'new'
     },
     folder: {
-        type: String,
-        enum: ['inbox', 'viewed'],
-        default: 'inbox'
+      type: DataTypes.ENUM('inbox', 'viewed'),
+      defaultValue: 'inbox'
     },
     adminReply: {
-        message: String,
-        repliedAt: Date,
-        repliedBy: String
+      type: DataTypes.JSON,
+      defaultValue: {
+        message: null,
+        repliedAt: null,
+        repliedBy: null
+      }
     },
     newsletter: {
-        type: Boolean,
-        default: false
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     createdAt: {
-        type: Date,
-        default: Date.now
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     },
-    viewedAt: Date,
-    deletedAt: Date,
+    viewedAt: DataTypes.DATE,
+    deletedAt: DataTypes.DATE,
     isDeleted: {
-        type: Boolean,
-        default: false
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
-}, { timestamps: true });
+  }, {
+    timestamps: true
+  });
 
-module.exports = mongoose.model('Message', messageSchema);
+  return Message;
+};
