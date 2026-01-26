@@ -244,6 +244,9 @@ router.get('/stats/by-year', async (req, res) => {
           raw: true,
           order: [['yearOfStudy', 'ASC']]
         });
+
+        res.json({
+            success: true,
             stats
         });
     } catch (error) {

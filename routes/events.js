@@ -159,6 +159,9 @@ router.delete('/:id', async (req, res) => {
     }
     
     await event.destroy();
+    res.json({ message: 'Event deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

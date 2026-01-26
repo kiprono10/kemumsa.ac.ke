@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Executive } = require('../models');
+const { Op } = require('sequelize');
 const multer = require('multer');
 const path = require('path');
 
@@ -146,7 +147,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
         if (email && email !== executive.email) {
             const existingExecutive = await Executive.findOne({ 
-              where: { email: email.toLowerCase(), id: { [require('sequelize').Op.ne]: req.params.id } }
+              where: { email: email.toLowerCase(), id: { [Op.ne]: req.params.id } }
             });
             if (existingExecutive) {
                 return res.status(400).json({
@@ -210,6 +211,9 @@ router.delete('/:id', async (req, res) => {
 
         await executive.destroy();
         
+        res.json({
+            success: true,
+            message: 'Executive deleted successfully'
         });
     } catch (error) {
         res.status(500).json({

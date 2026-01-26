@@ -2,7 +2,10 @@
 
 /* Hide desktop elements on mobile */
 @media (max-width: 1024px) {
-    .desktop-nav,
+    .desktop-nav {
+        display: none !important;
+    }
+    
     .header-actions {
         display: none !important;
     }
@@ -32,6 +35,37 @@
         display: block;
         width: 100%;
         box-sizing: border-box;
+    }
+
+    .desktop-nav.show .mobile-menu-actions {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+        border-top: 1px solid var(--light-gray);
+        margin-top: 10px;
+    }
+
+    .desktop-nav.show .mobile-menu-actions button {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-height: 44px;
+    }
+
+    .desktop-nav.show .btn-login {
+        background-color: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .desktop-nav.show .btn-join {
+        background-color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        color: white;
     }
     
     .mobile-menu-toggle {

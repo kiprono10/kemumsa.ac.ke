@@ -381,3 +381,42 @@ router.post('/profile/update', async (req, res) => {
       password: admin.password,
       updatedAt: new Date()
     });
+    res.json({
+      success: true,
+      message: 'Admin profile updated successfully',
+      admin: {
+        username: admin.username,
+        email: admin.email,
+        role: admin.role
+      }
+    });
+  } catch (error) {
+    console.error('Error updating admin profile:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+});
+
+// Verify admin password (for validation before making changes)
+router.post('/verify-password', async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    let admin = await Admin.findOne();
+    
+    // If no admin exists, use hardcoded credentials
+    if (!admin) {
+      const isValid = password === 'admin123';
+      return res.json({ valid: isValid });
+    }
+
+    const isValid = admin.password === password;
+    res.json({ valid: isValid });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;

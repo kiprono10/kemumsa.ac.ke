@@ -1,84 +1,63 @@
-const { DataTypes } = require('sequelize');
+const mongoose = require('mongoose');
 
-module.exports = (sequelize) => {
-  const ClassLeader = sequelize.define('ClassLeader', {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      trim: true
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      trim: true
-    },
-    position: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      trim: true,
-      comment: 'Year 1 Representative, Class Secretary'
-    },
-    yearOfStudy: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 1,
-        max: 6
-      }
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      lowercase: true,
-      validate: {
-        isEmail: true
-      }
-    },
-    phone: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    bio: {
-      type: DataTypes.TEXT,
-      trim: true
-    },
-    imageUrl: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    socialAccounts: {
-      type: DataTypes.JSON,
-      defaultValue: {
-        facebook: null,
-        twitter: null,
-        instagram: null,
-        linkedin: null
-      }
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+const classLeaderSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  position: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  yearOfStudy: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 6,
+    index: true
+  },
+  email: {
+    type: String,
+    required: true,
+    lowercase: true,
+    match: /.+\@.+\..+/,
+    index: true
+  },
+  phone: {
+    type: String,
+    trim: true
+  },
+  bio: {
+    type: String,
+    trim: true
+  },
+  imageUrl: {
+    type: String,
+    trim: true
+  },
+  socialAccounts: {
+    type: Object,
+    default: {
+      facebook: null,
+      twitter: null,
+      instagram: null,
+      linkedin: null
     }
-  }, {
-    timestamps: true,
-    indexes: [
-      { fields: ['yearOfStudy', 'isActive'] },
-      { fields: ['email'] }
-    ]
-  });
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+    index: true
+  }
+}, { timestamps: true });
 
-  return ClassLeader;
-};
+classLeaderSchema.index({ yearOfStudy: 1, isActive: 1 });
+
+module.exports = mongoose.model('ClassLeader', classLeaderSchema);

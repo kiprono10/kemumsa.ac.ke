@@ -7,23 +7,18 @@ const compression = require('compression');
 require('dotenv').config();
 
 // Import database models
-const { sequelize, Member, Event, syncDatabase } = require('./models');
+const { connectDB, syncDatabase } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-// Test database connection
-sequelize.authenticate()
-  .then(() => {
-    console.log('PostgreSQL connected successfully');
-    // Sync database (create tables if they don't exist)
-    return syncDatabase({ alter: false });
-  })
-  .catch(err => {
-    console.error('PostgreSQL connection error:', err.message);
-    console.log('Please make sure PostgreSQL is running and DATABASE_URL is configured');
-  });
+// Connect to MongoDB
+connectDB().catch(err => {
+  console.error('MongoDB connection error:', err.message);
+  console.log('Please make sure MongoDB is running and MONGODB_URI is configured');
+  process.exit(1);
+});
 
 // Middleware
 // app.use(helmet()); // Temporarily disabled

@@ -1,67 +1,56 @@
-const { DataTypes } = require('sequelize');
+const mongoose = require('mongoose');
 
-module.exports = (sequelize) => {
-  const Event = sequelize.define('Event', {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      trim: true
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      trim: true
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    time: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    location: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    organizer: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    maxAttendees: {
-      type: DataTypes.INTEGER,
-      validate: {
-        min: 1
-      }
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    },
-    isPast: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    image: {
-      type: DataTypes.STRING,
-      trim: true
-    },
-    media: {
-      type: DataTypes.JSON,
-      defaultValue: []
-    },
-    createdDate: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    }
-  }, {
-    timestamps: true
-  });
+const eventSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  time: {
+    type: String,
+    trim: true
+  },
+  location: {
+    type: String,
+    trim: true
+  },
+  organizer: {
+    type: String,
+    trim: true
+  },
+  maxAttendees: {
+    type: Number,
+    min: 1
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  isPast: {
+    type: Boolean,
+    default: false
+  },
+  image: {
+    type: String,
+    trim: true
+  },
+  media: {
+    type: [Object],
+    default: []
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now
+  }
+}, { timestamps: true });
 
-  return Event;
-};
+module.exports = mongoose.model('Event', eventSchema);

@@ -1,36 +1,32 @@
-const { Sequelize } = require('sequelize');
+const mongoose = require('mongoose');
 const path = require('path');
 
-// Initialize Sequelize
-const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/kemumsa', {
-  dialect: 'postgres',
-  logging: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kemumsa';
+    await mongoose.connect(mongoURI);
+    console.log('MongoDB connected successfully');
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
   }
-});
+};
 
 // Import models
-const Member = require('./Member')(sequelize);
-const Event = require('./Event')(sequelize);
-const Executive = require('./Executive')(sequelize);
-const ClassLeader = require('./ClassLeader')(sequelize);
-const Resource = require('./Resource')(sequelize);
-const Message = require('./Message')(sequelize);
-const Communication = require('./Communication')(sequelize);
-const Admin = require('./Admin')(sequelize);
+const Member = require('./Member');
+const Event = require('./Event');
+const Executive = require('./Executive');
+const ClassLeader = require('./ClassLeader');
+const Resource = require('./Resource');
+const Message = require('./Message');
+const Communication = require('./Communication');
+const Admin = require('./Admin');
 
-// Define associations
-// Add any model associations here if needed
-// Example: Member.hasMany(Message, { foreignKey: 'memberId' });
-
-// Sync database
+// Sync database (create collections if they don't exist)
 const syncDatabase = async (options = {}) => {
   try {
-    await sequelize.sync(options);
+    // MongoDB collections are created automatically when first document is inserted
     console.log('Database synchronized successfully');
   } catch (err) {
     console.error('Error synchronizing database:', err.message);
@@ -39,7 +35,8 @@ const syncDatabase = async (options = {}) => {
 
 // Export models and utilities
 module.exports = {
-  sequelize,
+  mongoose,
+  connectDB,
   Member,
   Event,
   Executive,
