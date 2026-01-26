@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: kemumsa-website
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONGODB_URI
+        value: ${DATABASE_URL}
+      - key: JWT_SECRET
+        value: ${JWT_SECRET}
+
+databases:
+  - name: kemumsa_db
+    engine: mongodb
+    plan: free
+    ipAllowList: []
+
+envVarGroups:
+  - name: production
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
