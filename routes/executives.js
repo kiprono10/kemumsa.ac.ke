@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Executive } = require('../models');
-const { Op } = require('sequelize');
 const multer = require('multer');
 const path = require('path');
 
@@ -33,10 +32,7 @@ const upload = multer({
 // Get all executives
 router.get('/', async (req, res) => {
     try {
-        const executives = await Executive.findAll({ 
-          where: { isActive: true },
-          order: [['position', 'ASC']]
-        });
+        const executives = await Executive.find({ isActive: true }).sort({ position: 1 });
         res.json({
             success: true,
             executives,
@@ -53,7 +49,7 @@ router.get('/', async (req, res) => {
 // Get single executive
 router.get('/:id', async (req, res) => {
     try {
-        const executive = await Executive.findByPk(req.params.id);
+        const executive = await Executive.findById(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -87,7 +83,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             });
         }
 
-        const existingExecutive = await Executive.findOne({ where: { email: email.toLowerCase() } });
+        const existingExecutive = await Executive.findOne({ email: email.toLowerCase() });
         if (existingExecutive) {
             return res.status(400).json({
                 success: false,
@@ -137,7 +133,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     try {
         const { firstName, lastName, position, email, phone, yearOfStudy, isActive, imageUrl, facebook, twitter, instagram, linkedin, whatsapp } = req.body;
 
-        const executive = await Executive.findByPk(req.params.id);
+        const executive = await Executive.findById(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -147,7 +143,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
         if (email && email !== executive.email) {
             const existingExecutive = await Executive.findOne({ 
-              where: { email: email.toLowerCase(), id: { [Op.ne]: req.params.id } }
+              email: email.toLowerCase(),
+              _id: { $ne: req.params.id }
             });
             if (existingExecutive) {
                 return res.status(400).json({
@@ -183,12 +180,12 @@ router.put('/:id', upload.single('image'), async (req, res) => {
           }
         };
 
-        await executive.update(updateData);
+        await Executive.findByIdAndUpdate(req.params.id, updateData);
 
         res.json({
             success: true,
             message: 'Executive updated successfully',
-            executive
+            executive: { ...executive.toObject(), ...updateData }
         });
     } catch (error) {
         res.status(500).json({
@@ -201,7 +198,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete executive
 router.delete('/:id', async (req, res) => {
     try {
-        const executive = await Executive.findByPk(req.params.id);
+        const executive = await Executive.findById(req.params.id);
         if (!executive) {
             return res.status(404).json({
                 success: false,
@@ -209,7 +206,7 @@ router.delete('/:id', async (req, res) => {
             });
         }
 
-        await executive.destroy();
+        await Executive.findByIdAndDelete(req.params.id);
         
         res.json({
             success: true,

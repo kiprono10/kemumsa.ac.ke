@@ -96,7 +96,7 @@ router.post('/communication', async (req, res) => {
       });
     } else {
       // Update existing communication document
-      await communication.update({
+      await Communication.findByIdAndUpdate(communication._id, {
         email: email || communication.email,
         phone: phone || communication.phone,
         office: office || communication.office,
@@ -119,13 +119,10 @@ router.get('/messages', async (req, res) => {
   try {
     const folder = req.query.folder || 'inbox';
     
-    const messages = await Message.findAll({
-      where: {
-        folder: folder,
-        isDeleted: false
-      },
-      order: [['createdAt', 'DESC']]
-    });
+    const messages = await Message.find({
+      folder: folder,
+      isDeleted: false
+    }).sort({ createdAt: -1 });
     
     res.json({
       success: true,
@@ -141,7 +138,7 @@ router.get('/messages', async (req, res) => {
 // Get single message
 router.get('/messages/:id', async (req, res) => {
   try {
-    const message = await Message.findByPk(req.params.id);
+    const message = await Message.findById(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -149,7 +146,7 @@ router.get('/messages/:id', async (req, res) => {
     
     // Mark as viewed
     if (message.status === 'new') {
-      await message.update({
+      await Message.findByIdAndUpdate(req.params.id, {
         status: 'viewed',
         folder: 'viewed',
         viewedAt: new Date()
@@ -176,13 +173,13 @@ router.post('/messages/:id/reply', async (req, res) => {
       return res.status(400).json({ message: 'Reply message is required' });
     }
 
-    const message = await Message.findByPk(req.params.id);
+    const message = await Message.findById(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    await message.update({
+    await Message.findByIdAndUpdate(req.params.id, {
       adminReply: {
         message: replyMessage,
         repliedAt: new Date(),
@@ -210,7 +207,7 @@ router.delete('/messages/:id', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const message = await Message.findByPk(req.params.id);
+    const message = await Message.findById(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -221,7 +218,7 @@ router.delete('/messages/:id', async (req, res) => {
       return res.status(403).json({ message: 'Can only delete messages from viewed folder' });
     }
 
-    await message.update({
+    await Message.findByIdAndUpdate(req.params.id, {
       isDeleted: true,
       deletedAt: new Date()
     });
@@ -238,13 +235,13 @@ router.delete('/messages/:id', async (req, res) => {
 // Move message to viewed
 router.post('/messages/:id/mark-viewed', async (req, res) => {
   try {
-    const message = await Message.findByPk(req.params.id);
+    const message = await Message.findById(req.params.id);
     
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    await message.update({
+    await Message.findByIdAndUpdate(req.params.id, {
       status: 'viewed',
       folder: 'viewed',
       viewedAt: new Date()
@@ -361,8 +358,8 @@ router.post('/profile/update', async (req, res) => {
 
     // Update username if provided
     if (newUsername && newUsername.trim()) {
-      const existingAdmin = await Admin.findOne({ where: { username: newUsername } });
-      if (existingAdmin && existingAdmin.id !== admin.id) {
+      const existingAdmin = await Admin.findOne({ username: newUsername });
+      if (existingAdmin && existingAdmin._id.toString() !== admin._id.toString()) {
         return res.status(400).json({ 
           success: false, 
           message: 'Username already taken' 

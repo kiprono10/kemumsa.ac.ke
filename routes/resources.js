@@ -6,10 +6,7 @@ const router = express.Router();
 // GET all resources (public for members)
 router.get('/', async (req, res) => {
   try {
-    const resources = await Resource.findAll({ 
-      where: { isActive: true },
-      order: [['createdAt', 'DESC']]
-    });
+    const resources = await Resource.find({ isActive: true }).sort({ createdAt: -1 });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -20,10 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/year/:year', async (req, res) => {
   try {
     const year = parseInt(req.params.year);
-    const resources = await Resource.findAll({ 
-      where: { year, isActive: true },
-      order: [['createdAt', 'DESC']]
-    });
+    const resources = await Resource.find({ year, isActive: true }).sort({ createdAt: -1 });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -34,10 +28,7 @@ router.get('/year/:year', async (req, res) => {
 router.get('/type/:type', async (req, res) => {
   try {
     const type = req.params.type;
-    const resources = await Resource.findAll({ 
-      where: { type, isActive: true },
-      order: [['createdAt', 'DESC']]
-    });
+    const resources = await Resource.find({ type, isActive: true }).sort({ createdAt: -1 });
     res.json(resources);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -47,7 +38,7 @@ router.get('/type/:type', async (req, res) => {
 // GET a single resource by ID
 router.get('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findByPk(req.params.id);
+    const resource = await Resource.findById(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
     res.json(resource);
   } catch (error) {
@@ -79,7 +70,7 @@ router.post('/', async (req, res) => {
 // PUT update a resource (admin only)
 router.put('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findByPk(req.params.id);
+    const resource = await Resource.findById(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
 
     const updateData = {
@@ -93,8 +84,8 @@ router.put('/:id', async (req, res) => {
       isActive: req.body.isActive !== undefined ? req.body.isActive : resource.isActive
     };
 
-    await resource.update(updateData);
-    const updatedResource = await Resource.findByPk(req.params.id);
+    await Resource.findByIdAndUpdate(req.params.id, updateData);
+    const updatedResource = await Resource.findById(req.params.id);
     res.json(updatedResource);
   } catch (error) {
     console.error('Error updating resource:', error);
@@ -105,9 +96,9 @@ router.put('/:id', async (req, res) => {
 // DELETE a resource (admin only)
 router.delete('/:id', async (req, res) => {
   try {
-    const resource = await Resource.findByPk(req.params.id);
+    const resource = await Resource.findById(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
-    await resource.destroy();
+    await Resource.findByIdAndDelete(req.params.id);
     res.json({ message: 'Resource deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -117,11 +108,12 @@ router.delete('/:id', async (req, res) => {
 // PATCH toggle active status (admin only)
 router.patch('/:id/toggle', async (req, res) => {
   try {
-    const resource = await Resource.findByPk(req.params.id);
+    const resource = await Resource.findById(req.params.id);
     if (!resource) return res.status(404).json({ message: 'Resource not found' });
 
-    await resource.update({ isActive: !resource.isActive });
-    const updatedResource = await Resource.findByPk(req.params.id);
+    await Resource.findByIdAndUpdate(req.params.id, { isActive: !resource.isActive });
+    const updatedResource = await Resource.findById(req.params.id);
+    res.json(updatedResource);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

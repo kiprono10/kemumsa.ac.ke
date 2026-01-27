@@ -3,7 +3,6 @@ const router = express.Router();
 const { ClassLeader } = require('../models');
 const multer = require('multer');
 const path = require('path');
-const { Op, sequelize } = require('sequelize');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -34,23 +33,21 @@ const upload = multer({
 router.get('/', async (req, res) => {
     try {
         const { year, isActive } = req.query;
-        let where = {};
+        let filter = {};
 
         if (year) {
-            where.yearOfStudy = parseInt(year);
+            filter.yearOfStudy = parseInt(year);
         }
 
         if (isActive !== undefined) {
-            where.isActive = isActive === 'true';
+            filter.isActive = isActive === 'true';
         } else {
-            where.isActive = true; // Default: only show active leaders
+            filter.isActive = true; // Default: only show active leaders
         }
 
-        const classLeaders = await ClassLeader.findAll({ 
-          where,
-          order: [['yearOfStudy', 'ASC'], ['firstName', 'ASC']],
-          raw: true 
-        });
+        const classLeaders = await ClassLeader.find(filter)
+          .sort({ yearOfStudy: 1, firstName: 1 })
+          .lean();
 
         res.json({
             success: true,
@@ -68,7 +65,7 @@ router.get('/', async (req, res) => {
 // Get single class leader
 router.get('/:id', async (req, res) => {
     try {
-        const classLeader = await ClassLeader.findByPk(req.params.id);
+        const classLeader = await ClassLeader.findById(req.params.id);
 
         if (!classLeader) {
             return res.status(404).json({
@@ -109,7 +106,7 @@ router.post('/', upload.single('image'), async (req, res) => {
         }
 
         // Check if email already exists
-        const existingLeader = await ClassLeader.findOne({ where: { email: email.toLowerCase() } });
+        const existingLeader = await ClassLeader.findOne({ email: email.toLowerCase() });
         if (existingLeader) {
             return res.status(400).json({
                 success: false,
@@ -154,7 +151,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             imagePath = req.file.path;
         }
 
-        const classLeader = await ClassLeader.findByPk(req.params.id);
+        const classLeader = await ClassLeader.findById(req.params.id);
 
         if (!classLeader) {
             return res.status(404).json({
@@ -166,7 +163,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         // Check if new email is already used by another leader
         if (email && email !== classLeader.email) {
             const existingLeader = await ClassLeader.findOne({ 
-              where: { email: email.toLowerCase(), id: { [Op.ne]: req.params.id } }
+              email: email.toLowerCase(),
+              _id: { $ne: req.params.id }
             });
             if (existingLeader) {
                 return res.status(400).json({
@@ -190,12 +188,12 @@ router.put('/:id', upload.single('image'), async (req, res) => {
           isActive: isActive !== undefined ? isActive : classLeader.isActive
         };
 
-        await classLeader.update(updateData);
+        await ClassLeader.findByIdAndUpdate(req.params.id, updateData);
 
         res.json({
             success: true,
             message: 'Class leader updated successfully',
-            classLeader
+            classLeader: { ...classLeader.toObject(), ...updateData }
         });
     } catch (error) {
         res.status(500).json({
@@ -208,7 +206,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete class leader
 router.delete('/:id', async (req, res) => {
     try {
-        const classLeader = await ClassLeader.findByPk(req.params.id);
+        const classLeader = await ClassLeader.findById(req.params.id);
 
         if (!classLeader) {
             return res.status(404).json({
@@ -217,7 +215,7 @@ router.delete('/:id', async (req, res) => {
             });
         }
 
-        await classLeader.destroy();
+        await ClassLeader.findByIdAndDelete(req.params.id);
 
         res.json({
             success: true,
@@ -234,20 +232,15 @@ router.delete('/:id', async (req, res) => {
 // Get class leaders by year with count
 router.get('/stats/by-year', async (req, res) => {
     try {
-        const stats = await ClassLeader.findAll({
-          attributes: [
-            'yearOfStudy',
-            [sequelize.fn('COUNT', sequelize.col('id')), 'count']
-          ],
-          where: { isActive: true },
-          group: ['yearOfStudy'],
-          raw: true,
-          order: [['yearOfStudy', 'ASC']]
-        });
+        const stats = await ClassLeader.aggregate([
+          { $match: { isActive: true } },
+          { $group: { _id: '$yearOfStudy', count: { $sum: 1 } } },
+          { $sort: { _id: 1 } }
+        ]);
 
         res.json({
             success: true,
-            stats
+            stats: stats.map(s => ({ yearOfStudy: s._id, count: s.count }))
         });
     } catch (error) {
         res.status(500).json({
