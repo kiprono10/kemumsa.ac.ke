@@ -71,7 +71,7 @@ router.get('/', async (req, res) => {
     const members = await Member.find({
       profileVisible: true,
       isActive: true
-    }).select('id firstName lastName email yearOfStudy department status interests profilePicture profileVisible').lean();
+    }).select('id firstName lastName email yearOfStudy department status interests profilePicture profileVisible mantra').lean();
 
     // Get count of all active members (for stats)
     const totalMembers = await Member.countDocuments({ isActive: true });

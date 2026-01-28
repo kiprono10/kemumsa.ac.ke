@@ -57,6 +57,155 @@
             z-index: 10;
         }
 
+        /* Member Spotlight */
+        .spotlight-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .spotlight-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            background: linear-gradient(135deg, #871054 0%, #a83b6e 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(135, 16, 84, 0.15);
+        }
+
+        .spotlight-content {
+            padding: 2rem;
+            color: white;
+            text-align: center;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spotlight-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spotlight-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spotlight-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        .spotlight-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .spotlight-avatar i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .spotlight-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .spotlight-year {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 0.25rem 0;
+        }
+
+        .spotlight-department {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin: 0.5rem 0 1rem;
+            font-style: italic;
+        }
+
+        .spotlight-mantra {
+            font-size: 1.05rem;
+            font-style: italic;
+            margin: 1rem 0 0;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+
+        .spotlight-navigation {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .spotlight-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            pointer-events: all;
+            font-size: 1.2rem;
+        }
+
+        .spotlight-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .spotlight-indicators {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .spotlight-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .spotlight-indicator.active {
+            background: #871054;
+            width: 24px;
+            border-radius: 4px;
+        }
+
         .stats-wrapper {
             max-width: 1200px;
             margin: 0 auto;
@@ -615,6 +764,28 @@
                 padding: 1.5rem 15px;
             }
 
+            .spotlight-container {
+                max-width: 100%;
+            }
+
+            .spotlight-content {
+                padding: 1.5rem;
+                min-height: 250px;
+            }
+
+            .spotlight-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .spotlight-name {
+                font-size: 1.2rem;
+            }
+
+            .spotlight-mantra {
+                font-size: 0.95rem;
+            }
+
             .stats-wrapper {
                 gap: 1rem;
             }
@@ -729,23 +900,26 @@
             </div>
         </section>
 
-        <!-- Quick Stats -->
+        <!-- Member Spotlight -->
         <section class="members-quick-stats">
-            <div class="stats-wrapper">
-                <div class="stat-item">
-                    <span class="stat-number" id="totalMembersValue">0</span>
-                    <span class="stat-label">Members</span>
+            <div class="spotlight-wrapper">
+                <div class="spotlight-container">
+                    <div class="spotlight-content" id="spotlightContent">
+                        <div class="spotlight-loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading member spotlight...</p>
+                        </div>
+                    </div>
+                    <div class="spotlight-navigation">
+                        <button class="spotlight-btn" id="prevSpotlight" onclick="previousSpotlight()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="spotlight-btn" id="nextSpotlight" onclick="nextSpotlight()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <span class="stat-number" id="visibleMembersValue">0</span>
-                    <span class="stat-label">Public Profiles</span>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                    <span class="stat-number" id="yearGroupsValue">6</span>
-                    <span class="stat-label">Year Groups</span>
-                </div>
+                <div class="spotlight-indicators" id="spotlightIndicators"></div>
             </div>
         </section>
 
@@ -914,6 +1088,9 @@
         // Global state
         let allMembers = [];
         let currentFilterYear = 'all';
+        let spotlightMembers = [];
+        let currentSpotlightIndex = 0;
+        let spotlightAutoplayInterval;
 
         // ===== MEMBER LOADING =====
         async function fetchMembers() {
@@ -928,6 +1105,85 @@
                 console.error('Error fetching members:', error);
                 showNoResults();
             }
+        }
+
+        // ===== MEMBER SPOTLIGHT =====
+        function initSpotlight() {
+            spotlightMembers = getVisibleMembers().filter(m => m.mantra).sort(() => Math.random() - 0.5);
+            if (spotlightMembers.length === 0) {
+                spotlightMembers = getVisibleMembers().sort(() => Math.random() - 0.5).slice(0, 10);
+            }
+            if (spotlightMembers.length > 0) {
+                currentSpotlightIndex = 0;
+                renderSpotlight();
+                renderSpotlightIndicators();
+                startSpotlightAutoplay();
+            }
+        }
+
+        function renderSpotlight() {
+            if (spotlightMembers.length === 0) return;
+            const member = spotlightMembers[currentSpotlightIndex];
+            const yearSuffix = getOrdinalSuffix(member.yearOfStudy);
+            
+            const html = `
+                <div class="spotlight-member">
+                    <div class="spotlight-avatar">
+                        ${member.profilePicture ? 
+                            `<img src="${member.profilePicture}" alt="${member.firstName}">` :
+                            `<i class="fas fa-user"></i>`
+                        }
+                    </div>
+                    <h3 class="spotlight-name">${member.firstName} ${member.lastName}</h3>
+                    <p class="spotlight-year">${member.yearOfStudy}${yearSuffix} Year</p>
+                    <p class="spotlight-department">${member.department || 'Medicine'}</p>
+                    ${member.mantra ? `<p class="spotlight-mantra">"${member.mantra}"</p>` : ''}
+                </div>
+            `;
+            document.getElementById('spotlightContent').innerHTML = html;
+            updateSpotlightIndicators();
+        }
+
+        function renderSpotlightIndicators() {
+            const container = document.getElementById('spotlightIndicators');
+            container.innerHTML = spotlightMembers.map((_, i) => 
+                `<div class="spotlight-indicator ${i === 0 ? 'active' : ''}" onclick="goToSpotlight(${i})"></div>`
+            ).join('');
+        }
+
+        function updateSpotlightIndicators() {
+            document.querySelectorAll('.spotlight-indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === currentSpotlightIndex);
+            });
+        }
+
+        function nextSpotlight() {
+            currentSpotlightIndex = (currentSpotlightIndex + 1) % spotlightMembers.length;
+            renderSpotlight();
+            resetSpotlightAutoplay();
+        }
+
+        function previousSpotlight() {
+            currentSpotlightIndex = (currentSpotlightIndex - 1 + spotlightMembers.length) % spotlightMembers.length;
+            renderSpotlight();
+            resetSpotlightAutoplay();
+        }
+
+        function goToSpotlight(index) {
+            currentSpotlightIndex = index;
+            renderSpotlight();
+            resetSpotlightAutoplay();
+        }
+
+        function startSpotlightAutoplay() {
+            spotlightAutoplayInterval = setInterval(() => {
+                nextSpotlight();
+            }, 5000);
+        }
+
+        function resetSpotlightAutoplay() {
+            clearInterval(spotlightAutoplayInterval);
+            startSpotlightAutoplay();
         }
 
         // ===== MEMBER RENDERING =====
@@ -1144,6 +1400,11 @@
             fetchMembers();
             fetchClassLeaders();
             loadSocialMediaLinks();
+            
+            // Initialize spotlight after a short delay to ensure members are loaded
+            setTimeout(() => {
+                initSpotlight();
+            }, 1000);
         });
 
         // Load social media links

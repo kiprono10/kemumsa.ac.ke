@@ -57,6 +57,11 @@ const memberSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  mantra: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   status: {
     type: String,
     enum: ['online', 'away', 'offline'],

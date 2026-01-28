@@ -638,6 +638,20 @@
             </div>
         </div>
 
+        <!-- My Mantra Section -->
+        <div class="card" style="background: linear-gradient(135deg, rgba(135, 16, 84, 0.05) 0%, rgba(216, 175, 55, 0.05) 100%); border-left: 4px solid #871054;">
+            <div class="card-header">
+                <i class="fas fa-lightbulb" style="color: #d4af37;"></i>
+                <h3>My Mantra</h3>
+            </div>
+            <div class="card-body">
+                <p id="mantaDisplay" style="font-size: 1.1rem; color: #871054; font-style: italic; margin: 0; padding: 15px 0;">
+                    "Your mantra will appear here" 
+                </p>
+                <small style="color: #666;">Add your personal mantra or inspiration in your profile settings</small>
+            </div>
+        </div>
+
         <!-- Alert -->
         <div id="successAlert" class="alert alert-success">
             <i class="fas fa-check-circle"></i>
@@ -985,6 +999,11 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="editMantra">My Mantra / Personal Inspiration</label>
+                        <textarea id="editMantra" placeholder="Share your personal mantra or inspiration (e.g., 'Heal with compassion, lead with integrity')" style="resize: vertical; min-height: 80px; max-height: 150px;"></textarea>
+                    </div>
+
                     <!-- Visibility Toggle -->
                     <div class="toggle-group">
                         <div class="toggle-label">
@@ -1067,6 +1086,13 @@
             document.getElementById('editStudentId').value = memberData.studentId || '';
             document.getElementById('editDepartment').value = department;
             document.getElementById('editYearOfStudy').value = yearOfStudy || '';
+            document.getElementById('editMantra').value = memberData.mantra || '';
+            
+            // Display mantra if it exists
+            const mantaDisplay = document.getElementById('mantaDisplay');
+            if (memberData.mantra) {
+                mantaDisplay.textContent = `"${memberData.mantra}"`;
+            }
             
             // Set profile picture preview
             if (memberData.profilePicture) {
@@ -1277,6 +1303,7 @@
                 phone,
                 department,
                 yearOfStudy: parseInt(yearOfStudy),
+                mantra: document.getElementById('editMantra').value,
                 profileVisible
             };
 
