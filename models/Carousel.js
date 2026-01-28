@@ -34,6 +34,11 @@ const carouselSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  aspectRatio: {
+    type: String,
+    enum: ['3:4', '4:3', '1:1', '9:16', '16:9'],
+    default: '16:9'
+  },
   createdAt: {
     type: Date,
     default: Date.now,

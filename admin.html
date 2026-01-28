@@ -722,8 +722,8 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">Configuration</div>
-                    <div class="nav-item" onclick="switchTab('carousel')">
-                        <i class="fas fa-images"></i> Carousel Management
+                    <div class="nav-item" onclick="switchTab('mission')">
+                        <i class="fas fa-bullseye"></i> Mission & Vision
                     </div>
                     <div class="nav-item" onclick="switchTab('communication')">
                         <i class="fas fa-phone"></i> Communication Settings
@@ -1131,78 +1131,32 @@
                     </div>
                 </div>
 
-                <!-- Carousel Management Tab -->
-                <div id="carousel" class="content-section">
+                <!-- Mission/Vision Settings Tab -->
+                <div id="mission" class="content-section">
                     <div class="section-header">
-                        <h2>Carousel Management</h2>
-                        <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Manage images displayed on the home page carousel</p>
+                        <h2>Mission & Vision Management</h2>
+                        <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Customize the mission statement displayed on the home page hero section</p>
                     </div>
 
-                    <div style="margin-bottom: 2rem;">
-                        <button class="btn btn-primary" onclick="openCarouselModal('add')">
-                            <i class="fas fa-plus"></i> Add New Image
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="missionTitle">Mission Title</label>
+                            <input type="text" id="missionTitle" placeholder="e.g., Uniting Medical Minds" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="missionStatement">Mission Statement</label>
+                            <textarea id="missionStatement" placeholder="Describe KeMUMSA's mission..." style="resize: vertical; min-height: 120px;" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="missionTagline">Tagline</label>
+                            <input type="text" id="missionTagline" placeholder="e.g., Excellence in Medical Training" required>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="saveMissionSettings()">
+                            <i class="fas fa-save"></i> Save Mission Settings
                         </button>
-                    </div>
-
-                    <div id="carouselImagesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                        <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #f0f0f0; border-radius: 8px;">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #999; margin-right: 0.5rem;"></i>
-                            Loading carousel images...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Carousel Image Modal -->
-                <div id="carouselModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Manage Carousel Image</h2>
-                            <button class="close-btn" onclick="closeCarouselModal()">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="carouselImageUrl">Image URL or Upload</label>
-                                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
-                                    <input type="text" id="carouselImageUrl" placeholder="https://..." style="flex: 1;">
-                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('carouselImageFile').click()">
-                                        <i class="fas fa-upload"></i> Upload
-                                    </button>
-                                </div>
-                                <input type="file" id="carouselImageFile" accept="image/*" style="display: none;" onchange="handleCarouselImageUpload(event)">
-                                <small style="color: #666;">Max file size: 10MB. Supported: JPG, PNG, GIF, WEBP</small>
-                                <div id="uploadProgress" style="display: none; margin-top: 0.5rem;">
-                                    <div style="background: #f0f0f0; border-radius: 4px; height: 6px; overflow: hidden;">
-                                        <div id="uploadProgressBar" style="background: #007bff; height: 100%; width: 0%; transition: width 0.3s;"></div>
-                                    </div>
-                                    <small id="uploadStatus" style="color: #666; display: block; margin-top: 0.25rem;">Uploading...</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="carouselTitle">Title (optional)</label>
-                                <input type="text" id="carouselTitle" placeholder="Image title">
-                            </div>
-                            <div class="form-group">
-                                <label for="carouselDescription">Description (optional)</label>
-                                <textarea id="carouselDescription" placeholder="Image description" style="resize: vertical; min-height: 80px;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="carouselType">Image Type</label>
-                                <select id="carouselType" required>
-                                    <option value="event">Event</option>
-                                    <option value="student">Student</option>
-                                    <option value="activity">Activity</option>
-                                    <option value="achievement">Achievement</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="carouselOrder">Display Order</label>
-                                <input type="number" id="carouselOrder" placeholder="0" value="0">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" onclick="closeCarouselModal()">Cancel</button>
-                            <button class="btn btn-primary" onclick="saveCarouselImage()">Save Image</button>
-                        </div>
                     </div>
                 </div>
 
@@ -1934,6 +1888,7 @@
             else if (tab === 'classleaders') loadClassLeaders();
             else if (tab === 'contacts') loadMessages('inbox');
             else if (tab === 'resources') loadResources();
+            else if (tab === 'mission') loadMissionSettings();
             else if (tab === 'communication') loadCommunicationSettings();
             else if (tab === 'adminprofile') loadAdminProfile();
         }
@@ -3152,41 +3107,132 @@
         }
 
         async function saveCommunicationSettings() {
-            const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
-
-            const communicationData = {
-                email: document.getElementById('commEmail').value,
-                phone: document.getElementById('commPhone').value,
-                office: {
-                    building: document.getElementById('commBuilding').value,
-                    room: document.getElementById('commRoom').value,
-                    location: document.getElementById('commLocation').value
-                },
-                officeHours: {
-                    monday: document.getElementById('commMonday').value,
-                    tuesday: document.getElementById('commMonday').value,
-                    wednesday: document.getElementById('commMonday').value,
-                    thursday: document.getElementById('commMonday').value,
-                    friday: document.getElementById('commMonday').value,
-                    saturday: document.getElementById('commSaturday').value,
-                    sunday: document.getElementById('commSunday').value
-                },
-                responseTime: document.getElementById('commResponseTime').value,
-                address: {
-                    city: document.getElementById('commCity').value,
-                    state: document.getElementById('commState').value,
-                    country: document.getElementById('commCountry').value
-                },
-                socialMedia: {
-                    facebook: document.getElementById('commFacebook').value,
-                    twitter: document.getElementById('commTwitter').value,
-                    instagram: document.getElementById('commInstagram').value,
-                    linkedin: document.getElementById('commLinkedin').value,
-                    whatsapp: document.getElementById('commWhatsapp').value
-                }
-            };
-
             try {
+                const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+                const communicationData = {
+                    email: document.getElementById('commEmail').value,
+                    phone: document.getElementById('commPhone').value,
+                    office: {
+                        building: document.getElementById('commBuilding').value,
+                        room: document.getElementById('commRoom').value,
+                        location: document.getElementById('commLocation').value
+                    },
+                    officeHours: {
+                        monday: document.getElementById('commMonday').value,
+                        tuesday: document.getElementById('commMonday').value,
+                        wednesday: document.getElementById('commMonday').value,
+                        thursday: document.getElementById('commMonday').value,
+                        friday: document.getElementById('commMonday').value,
+                        saturday: document.getElementById('commSaturday').value,
+                        sunday: document.getElementById('commSunday').value
+                    },
+                    responseTime: document.getElementById('commResponseTime').value,
+                    address: {
+                        city: document.getElementById('commCity').value,
+                        state: document.getElementById('commState').value,
+                        country: document.getElementById('commCountry').value
+                    },
+                    socialMedia: {
+                        facebook: document.getElementById('commFacebook').value,
+                        twitter: document.getElementById('commTwitter').value,
+                        instagram: document.getElementById('commInstagram').value,
+                        linkedin: document.getElementById('commLinkedin').value,
+                        whatsapp: document.getElementById('commWhatsapp').value
+                    }
+                };
+
+                const response = await fetch('/api/admin/communication', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-token': token
+                    },
+                    body: JSON.stringify(communicationData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Communication settings saved successfully!');
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to save settings'));
+                }
+            } catch (error) {
+                console.error('Error saving communication settings:', error);
+                alert('Error saving settings. Please try again.');
+            }
+        }
+
+        // ===== MISSION & VISION SETTINGS =====
+        async function loadMissionSettings() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const missionData = {
+                    title: document.getElementById('missionTitle').value,
+                    statement: document.getElementById('missionStatement').value,
+                    tagline: document.getElementById('missionTagline').value
+                };
+
+                const response = await fetch('/api/admin/mission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(missionData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Mission settings saved successfully!');
+                    // Update frontend mission display
+                    document.getElementById('missionTitle').textContent = missionData.title;
+                    document.getElementById('missionStatement').textContent = missionData.statement;
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to save mission settings'));
+                }
+            } catch (error) {
+                console.error('Error saving mission settings:', error);
+                alert('Error saving mission settings: ' + error.message);
+            }
+        }
+
+        async function saveCommunicationSettings() {
+            try {
+                const token = localStorage.getItem('adminToken') || `admin-token-${Date.now()}`;
+
+                const communicationData = {
+                    email: document.getElementById('commEmail').value,
+                    phone: document.getElementById('commPhone').value,
+                    office: {
+                        building: document.getElementById('commBuilding').value,
+                        room: document.getElementById('commRoom').value,
+                        location: document.getElementById('commLocation').value
+                    },
+                    officeHours: {
+                        monday: document.getElementById('commMonday').value,
+                        tuesday: document.getElementById('commMonday').value,
+                        wednesday: document.getElementById('commMonday').value,
+                        thursday: document.getElementById('commMonday').value,
+                        friday: document.getElementById('commMonday').value,
+                        saturday: document.getElementById('commSaturday').value,
+                        sunday: document.getElementById('commSunday').value
+                    },
+                    responseTime: document.getElementById('commResponseTime').value,
+                    address: {
+                        city: document.getElementById('commCity').value,
+                        state: document.getElementById('commState').value,
+                        country: document.getElementById('commCountry').value
+                    },
+                    socialMedia: {
+                        facebook: document.getElementById('commFacebook').value,
+                        twitter: document.getElementById('commTwitter').value,
+                        instagram: document.getElementById('commInstagram').value,
+                        linkedin: document.getElementById('commLinkedin').value,
+                        whatsapp: document.getElementById('commWhatsapp').value
+                    }
+                };
+
                 const response = await fetch('/api/admin/communication', {
                     method: 'POST',
                     headers: {
@@ -3225,6 +3271,53 @@
                 document.getElementById('adminUsername').value = data.username || 'admin';
             } catch (error) {
                 console.error('Error loading admin profile:', error);
+            }
+        }
+
+        // ===== MISSION & VISION SETTINGS =====
+        async function loadMissionSettings() {
+            try {
+                const response = await fetch('/api/admin/mission');
+                const data = response.ok ? await response.json() : { mission: {} };
+                
+                document.getElementById('missionTitle').value = data.mission?.title || 'Uniting Medical Minds';
+                document.getElementById('missionStatement').value = data.mission?.statement || 'KeMUMSA is dedicated to fostering excellence in medical practice through collaborative learning, professional development, and community service.';
+                document.getElementById('missionTagline').value = data.mission?.tagline || 'Excellence in Medical Training';
+            } catch (error) {
+                console.error('Error loading mission settings:', error);
+            }
+        }
+
+        async function saveMissionSettings() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const missionData = {
+                    title: document.getElementById('missionTitle').value,
+                    statement: document.getElementById('missionStatement').value,
+                    tagline: document.getElementById('missionTagline').value
+                };
+
+                const response = await fetch('/api/admin/mission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(missionData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Mission settings saved successfully!');
+                    // Update frontend mission display
+                    document.getElementById('missionTitle').textContent = missionData.title;
+                    document.getElementById('missionStatement').textContent = missionData.statement;
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to save mission settings'));
+                }
+            } catch (error) {
+                console.error('Error saving mission settings:', error);
+                alert('Error saving mission settings: ' + error.message);
             }
         }
 
@@ -3581,6 +3674,90 @@
         // ===== CAROUSEL MANAGEMENT =====
         let allCarouselImages = [];
         let currentCarouselEditId = null;
+        let currentCarouselTab = 'url';
+
+        function switchCarouselTab(tab) {
+            currentCarouselTab = tab;
+            document.getElementById('urlTab').style.display = tab === 'url' ? 'block' : 'none';
+            document.getElementById('uploadTab').style.display = tab === 'upload' ? 'block' : 'none';
+            
+            document.getElementById('urlTabBtn').style.background = tab === 'url' ? '#871054' : '#ddd';
+            document.getElementById('urlTabBtn').style.color = tab === 'url' ? 'white' : '#333';
+            document.getElementById('uploadTabBtn').style.background = tab === 'upload' ? '#871054' : '#ddd';
+            document.getElementById('uploadTabBtn').style.color = tab === 'upload' ? 'white' : '#333';
+        }
+
+        function previewCarouselImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function uploadCarouselImage(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const uploadProgress = document.getElementById('uploadProgress');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const uploadProgressBar = document.getElementById('uploadProgressBar');
+
+            uploadProgress.style.display = 'block';
+            uploadStatus.textContent = 'Uploading...';
+            uploadProgressBar.style.width = '0%';
+
+            try {
+                const token = localStorage.getItem('adminToken');
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        uploadProgressBar.style.width = percentComplete + '%';
+                        uploadStatus.textContent = Math.round(percentComplete) + '%';
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            document.getElementById('carouselImageUrl').value = response.imageUrl;
+                            uploadStatus.textContent = 'Upload successful!';
+                            uploadProgressBar.style.width = '100%';
+                            uploadStatus.style.color = '#28a745';
+                            setTimeout(() => {
+                                uploadProgress.style.display = 'none';
+                                uploadStatus.style.color = '#666';
+                            }, 1500);
+                        } else {
+                            uploadStatus.textContent = 'Upload failed: ' + response.message;
+                            uploadStatus.style.color = '#dc3545';
+                        }
+                    } else {
+                        uploadStatus.textContent = 'Upload failed';
+                        uploadStatus.style.color = '#dc3545';
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    uploadStatus.textContent = 'Upload error';
+                    uploadStatus.style.color = '#dc3545';
+                });
+
+                xhr.open('POST', '/api/carousel/admin/upload');
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                xhr.send(formData);
+            } catch (error) {
+                uploadStatus.textContent = 'Error: ' + error.message;
+                uploadStatus.style.color = '#dc3545';
+            }
+        }
 
         async function loadCarouselImages() {
             try {
@@ -3653,14 +3830,23 @@
         }
 
         async function saveCarouselImage() {
-            const imageUrl = document.getElementById('carouselImageUrl').value;
+            let imageUrl = document.getElementById('carouselImageUrl').value;
             const title = document.getElementById('carouselTitle').value;
             const description = document.getElementById('carouselDescription').value;
             const imageType = document.getElementById('carouselType').value;
             const displayOrder = parseInt(document.getElementById('carouselOrder').value);
 
+            // If using upload tab and file is selected, upload first
+            if (currentCarouselTab === 'upload') {
+                const fileInput = document.getElementById('carouselImageFile');
+                if (fileInput.files.length > 0) {
+                    await uploadCarouselImage(fileInput.files[0]);
+                    imageUrl = document.getElementById('carouselImageUrl').value;
+                }
+            }
+
             if (!imageUrl) {
-                alert('Please enter an image URL');
+                alert('Please enter an image URL or upload an image');
                 return;
             }
 
@@ -3739,67 +3925,6 @@
             } catch (error) {
                 console.error('Error toggling carousel image:', error);
                 alert('Error toggling image: ' + error.message);
-            }
-        }
-
-        async function handleCarouselImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const token = localStorage.getItem('adminToken');
-                const uploadProgress = document.getElementById('uploadProgress');
-                const uploadProgressBar = document.getElementById('uploadProgressBar');
-                const uploadStatus = document.getElementById('uploadStatus');
-
-                uploadProgress.style.display = 'block';
-                uploadStatus.textContent = `Uploading ${file.name}...`;
-                uploadProgressBar.style.width = '0%';
-
-                const xhr = new XMLHttpRequest();
-
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percentComplete = (e.loaded / e.total) * 100;
-                        uploadProgressBar.style.width = percentComplete + '%';
-                        uploadStatus.textContent = `Uploading... ${Math.round(percentComplete)}%`;
-                    }
-                });
-
-                xhr.addEventListener('load', () => {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            document.getElementById('carouselImageUrl').value = response.imageUrl;
-                            uploadStatus.textContent = 'Upload successful!';
-                            uploadProgressBar.style.width = '100%';
-                            setTimeout(() => {
-                                uploadProgress.style.display = 'none';
-                                document.getElementById('carouselImageFile').value = '';
-                            }, 1500);
-                        } else {
-                            uploadStatus.textContent = 'Upload failed: ' + response.message;
-                        }
-                    } else {
-                        uploadStatus.textContent = 'Upload failed: Server error';
-                    }
-                });
-
-                xhr.addEventListener('error', () => {
-                    uploadStatus.textContent = 'Upload failed: Network error';
-                });
-
-                xhr.open('POST', '/api/carousel/admin/upload');
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                xhr.send(formData);
-
-            } catch (error) {
-                console.error('Error uploading carousel image:', error);
-                alert('Error uploading image: ' + error.message);
-                document.getElementById('uploadProgress').style.display = 'none';
             }
         }
     </script>

@@ -2,6 +2,49 @@ const express = require('express');
 const router = express.Router();
 const { Communication, Message, Member, Admin } = require('../models');
 
+// Mission & Vision settings (stored in memory/temp - can be moved to DB)
+let missionSettings = {
+  title: 'Uniting Medical Minds',
+  statement: 'KeMUMSA is dedicated to fostering excellence in medical practice through collaborative learning, professional development, and community service.',
+  tagline: 'Excellence in Medical Training'
+};
+
+// Get mission settings
+router.get('/mission', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      mission: missionSettings
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Save mission settings (requires auth)
+router.post('/mission', (req, res) => {
+  try {
+    const { title, statement, tagline } = req.body;
+    
+    if (!title || !statement || !tagline) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Title, statement, and tagline are required' 
+      });
+    }
+
+    missionSettings = { title, statement, tagline };
+    
+    res.json({
+      success: true,
+      message: 'Mission settings saved successfully',
+      mission: missionSettings
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // Admin login endpoint
 router.post('/login', async (req, res) => {
   try {
