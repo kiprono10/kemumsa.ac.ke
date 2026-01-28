@@ -75,6 +75,7 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(135, 16, 84, 0.15);
+            min-height: 380px;
         }
 
         .spotlight-content {
@@ -86,6 +87,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .spotlight-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
 
         .spotlight-loading {
@@ -93,6 +109,8 @@
             flex-direction: column;
             align-items: center;
             gap: 1rem;
+            position: relative;
+            z-index: 2;
         }
 
         .spotlight-member {
@@ -100,6 +118,8 @@
             flex-direction: column;
             align-items: center;
             gap: 1rem;
+            position: relative;
+            z-index: 2;
         }
 
         .spotlight-avatar {
@@ -129,27 +149,31 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .spotlight-year {
             font-size: 0.9rem;
-            opacity: 0.9;
+            opacity: 0.95;
             margin: 0.25rem 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .spotlight-department {
             font-size: 0.85rem;
-            opacity: 0.85;
+            opacity: 0.9;
             margin: 0.5rem 0 1rem;
             font-style: italic;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .spotlight-mantra {
             font-size: 1.05rem;
             font-style: italic;
             margin: 1rem 0 0;
-            opacity: 0.95;
+            opacity: 0.98;
             line-height: 1.4;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .spotlight-navigation {
@@ -766,11 +790,12 @@
 
             .spotlight-container {
                 max-width: 100%;
+                min-height: 320px;
             }
 
             .spotlight-content {
                 padding: 1.5rem;
-                min-height: 250px;
+                min-height: 220px;
             }
 
             .spotlight-avatar {
@@ -1109,15 +1134,29 @@
 
         // ===== MEMBER SPOTLIGHT =====
         function initSpotlight() {
-            spotlightMembers = getVisibleMembers().filter(m => m.mantra).sort(() => Math.random() - 0.5);
+            // Filter members with mantra first, then mix with random members without mantra
+            const membersWithMantra = getVisibleMembers().filter(m => m.mantra && m.profilePicture);
+            const allVisibleMembers = getVisibleMembers().sort(() => Math.random() - 0.5);
+            
+            // Combine: prioritize members with mantra, fill rest with random members
+            spotlightMembers = [...membersWithMantra, ...allVisibleMembers].slice(0, 20);
+            
             if (spotlightMembers.length === 0) {
-                spotlightMembers = getVisibleMembers().sort(() => Math.random() - 0.5).slice(0, 10);
+                spotlightMembers = allVisibleMembers.slice(0, 10);
             }
+            
             if (spotlightMembers.length > 0) {
-                currentSpotlightIndex = 0;
+                currentSpotlightIndex = Math.floor(Math.random() * spotlightMembers.length);
                 renderSpotlight();
                 renderSpotlightIndicators();
                 startSpotlightAutoplay();
+            } else {
+                document.getElementById('spotlightContent').innerHTML = `
+                    <div class="spotlight-loading">
+                        <i class="fas fa-users"></i>
+                        <p>No members available yet</p>
+                    </div>
+                `;
             }
         }
 
@@ -1125,6 +1164,12 @@
             if (spotlightMembers.length === 0) return;
             const member = spotlightMembers[currentSpotlightIndex];
             const yearSuffix = getOrdinalSuffix(member.yearOfStudy);
+            const backgroundImage = member.profilePicture ? `url('${member.profilePicture}')` : '';
+            
+            const content = document.getElementById('spotlightContent');
+            if (backgroundImage) {
+                content.style.backgroundImage = backgroundImage;
+            }
             
             const html = `
                 <div class="spotlight-member">
@@ -1137,10 +1182,10 @@
                     <h3 class="spotlight-name">${member.firstName} ${member.lastName}</h3>
                     <p class="spotlight-year">${member.yearOfStudy}${yearSuffix} Year</p>
                     <p class="spotlight-department">${member.department || 'Medicine'}</p>
-                    ${member.mantra ? `<p class="spotlight-mantra">"${member.mantra}"</p>` : ''}
+                    ${member.mantra ? `<p class="spotlight-mantra">"${member.mantra}"</p>` : '<p class="spotlight-mantra">Member of KeMUMSA</p>'}
                 </div>
             `;
-            document.getElementById('spotlightContent').innerHTML = html;
+            content.innerHTML = html;
             updateSpotlightIndicators();
         }
 
@@ -1401,10 +1446,17 @@
             fetchClassLeaders();
             loadSocialMediaLinks();
             
-            // Initialize spotlight after a short delay to ensure members are loaded
+            // Initialize spotlight after members are loaded
             setTimeout(() => {
-                initSpotlight();
-            }, 1000);
+                if (allMembers && allMembers.length > 0) {
+                    initSpotlight();
+                } else {
+                    // Retry after another second if data not ready
+                    setTimeout(() => {
+                        initSpotlight();
+                    }, 1000);
+                }
+            }, 1500);
         });
 
         // Load social media links
