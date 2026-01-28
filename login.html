@@ -672,9 +672,11 @@
             } catch (error) {
                 console.error('Login error:', error);
                 // For demo purposes, allow login to proceed
-                // Store demo member data
+                // Store demo member data with required _id field
                 localStorage.setItem('memberData', JSON.stringify({
+                    _id: 'demo-member-' + Date.now(),
                     firstName: email.split('@')[0],
+                    lastName: 'Demo',
                     email: email,
                     yearOfStudy: 2,
                     department: 'Medicine',
