@@ -22,6 +22,7 @@ const Resource = require('./Resource');
 const Message = require('./Message');
 const Communication = require('./Communication');
 const Admin = require('./Admin');
+const Carousel = require('./Carousel');
 
 // Sync database (create collections if they don't exist)
 const syncDatabase = async (options = {}) => {
@@ -45,5 +46,6 @@ module.exports = {
   Message,
   Communication,
   Admin,
+  Carousel,
   syncDatabase
 };

@@ -722,6 +722,9 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">Configuration</div>
+                    <div class="nav-item" onclick="switchTab('carousel')">
+                        <i class="fas fa-images"></i> Carousel Management
+                    </div>
                     <div class="nav-item" onclick="switchTab('communication')">
                         <i class="fas fa-phone"></i> Communication Settings
                     </div>
@@ -1125,6 +1128,68 @@
                     <div class="map-container" id="mapContainer" style="display: none;">
                         <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Location Preview</h3>
                         <iframe id="mapFrame" width="100%" height="100%" style="border-radius: 6px; border: none;" src=""></iframe>
+                    </div>
+                </div>
+
+                <!-- Carousel Management Tab -->
+                <div id="carousel" class="content-section">
+                    <div class="section-header">
+                        <h2>Carousel Management</h2>
+                        <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Manage images displayed on the home page carousel</p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <button class="btn btn-primary" onclick="openCarouselModal('add')">
+                            <i class="fas fa-plus"></i> Add New Image
+                        </button>
+                    </div>
+
+                    <div id="carouselImagesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #f0f0f0; border-radius: 8px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #999; margin-right: 0.5rem;"></i>
+                            Loading carousel images...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Image Modal -->
+                <div id="carouselModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Manage Carousel Image</h2>
+                            <button class="close-btn" onclick="closeCarouselModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="carouselImageUrl">Image URL</label>
+                                <input type="text" id="carouselImageUrl" placeholder="https://..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="carouselTitle">Title (optional)</label>
+                                <input type="text" id="carouselTitle" placeholder="Image title">
+                            </div>
+                            <div class="form-group">
+                                <label for="carouselDescription">Description (optional)</label>
+                                <textarea id="carouselDescription" placeholder="Image description" style="resize: vertical; min-height: 80px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="carouselType">Image Type</label>
+                                <select id="carouselType" required>
+                                    <option value="event">Event</option>
+                                    <option value="student">Student</option>
+                                    <option value="activity">Activity</option>
+                                    <option value="achievement">Achievement</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="carouselOrder">Display Order</label>
+                                <input type="number" id="carouselOrder" placeholder="0" value="0">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeCarouselModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="saveCarouselImage()">Save Image</button>
+                        </div>
                     </div>
                 </div>
 
@@ -3498,6 +3563,170 @@
             }
 
             renderMessagesTable(filtered);
+        }
+
+        // ===== CAROUSEL MANAGEMENT =====
+        let allCarouselImages = [];
+        let currentCarouselEditId = null;
+
+        async function loadCarouselImages() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch('/api/carousel/admin/all', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (data.images) {
+                    allCarouselImages = data.images;
+                    renderCarouselImagesList();
+                }
+            } catch (error) {
+                console.error('Error loading carousel images:', error);
+            }
+        }
+
+        function renderCarouselImagesList() {
+            const container = document.getElementById('carouselImagesList');
+            
+            if (allCarouselImages.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: #f0f0f0; border-radius: 8px;"><p>No carousel images yet. Add one to get started!</p></div>';
+                return;
+            }
+
+            container.innerHTML = allCarouselImages.map(img => `
+                <div style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="width: 100%; height: 150px; background: #f0f0f0; overflow: hidden;">
+                        <img src="${img.imageUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="${img.title || 'Carousel image'}">
+                    </div>
+                    <div style="padding: 1rem;">
+                        <p style="margin: 0; font-weight: 600; font-size: 0.95rem;">${img.title || 'Untitled'}</p>
+                        <p style="margin: 0.5rem 0 0; font-size: 0.85rem; color: #666;">${img.imageType}</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm" style="flex: 1; background: #007bff; color: white;" onclick="editCarouselImage('${img._id}')">Edit</button>
+                            <button class="btn btn-sm" style="flex: 1; background: ${img.active ? '#28a745' : '#ffc107'}; color: white;" onclick="toggleCarouselImage('${img._id}')">${img.active ? 'Active' : 'Inactive'}</button>
+                            <button class="btn btn-sm" style="flex: 1; background: #dc3545; color: white;" onclick="deleteCarouselImage('${img._id}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openCarouselModal(mode, id = null) {
+            currentCarouselEditId = id;
+            document.getElementById('carouselModal').classList.add('show');
+
+            if (mode === 'edit' && id) {
+                const img = allCarouselImages.find(i => i._id === id);
+                if (img) {
+                    document.getElementById('carouselImageUrl').value = img.imageUrl;
+                    document.getElementById('carouselTitle').value = img.title || '';
+                    document.getElementById('carouselDescription').value = img.description || '';
+                    document.getElementById('carouselType').value = img.imageType;
+                    document.getElementById('carouselOrder').value = img.displayOrder;
+                }
+            } else {
+                document.getElementById('carouselImageUrl').value = '';
+                document.getElementById('carouselTitle').value = '';
+                document.getElementById('carouselDescription').value = '';
+                document.getElementById('carouselType').value = 'event';
+                document.getElementById('carouselOrder').value = '0';
+            }
+        }
+
+        function closeCarouselModal() {
+            document.getElementById('carouselModal').classList.remove('show');
+            currentCarouselEditId = null;
+        }
+
+        async function saveCarouselImage() {
+            const imageUrl = document.getElementById('carouselImageUrl').value;
+            const title = document.getElementById('carouselTitle').value;
+            const description = document.getElementById('carouselDescription').value;
+            const imageType = document.getElementById('carouselType').value;
+            const displayOrder = parseInt(document.getElementById('carouselOrder').value);
+
+            if (!imageUrl) {
+                alert('Please enter an image URL');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('adminToken');
+                const method = currentCarouselEditId ? 'PUT' : 'POST';
+                const endpoint = currentCarouselEditId ? `/api/carousel/admin/update/${currentCarouselEditId}` : '/api/carousel/admin/add';
+
+                const response = await fetch(endpoint, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ imageUrl, title, description, imageType, displayOrder })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Image ${currentCarouselEditId ? 'updated' : 'added'} successfully!`);
+                    closeCarouselModal();
+                    loadCarouselImages();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to save image'));
+                }
+            } catch (error) {
+                console.error('Error saving carousel image:', error);
+                alert('Error saving image: ' + error.message);
+            }
+        }
+
+        function editCarouselImage(id) {
+            openCarouselModal('edit', id);
+        }
+
+        async function deleteCarouselImage(id) {
+            if (!confirm('Are you sure you want to delete this image?')) return;
+
+            try {
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch(`/api/carousel/admin/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Image deleted successfully!');
+                    loadCarouselImages();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to delete image'));
+                }
+            } catch (error) {
+                console.error('Error deleting carousel image:', error);
+                alert('Error deleting image: ' + error.message);
+            }
+        }
+
+        async function toggleCarouselImage(id) {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch(`/api/carousel/admin/toggle/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadCarouselImages();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to toggle image'));
+                }
+            } catch (error) {
+                console.error('Error toggling carousel image:', error);
+                alert('Error toggling image: ' + error.message);
+            }
         }
     </script>
 </body>

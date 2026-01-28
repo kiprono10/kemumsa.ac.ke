@@ -62,7 +62,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Import routes
-let memberRoutes, eventRoutes, adminRoutes, classLeaderRoutes, executiveRoutes, resourceRoutes;
+let memberRoutes, eventRoutes, adminRoutes, classLeaderRoutes, executiveRoutes, resourceRoutes, carouselRoutes;
 try {
   memberRoutes = require('./routes/members');
   eventRoutes = require('./routes/events');
@@ -70,6 +70,7 @@ try {
   classLeaderRoutes = require('./routes/class-leaders');
   executiveRoutes = require('./routes/executives');
   resourceRoutes = require('./routes/resources');
+  carouselRoutes = require('./routes/carousel');
   console.log('Routes loaded successfully');
 } catch (err) {
   console.error('Error loading routes:', err.message);
@@ -152,6 +153,12 @@ if (resourceRoutes) {
   console.log('Mounted /api/resources route');
 } else {
   console.log('resourceRoutes is falsy, not mounting /api/resources');
+}
+if (carouselRoutes) {
+  app.use('/api/carousel', carouselRoutes);
+  console.log('Mounted /api/carousel route');
+} else {
+  console.log('carouselRoutes is falsy, not mounting /api/carousel');
 }
 
 // 404 handler
