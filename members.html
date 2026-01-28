@@ -18,6 +18,662 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
+
+    <style>
+        /* ===== MEMBERS PAGE STYLES ===== */
+
+        .members-page-header {
+            background: linear-gradient(135deg, #871054 0%, #a83b6e 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .members-page-header .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .members-page-header .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .members-page-header .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 1;
+            color: white;
+        }
+
+        /* Quick Stats */
+        .members-quick-stats {
+            background: white;
+            padding: 2rem;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .stats-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #871054;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 40px;
+            background: #ddd;
+        }
+
+        /* Discovery Section */
+        .members-discovery {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .discovery-container {
+            width: 100%;
+        }
+
+        /* Search Bar */
+        .members-search-bar {
+            margin-bottom: 2rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 1rem;
+            color: #999;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #871054;
+            box-shadow: 0 0 0 3px rgba(135, 16, 84, 0.1);
+        }
+
+        /* Filter Tabs */
+        .members-filter-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-tab:hover {
+            border-color: #871054;
+            color: #871054;
+        }
+
+        .filter-tab.active {
+            background: #871054;
+            color: white;
+            border-color: #871054;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .view-btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover, .view-btn.active {
+            border-color: #871054;
+            color: #871054;
+        }
+
+        /* Members Display */
+        .members-display {
+            min-height: 300px;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Modern Member Card */
+        .modern-member-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .modern-member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(135, 16, 84, 0.12);
+        }
+
+        .member-card-header {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .member-avatar-large {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #f0f0f0;
+            background: linear-gradient(135deg, #871054, #c41a7b);
+        }
+
+        .member-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .member-status-badge {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            border: 3px solid white;
+            background: #999;
+        }
+
+        .member-status-badge.online {
+            background: #28a745;
+        }
+
+        .member-status-badge.away {
+            background: #ffc107;
+        }
+
+        .member-card-content {
+            text-align: center;
+        }
+
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: #333;
+        }
+
+        .member-year-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(135, 16, 84, 0.1);
+            color: #871054;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+        }
+
+        .member-department {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0 0 0.75rem;
+        }
+
+        .member-interests-list {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0.75rem 0;
+        }
+
+        .member-interest {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #f0f0f0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .member-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            padding: 0.6rem 0.5rem;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .card-action-btn:hover {
+            background: #871054;
+            color: white;
+            border-color: #871054;
+        }
+
+        /* No Results */
+        .no-results-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .no-results-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .no-results-state h3 {
+            color: #333;
+            margin: 0 0 0.5rem;
+        }
+
+        .no-results-state p {
+            color: #999;
+            margin: 0 0 1.5rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #871054;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6d0a41;
+        }
+
+        /* Class Leaders */
+        .class-leaders-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            background: white;
+        }
+
+        .leaders-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 40px;
+        }
+
+        .leaders-header .section-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .leaders-header .section-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .leaders-year-filter {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .class-filter-select {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .class-filter-select:hover, .class-filter-select:focus {
+            border-color: #871054;
+            color: #871054;
+            outline: none;
+        }
+
+        .class-leaders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .class-leader-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .class-leader-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(135, 16, 84, 0.12);
+        }
+
+        .leader-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #f0f0f0;
+            background: linear-gradient(135deg, #871054, #c41a7b);
+        }
+
+        .leader-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .leader-avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #871054, #c41a7b);
+            color: white;
+            font-size: 2rem;
+        }
+
+        .leader-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: #333;
+        }
+
+        .leader-position {
+            color: #871054;
+            font-weight: 600;
+            margin: 0 0 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .leader-year {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+
+        .loading-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .members-page-header .page-title {
+                font-size: 1.8rem;
+            }
+
+            .members-page-header .page-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .stats-wrapper {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .stat-divider {
+                display: none;
+            }
+
+            .members-filter-tabs {
+                gap: 0.5rem;
+            }
+
+            .filter-tab {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.85rem;
+            }
+
+            .members-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .modern-member-card {
+                padding: 1rem;
+            }
+
+            .member-avatar-large {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 0.75rem;
+            }
+
+            .member-name {
+                font-size: 1rem;
+            }
+
+            .card-action-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.3rem;
+            }
+
+            .class-leaders-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
+            }
+
+            .class-leader-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .leader-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .leader-name {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .members-page-header {
+                padding: 40px 15px;
+            }
+
+            .members-page-header .page-title {
+                font-size: 1.5rem;
+            }
+
+            .members-page-header .page-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .members-quick-stats {
+                padding: 1.5rem 15px;
+            }
+
+            .stats-wrapper {
+                gap: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .members-discovery {
+                padding: 20px 15px;
+            }
+
+            .members-filter-tabs {
+                gap: 0.4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .filter-tab {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.75rem;
+            }
+
+            .members-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .modern-member-card {
+                padding: 0.75rem;
+            }
+
+            .member-avatar-large {
+                width: 70px;
+                height: 70px;
+            }
+
+            .member-name {
+                font-size: 0.9rem;
+            }
+
+            .card-action-btn {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.2rem;
+            }
+
+            .class-leaders-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .class-leader-card {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -26,12 +682,7 @@
             <!-- Logo -->
             <div class="logo-area">
                 <div class="logo-icon">
-                    <div class="logo-heart">
-                        <i class="fas fa-heartbeat"></i>
-                    </div>
-                    <div class="logo-caduceus">
-                        <i class="fas fa-staff-snake"></i>
-                    </div>
+                    <img src="outsourced-media/Logo.png" alt="KeMUMSA Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 <div class="logo-text">
                     <h1 class="association-name">KeMUMSA</h1>
@@ -71,116 +722,110 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Page Header -->
-        <section class="page-header">
-            <h1 class="page-title">Member Community</h1>
-            <p class="page-subtitle">Connect, collaborate, and grow with fellow medical students</p>
+        <section class="members-page-header">
+            <div class="header-content">
+                <h1 class="page-title">Member Directory</h1>
+                <p class="page-subtitle">Explore our vibrant community of medical students</p>
+            </div>
         </section>
 
-        <!-- Member Stats -->
-        <section class="member-stats">
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-label">Total Members</h3>
-                        <p class="stat-value" id="totalMembersValue">0</p>
+        <!-- Quick Stats -->
+        <section class="members-quick-stats">
+            <div class="stats-wrapper">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalMembersValue">0</span>
+                    <span class="stat-label">Members</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" id="visibleMembersValue">0</span>
+                    <span class="stat-label">Public Profiles</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number" id="yearGroupsValue">6</span>
+                    <span class="stat-label">Year Groups</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Member Discovery Section -->
+        <section class="members-discovery">
+            <div class="discovery-container">
+                <!-- Search Bar -->
+                <div class="members-search-bar">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search by name, role, interests..." class="search-input" id="memberSearch">
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-label">Public Profiles</h3>
-                        <p class="stat-value" id="visibleMembersValue">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-circle-dot"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-label">Active Now</h3>
-                        <p class="stat-value" id="activeNowValue">0</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
+
+                <!-- Filter Tabs -->
+                <div class="members-filter-tabs">
+                    <button class="filter-tab active" data-filter="all">
+                        <i class="fas fa-th-large"></i>
+                        <span>All</span>
+                    </button>
+                    <button class="filter-tab" data-filter="1">
+                        <i class="fas fa-bookmark"></i>
+                        <span>1st Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="2">
+                        <i class="fas fa-bookmark"></i>
+                        <span>2nd Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="3">
+                        <i class="fas fa-bookmark"></i>
+                        <span>3rd Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="4">
+                        <i class="fas fa-bookmark"></i>
+                        <span>4th Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="5">
+                        <i class="fas fa-bookmark"></i>
+                        <span>5th Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="6">
+                        <i class="fas fa-bookmark"></i>
+                        <span>6th Year</span>
+                    </button>
+                    <button class="filter-tab" data-filter="alumni">
                         <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-label">Year Groups</h3>
-                        <p class="stat-value" id="yearGroupsValue">6</p>
-                    </div>
+                        <span>Alumni</span>
+                    </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- Member Directory -->
-        <section class="member-directory">
-            <div class="directory-header">
-                <h2 class="section-title">Member Directory</h2>
-                <div class="directory-controls">
-                    <div class="search-box">
-                        <input type="text" placeholder="Search members..." class="search-input">
-                        <button class="search-btn"><i class="fi fi-ts-search"></i></button>
-                    </div>
-                    <div class="filter-dropdown">
-                        <select class="filter-select">
-                            <option value="all">All Years</option>
-                            <option value="1">1st Year</option>
-                            <option value="2">2nd Year</option>
-                            <option value="3">3rd Year</option>
-                            <option value="4">4th Year</option>
-                            <option value="5">5th Year</option>
-                            <option value="6">6th Year</option>
-                            <option value="alumni">Alumni</option>
-                        </select>
+                <!-- Members Display -->
+                <div class="members-display" id="membersDisplay">
+                    <div class="members-grid" id="membersGrid">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading members...</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="members-grid" id="membersGrid">
-                <!-- Member cards will be loaded dynamically here -->
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <p>Loading members...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Academic Resources Section (for logged-in members) -->
-        <section class="academic-resources" id="academicResources" style="display: none; margin: 60px 0;">
-            <div class="container">
-                <h2 class="section-title">Your Academic Resources</h2>
-                <p class="section-subtitle" id="resourcesSubtitle">Access exams, CATs, and study notes for your year of study</p>
-                
-                <div class="resources-filters" style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button class="filter-btn active" onclick="filterResourcesByType('all')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: #871054; color: white; border-radius: 20px; cursor: pointer;">All Resources</button>
-                    <button class="filter-btn" onclick="filterResourcesByType('exam')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">📋 Exams</button>
-                    <button class="filter-btn" onclick="filterResourcesByType('cat')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">✓ CATs</button>
-                    <button class="filter-btn" onclick="filterResourcesByType('notes')" style="padding: 0.5rem 1rem; border: 2px solid #871054; background: white; color: #871054; border-radius: 20px; cursor: pointer;">📚 Study Notes</button>
-                </div>
-
-                <div class="resources-grid" id="resourcesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-                    <!-- Resources will be loaded dynamically -->
-                </div>
-
-                <div id="noResourcesMsg" style="text-align: center; padding: 2rem; color: #999;">
-                    <i class="fas fa-book" style="font-size: 2.5rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
-                    <p>No resources available for your year yet.</p>
+                <!-- No Results State -->
+                <div class="no-results-state" id="noResultsState" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No members found</h3>
+                    <p>Try adjusting your search or filters</p>
+                    <button class="btn btn-primary" onclick="resetFilters()">Reset Filters</button>
                 </div>
             </div>
         </section>
 
         <!-- Class Leaders Section -->
-        <section class="class-leaders-section" id="classLeadersSection" style="margin: 60px 0; background: linear-gradient(135deg, rgba(135, 16, 84, 0.05) 0%, rgba(135, 16, 84, 0.02) 100%); padding: 40px 20px; border-radius: 16px;">
-            <div class="container">
-                <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Class Leaders 2026</h2>
-                <div class="class-leaders-filter" style="text-align: center; margin-bottom: 2rem;">
-                    <select class="class-filter-select" style="padding: 0.75rem 1rem; border: 2px solid #871054; border-radius: 6px; font-size: 1rem; cursor: pointer;">
+        <section class="class-leaders-section">
+            <div class="leaders-container">
+                <div class="leaders-header">
+                    <h2 class="section-title">Class Leaders</h2>
+                    <p class="section-subtitle">Your year's leadership team</p>
+                </div>
+
+                <div class="leaders-year-filter">
+                    <select class="class-filter-select" id="classLeadersYearFilter">
                         <option value="all">All Years</option>
                         <option value="1">1st Year</option>
                         <option value="2">2nd Year</option>
@@ -190,40 +835,17 @@
                         <option value="6">6th Year</option>
                     </select>
                 </div>
-                <div class="class-leaders-grid" id="classLeadersGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-loading" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
-                        <p style="color: #999;">Loading class leaders...</p>
+
+                <div class="class-leaders-grid" id="classLeadersGrid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading class leaders...</p>
                     </div>
                 </div>
             </div>
         </section>
 
     </main>
-
-    <!-- Mobile Bottom Nav -->
-    <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item">
-            <i class="fi fi-ts-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="events.html" class="nav-item">
-            <i class="fi fi-ts-calendar"></i>
-            <span>Events</span>
-        </a>
-        <a href="members.html" class="nav-item active">
-            <i class="fi fi-ts-users"></i>
-            <span>Members</span>
-        </a>
-        <a href="contact.html" class="nav-item">
-            <i class="fi fi-ts-chat"></i>
-            <span>Chat</span>
-        </a>
-        <a href="#join" class="nav-item">
-            <i class="fi fi-ts-user-plus"></i>
-            <span>Join</span>
-        </a>
-    </nav>
 
     <!-- Mobile Bottom Nav -->
     <nav class="mobile-bottom-nav">
@@ -289,171 +911,68 @@
     <script src="assets/css/js/main.js"></script>
     
     <script>
-        // Global variables for dynamic data
+        // Global state
         let allMembers = [];
-        let currentUserYear = null;
+        let currentFilterYear = 'all';
 
-        // Academic Resources Data
-        const academicResources = [
-            {
-                _id: '1',
-                title: 'Anatomy Midterm Exam',
-                type: 'exam',
-                year: '1',
-                subject: 'Anatomy',
-                description: 'Midterm examination covering chapters 1-5',
-                date: '2024-12-15',
-                fileUrl: 'https://drive.google.com/file/d/anatomy-exam',
-                isActive: true
-            },
-            {
-                _id: '2',
-                title: 'Biochemistry CAT 1',
-                type: 'cat',
-                year: '1',
-                subject: 'Biochemistry',
-                description: 'Continuous assessment test 1',
-                date: '2024-12-10',
-                fileUrl: 'https://drive.google.com/file/d/biochemistry-cat',
-                isActive: true
-            },
-            {
-                _id: '3',
-                title: 'Physiology Study Notes',
-                type: 'notes',
-                year: '1',
-                subject: 'Physiology',
-                description: 'Comprehensive study notes for Year 1 Physiology',
-                date: '2024-12-20',
-                fileUrl: 'https://drive.google.com/file/d/physiology-notes',
-                isActive: true
-            },
-            {
-                _id: '4',
-                title: 'Pharmacology Final Exam',
-                type: 'exam',
-                year: '2',
-                subject: 'Pharmacology',
-                description: 'Final exam covering all pharmacology topics',
-                date: '2024-12-22',
-                fileUrl: 'https://drive.google.com/file/d/pharma-exam',
-                isActive: true
-            },
-            {
-                _id: '5',
-                title: 'Pathology CAT 2',
-                type: 'cat',
-                year: '2',
-                subject: 'Pathology',
-                description: 'Second continuous assessment test',
-                date: '2024-12-18',
-                fileUrl: 'https://drive.google.com/file/d/pathology-cat',
-                isActive: true
-            },
-            {
-                _id: '6',
-                title: 'Clinical Medicine Notes',
-                type: 'notes',
-                year: '3',
-                subject: 'Clinical Medicine',
-                description: 'Study notes for clinical medicine module',
-                date: '2024-12-25',
-                fileUrl: 'https://drive.google.com/file/d/clinical-notes',
-                isActive: true
-            }
-        ];
-
-        let currentResourceFilter = 'all';
-
-        // Fetch members from API
+        // ===== MEMBER LOADING =====
         async function fetchMembers() {
             try {
                 const response = await fetch('/api/members');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch members');
-                }
+                if (!response.ok) throw new Error('Failed to fetch members');
                 const data = await response.json();
                 allMembers = data.members || [];
-                console.log('Members fetched:', allMembers);
-                
-                // Update stats if available from API
-                if (data.stats) {
-                    updateStats(data.stats);
-                }
-                
+                updateStats();
                 renderMembers();
             } catch (error) {
                 console.error('Error fetching members:', error);
-                const container = document.getElementById('membersGrid');
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545; margin-bottom: 15px;"></i>
-                        <p style="color: #999; font-size: 1.1rem;">Unable to load members</p>
-                        <small style="color: #bbb;">Please try refreshing the page</small>
-                    </div>
-                `;
+                showNoResults();
             }
         }
 
-        function getVisibleMembers() {
-            return allMembers.filter(member => member.profileVisible === true);
-        }
-
-        // Render members
-        function renderMembers(membersToDisplay) {
-            // Default to all members if no filter specified
-            if (!membersToDisplay) {
-                membersToDisplay = allMembers.length > 0 ? allMembers : getVisibleMembers();
-            }
-            
+        // ===== MEMBER RENDERING =====
+        function renderMembers(membersToDisplay = null) {
             const container = document.getElementById('membersGrid');
-            
-            console.log('renderMembers called with:', membersToDisplay);
-            console.log('Total allMembers:', allMembers.length);
-            console.log('Visible members:', membersToDisplay.length);
+            const members = membersToDisplay || getVisibleMembers();
 
-            if (membersToDisplay.length === 0) {
-                console.log('No visible members - showing empty state');
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                        <i class="fas fa-users" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
-                        <p style="color: #999; font-size: 1.1rem;">No public profiles available yet</p>
-                        <small style="color: #bbb;">Members with public profiles will appear here</small>
-                    </div>
-                `;
+            if (members.length === 0) {
+                container.innerHTML = '';
+                document.getElementById('noResultsState').style.display = 'flex';
                 return;
             }
 
-            container.innerHTML = membersToDisplay.map(member => {
-                // Generate avatar with initials or use profile picture
-                let avatarHTML;
-                if (member.profilePicture) {
-                    avatarHTML = `<img src="${member.profilePicture}" alt="${member.firstName} ${member.lastName}" style="width: 100%; height: 100%; object-fit: cover;">`;
-                } else {
-                    const initials = ((member.firstName || 'M')[0] + (member.lastName || 'U')[0]).toUpperCase();
-                    avatarHTML = `
-                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #871054, #c41a7b); color: white; font-weight: bold; font-size: 1.3rem;">
-                            ${initials}
-                        </div>
-                    `;
-                }
+            document.getElementById('noResultsState').style.display = 'none';
+            container.innerHTML = members.map(member => {
+                const initials = ((member.firstName || 'M')[0] + (member.lastName || 'U')[0]).toUpperCase();
+                const year = getOrdinalSuffix(member.yearOfStudy);
+                const interests = member.interests?.slice(0, 2).map(i => `<span class="member-interest">${i}</span>`).join('') || '';
 
                 return `
-                    <div class="member-card">
-                        <div class="member-avatar" style="position: relative; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 1rem; border: 3px solid #871054;">
-                            ${avatarHTML}
-                            <div class="member-status ${member.status || 'offline'}" style="position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; background: ${member.status === 'online' ? '#28a745' : member.status === 'away' ? '#ffc107' : '#999'};"></div>
-                        </div>
-                        <div class="member-info">
-                            <h3>${member.firstName} ${member.lastName}</h3>
-                            <p class="member-role">Member</p>
-                            <p class="member-year">${member.yearOfStudy}${getOrdinalSuffix(member.yearOfStudy)} Year</p>
-                            <div class="member-interests">
-                                ${member.interests && member.interests.length > 0 ? member.interests.map(interest => `<span class="interest-tag">${interest}</span>`).join('') : `<span class="interest-tag">${member.department || 'Medicine'}</span>`}
+                    <div class="modern-member-card">
+                        <div class="member-card-header">
+                            <div class="member-avatar-large">
+                                ${member.profilePicture ? 
+                                    `<img src="${member.profilePicture}" alt="${member.firstName}">` :
+                                    `<div class="avatar-initials">${initials}</div>`
+                                }
                             </div>
-                            <div class="member-actions">
-                                <button class="btn-view" onclick="viewProfile('${member._id}')"><i class="fi fi-ts-eye"></i> View Profile</button>
-                                <button class="btn-message" onclick="messageUser('${member._id}')"><i class="fi fi-ts-envelope"></i> Message</button>
+                            <div class="member-status-badge ${member.status || 'offline'}"></div>
+                        </div>
+                        
+                        <div class="member-card-content">
+                            <h3 class="member-name">${member.firstName} ${member.lastName}</h3>
+                            <p class="member-year-badge">${member.yearOfStudy}${year} Year</p>
+                            <p class="member-department">${member.department || 'Medicine'}</p>
+                            
+                            ${interests ? `<div class="member-interests-list">${interests}</div>` : ''}
+                            
+                            <div class="member-card-actions">
+                                <button class="card-action-btn" onclick="viewProfile('${member._id}')">
+                                    <i class="fas fa-user-circle"></i> View
+                                </button>
+                                <button class="card-action-btn" onclick="messageUser('${member._id}')">
+                                    <i class="fas fa-envelope"></i> Message
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -461,7 +980,48 @@
             }).join('');
         }
 
-        // Get ordinal suffix for year
+        // ===== STATS UPDATE =====
+        function updateStats() {
+            const total = allMembers.length;
+            const visible = getVisibleMembers().length;
+            const years = new Set(getVisibleMembers().map(m => m.yearOfStudy)).size;
+
+            animateNumber('totalMembersValue', total);
+            animateNumber('visibleMembersValue', visible);
+            document.getElementById('yearGroupsValue').textContent = years || 6;
+        }
+
+        function animateNumber(elementId, endValue) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            const startValue = parseInt(element.textContent) || 0;
+            if (isNaN(endValue) || endValue === 0) {
+                element.textContent = '0';
+                return;
+            }
+            const duration = 600;
+            const steps = 30;
+            const increment = (endValue - startValue) / steps;
+            let current = startValue;
+            let step = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                step++;
+                element.textContent = Math.floor(current);
+                
+                if (step >= steps) {
+                    element.textContent = endValue;
+                    clearInterval(timer);
+                }
+            }, duration / steps);
+        }
+
+        // ===== FILTERING & SEARCH =====
+        function getVisibleMembers() {
+            return allMembers.filter(m => m.profileVisible === true);
+        }
+
         function getOrdinalSuffix(num) {
             const j = num % 10;
             const k = num % 100;
@@ -471,373 +1031,140 @@
             return 'th';
         }
 
-        // Update stats with smooth animation
-        function updateStats(stats = null) {
-            if (stats) {
-                console.log('updateStats called with:', stats);
-                
-                // Ensure all values are valid numbers with strict validation
-                const totalMembers = (!isNaN(stats.totalMembers) && stats.totalMembers !== null) ? parseInt(stats.totalMembers) : 0;
-                const visibleMembers = (!isNaN(stats.visibleMembers) && stats.visibleMembers !== null) ? parseInt(stats.visibleMembers) : 0;
-                const activeNow = (!isNaN(stats.activeNow) && stats.activeNow !== null) ? parseInt(stats.activeNow) : 0;
-
-                console.log('Validated values:', { totalMembers, visibleMembers, activeNow });
-
-                // Update with animation
-                animateStatUpdate('totalMembersValue', totalMembers);
-                animateStatUpdate('visibleMembersValue', visibleMembers);
-                animateStatUpdate('activeNowValue', activeNow);
-                // Year Groups is always 6 (years 1-6), no need to update from API
-
-                console.log('Stats animation triggered');
-            } else {
-                // Fallback to client-side calculation
-                const visibleMembers = getVisibleMembers();
-                const totalCount = allMembers.length;
-                const visibleCount = visibleMembers.length;
-                const activeNowCount = visibleMembers.filter(m => m.status === 'online').length;
-                const yearsCount = new Set(visibleMembers.map(m => m.yearOfStudy)).size || 6;
-
-                // Ensure all values are valid numbers
-                const finalTotal = !isNaN(totalCount) ? totalCount : 0;
-                const finalVisible = !isNaN(visibleCount) ? visibleCount : 0;
-                const finalActive = !isNaN(activeNowCount) ? activeNowCount : 0;
-
-                animateStatUpdate('totalMembersValue', finalTotal);
-                animateStatUpdate('visibleMembersValue', finalVisible);
-                animateStatUpdate('activeNowValue', finalActive);
-                // Year Groups is always 6 (years 1-6), no need to update
-
-                console.log('Stats calculated fallback:', { finalTotal, finalVisible, finalActive });
-            }
+        function showNoResults() {
+            document.getElementById('membersGrid').innerHTML = '';
+            document.getElementById('noResultsState').style.display = 'flex';
         }
 
-        // Animate stat number changes
-        function animateStatUpdate(elementId, newValue) {
-            const element = document.getElementById(elementId);
-            if (!element) {
-                console.error(`Element with ID "${elementId}" not found`);
-                return;
-            }
-
-            // Ensure value is a valid number, convert to string
-            let displayValue = 0;
-            if (newValue !== undefined && newValue !== null && !isNaN(newValue)) {
-                displayValue = parseInt(newValue) || 0;
-            }
-            
-            // Directly set the value
-            element.textContent = displayValue.toString();
-            console.log(`${elementId}: set to ${displayValue}`);
+        function resetFilters() {
+            document.getElementById('memberSearch').value = '';
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.filter-tab[data-filter="all"]').classList.add('active');
+            currentFilterYear = 'all';
+            renderMembers();
         }
 
-        // Filter by year
-        document.querySelector('.filter-select').addEventListener('change', function(e) {
-            const selectedYear = e.target.value;
-
-            if (selectedYear === 'all') {
-                renderMembers(getVisibleMembers());
-            } else {
-                const filtered = getVisibleMembers().filter(member =>
-                    member.yearOfStudy === parseInt(selectedYear)
-                );
-                renderMembers(filtered);
-            }
-        });
-
-        // Search functionality
-        document.querySelector('.search-input').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            if (searchTerm === '') {
-                renderMembers(getVisibleMembers());
-                return;
-            }
-            
-            const filtered = getVisibleMembers().filter(member => 
-                member.firstName.toLowerCase().includes(searchTerm) ||
-                member.lastName.toLowerCase().includes(searchTerm) ||
-                member.role.toLowerCase().includes(searchTerm)
-            );
-            
-            renderMembers(filtered);
-        });
-
-        // View profile
+        // ===== USER ACTIONS =====
         function viewProfile(memberId) {
-            alert(`Opening profile for member ${memberId}. In production, this would open a profile page or modal.`);
+            alert(`Profile view for member ${memberId} - Coming soon!`);
         }
 
-        // Message user
         function messageUser(memberId) {
-            alert(`Opening messaging for member ${memberId}. In production, this would open a messaging interface.`);
+            alert(`Messaging member ${memberId} - Coming soon!`);
         }
 
-        // Show academic resources for logged-in users
-        function showAcademicResources(userYear) {
-            currentUserYear = userYear;
-            const resourcesSection = document.getElementById('academicResources');
-            resourcesSection.style.display = 'block';
-            document.getElementById('resourcesSubtitle').textContent = `Access exams, CATs, and study notes for Year ${userYear} students`;
-            loadUserResources();
-        }
-
-        // Load resources for user's year
-        function loadUserResources() {
-            const userResources = academicResources.filter(r => r.year === currentUserYear.toString() && r.isActive);
-            displayResources(userResources);
-        }
-
-        // Filter resources by type
-        function filterResourcesByType(type) {
-            // Update active button styling
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.style.background = 'white';
-                btn.style.color = '#871054';
-            });
-            event.target.style.background = '#871054';
-            event.target.style.color = 'white';
-
-            currentResourceFilter = type;
-            let resourcesToShow = academicResources.filter(r => r.year === currentUserYear.toString() && r.isActive);
-            
-            if (type !== 'all') {
-                resourcesToShow = resourcesToShow.filter(r => r.type === type);
-            }
-            
-            displayResources(resourcesToShow);
-        }
-
-        // Display resources
-        function displayResources(resources) {
-            const grid = document.getElementById('resourcesGrid');
-            const noMsg = document.getElementById('noResourcesMsg');
-
-            if (resources.length === 0) {
-                grid.style.display = 'none';
-                noMsg.style.display = 'block';
-                return;
-            }
-
-            grid.style.display = 'grid';
-            noMsg.style.display = 'none';
-
-            grid.innerHTML = resources.map(resource => {
-                const typeIcon = resource.type === 'exam' ? 'fa-file-pdf' : resource.type === 'cat' ? 'fa-clipboard-list' : 'fa-book';
-                const typeLabel = resource.type === 'exam' ? 'Exam' : resource.type === 'cat' ? 'CAT' : 'Study Notes';
-                const typeColor = resource.type === 'exam' ? '#dc3545' : resource.type === 'cat' ? '#007bff' : '#28a745';
-
-                return `
-                    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-left: 4px solid ${typeColor}; transition: all 0.3s;">
-                        <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
-                            <div style="flex-shrink: 0;">
-                                <i class="fas ${typeIcon}" style="font-size: 1.8rem; color: ${typeColor};"></i>
-                            </div>
-                            <div style="flex: 1;">
-                                <h3 style="margin: 0 0 0.5rem; color: #333; font-size: 1.1rem;">${resource.title}</h3>
-                                <p style="margin: 0 0 0.3rem; font-size: 0.9rem; color: #666;">
-                                    <strong>${typeLabel}</strong> • ${resource.subject}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <p style="margin: 0.75rem 0; color: #555; font-size: 0.95rem;">${resource.description}</p>
-                        
-                        <p style="margin: 0.75rem 0; font-size: 0.9rem; color: #999;">
-                            <i class="fas fa-calendar"></i> ${new Date(resource.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                        </p>
-                        
-                        ${resource.fileUrl ? `
-                            <a href="${resource.fileUrl}" target="_blank" style="display: inline-block; margin-top: 1rem; padding: 0.6rem 1.2rem; background: ${typeColor}; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem; transition: all 0.3s;">
-                                <i class="fas fa-download"></i> Access Resource
-                            </a>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Initialize on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            // Immediately set stats to 0 to avoid NaN display
-            document.getElementById('totalMembersValue').textContent = '0';
-            document.getElementById('visibleMembersValue').textContent = '0';
-            document.getElementById('activeNowValue').textContent = '0';
-            document.getElementById('yearGroupsValue').textContent = '0';
-            
-            // Show loading state immediately
-            const membersGrid = document.getElementById('membersGrid');
-            membersGrid.innerHTML = `
-                <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                    <i class="fas fa-spinner" style="font-size: 2rem; color: #871054; margin-bottom: 15px; display: block; animation: spin 1s linear infinite;"></i>
-                    <p style="color: #999;">Loading members...</p>
-                </div>
-            `;
-            
-            // Show loading state for class leaders
-            const classLeadersGrid = document.getElementById('classLeadersGrid');
-            if (classLeadersGrid) {
-                classLeadersGrid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-spinner" style="font-size: 2rem; color: #871054; margin-bottom: 15px; display: block; animation: spin 1s linear infinite;"></i>
-                        <p style="color: #999;">Loading class leaders...</p>
-                    </div>
-                `;
-            }
-            
-            // Load all data in parallel for faster performance
-            Promise.all([
-                fetchMembers(),
-                fetchClassLeaders()
-            ]).then(() => {
-                // Check if user is logged in (from login page or demo)
-                const loggedInUser = localStorage.getItem('loggedInUser');
-                if (loggedInUser) {
-                    try {
-                        const userData = JSON.parse(loggedInUser);
-                        if (userData.yearOfStudy || userData.year) {
-                            const userYear = userData.yearOfStudy || userData.year;
-                            showAcademicResources(userYear);
-                        }
-                    } catch (e) {
-                        console.log('User data not available');
-                    }
-                }
-            }).catch(error => {
-                console.error('Error loading data:', error);
-            });
-
-            // Add CSS animation for spinner
-            if (!document.getElementById('spinnerStyle')) {
-                const style = document.createElement('style');
-                style.id = 'spinnerStyle';
-                style.textContent = `
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-        });
-
-        // Fetch and display class leaders
+        // ===== CLASS LEADERS =====
         async function fetchClassLeaders() {
             try {
                 const response = await fetch('/api/class-leaders');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch class leaders');
-                }
-                const data = await response.json();
-                renderClassLeaders(data.classLeaders || []);
-            } catch (error) {
-                console.error('Error fetching class leaders:', error);
-                const grid = document.getElementById('classLeadersGrid');
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-info-circle" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
-                        <p style="color: #999;">No class leaders assigned yet</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Render class leaders
-        function renderClassLeaders(classLeaders = []) {
-            const grid = document.getElementById('classLeadersGrid');
-            
-            if (!classLeaders || classLeaders.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-info-circle" style="font-size: 2.5rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
-                        <p style="color: #999;">No class leaders assigned yet</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = classLeaders.map(leader => `
-                <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 15px rgba(135, 16, 84, 0.08); transition: all 0.3s ease; text-align: center; overflow: hidden;">
-                    <!-- Profile Image -->
-                    <div style="margin-bottom: 1.5rem;">
-                        <div style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 1.5rem; overflow: hidden; border: 4px solid #871054; background: linear-gradient(135deg, #871054, #c41a7b); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
-                            ${leader.imageUrl ? `<img src="${leader.imageUrl}" alt="${leader.firstName} ${leader.lastName}" style="width: 100%; height: 100%; object-fit: cover;">` : `<i class="fas fa-user"></i>`}
-                        </div>
-                    </div>
-                    
-                    <!-- Name and Position -->
-                    <h3 style="margin: 0 0 0.5rem; color: #333; font-size: 1.3rem; font-weight: 600;">${leader.firstName} ${leader.lastName}</h3>
-                    <p style="margin: 0 0 0.75rem; color: #871054; font-weight: 600; font-size: 1rem;">${leader.position}</p>
-                    <p style="margin: 0 0 1.5rem; color: #666; font-size: 0.95rem;">
-                        <i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>
-                        Year ${leader.yearOfStudy} Medicine
-                    </p>
-                    
-                    <!-- Social Links -->
-                    ${leader.socialMedia && (leader.socialMedia.facebook || leader.socialMedia.twitter || leader.socialMedia.instagram || leader.socialMedia.linkedin || leader.socialMedia.whatsapp) ? `
-                    <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-                        ${leader.socialMedia.facebook ? `<a href="${leader.socialMedia.facebook}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #1877f2; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Facebook"><i class="fab fa-facebook"></i></a>` : ''}
-                        ${leader.socialMedia.twitter ? `<a href="${leader.socialMedia.twitter}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #1da1f2; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Twitter"><i class="fab fa-twitter"></i></a>` : ''}
-                        ${leader.socialMedia.instagram ? `<a href="${leader.socialMedia.instagram}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #e4405f; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="Instagram"><i class="fab fa-instagram"></i></a>` : ''}
-                        ${leader.socialMedia.linkedin ? `<a href="${leader.socialMedia.linkedin}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #0077b5; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="LinkedIn"><i class="fab fa-linkedin"></i></a>` : ''}
-                        ${leader.socialMedia.whatsapp ? `<a href="${leader.socialMedia.whatsapp}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; color: #25d366; text-decoration: none; transition: all 0.3s; font-size: 1.1rem;" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
-                    </div>
-                    ` : `
-                    <p style="color: #999; font-size: 0.9rem; font-style: italic;">Social links not available</p>
-                    `}
-                </div>
-            `).join('');
-        }
-
-        // Filter class leaders by year
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('class-filter-select')) {
-                const selectedYear = e.target.value;
-                filterClassLeadersByYear(selectedYear);
-            }
-        });
-
-        // Filter function
-        async function filterClassLeadersByYear(year) {
-            try {
-                const url = year === 'all' ? '/api/class-leaders' : `/api/class-leaders?year=${year}`;
-                const response = await fetch(url);
                 if (!response.ok) throw new Error('Failed to fetch');
                 const data = await response.json();
                 renderClassLeaders(data.classLeaders || []);
             } catch (error) {
-                console.error('Error filtering class leaders:', error);
+                console.error('Error:', error);
+                document.getElementById('classLeadersGrid').innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
+                        <i class="fas fa-info-circle" style="font-size: 2.5rem; margin-bottom: 1rem; display: block;"></i>
+                        <p>No class leaders available</p>
+                    </div>
+                `;
             }
         }
 
-        // Load social media links from admin settings
+        function renderClassLeaders(leaders) {
+            const grid = document.getElementById('classLeadersGrid');
+            if (leaders.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
+                        <i class="fas fa-info-circle" style="font-size: 2.5rem; margin-bottom: 1rem; display: block;"></i>
+                        <p>No class leaders assigned yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = leaders.map(leader => `
+                <div class="class-leader-card">
+                    <div class="leader-image">
+                        ${leader.imageUrl ? 
+                            `<img src="${leader.imageUrl}" alt="${leader.firstName}">` :
+                            `<div class="leader-avatar-placeholder"><i class="fas fa-user"></i></div>`
+                        }
+                    </div>
+                    <h3 class="leader-name">${leader.firstName} ${leader.lastName}</h3>
+                    <p class="leader-position">${leader.position || 'Class Leader'}</p>
+                    <p class="leader-year"><i class="fas fa-graduation-cap"></i> Year ${leader.yearOfStudy}</p>
+                </div>
+            `).join('');
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilterYear = this.dataset.filter;
+                    
+                    const members = currentFilterYear === 'all' ? 
+                        getVisibleMembers() :
+                        getVisibleMembers().filter(m => m.yearOfStudy == currentFilterYear);
+                    renderMembers(members);
+                });
+            });
+
+            // Search input
+            document.getElementById('memberSearch').addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                const members = getVisibleMembers().filter(m => 
+                    m.firstName.toLowerCase().includes(term) ||
+                    m.lastName.toLowerCase().includes(term) ||
+                    (m.department || '').toLowerCase().includes(term)
+                );
+                renderMembers(members);
+            });
+
+            // Class leaders filter
+            const classFilter = document.getElementById('classLeadersYearFilter');
+            if (classFilter) {
+                classFilter.addEventListener('change', async function() {
+                    try {
+                        const url = this.value === 'all' ? '/api/class-leaders' : `/api/class-leaders?year=${this.value}`;
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        renderClassLeaders(data.classLeaders || []);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Load data
+            fetchMembers();
+            fetchClassLeaders();
+            loadSocialMediaLinks();
+        });
+
+        // Load social media links
         async function loadSocialMediaLinks() {
             try {
                 const response = await fetch('/api/admin/communication');
                 const data = await response.json();
-                
                 if (data.socialMedia) {
-                    const socialLinks = data.socialMedia;
-                    const socialLinksContainer = document.getElementById('footerSocialLinks');
-                    
-                    if (socialLinksContainer) {
-                        let html = '';
-                        if (socialLinks.facebook) html += `<a href="${socialLinks.facebook}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>`;
-                        if (socialLinks.twitter) html += `<a href="${socialLinks.twitter}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>`;
-                        if (socialLinks.instagram) html += `<a href="${socialLinks.instagram}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>`;
-                        if (socialLinks.linkedin) html += `<a href="${socialLinks.linkedin}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>`;
-                        if (socialLinks.whatsapp) html += `<a href="${socialLinks.whatsapp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
-                        
-                        socialLinksContainer.innerHTML = html || '<!-- Social media links not configured -->>';
-                    }
+                    const container = document.getElementById('footerSocialLinks');
+                    let html = '';
+                    if (data.socialMedia.facebook) html += `<a href="${data.socialMedia.facebook}" target="_blank"><i class="fab fa-facebook"></i></a>`;
+                    if (data.socialMedia.twitter) html += `<a href="${data.socialMedia.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>`;
+                    if (data.socialMedia.instagram) html += `<a href="${data.socialMedia.instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`;
+                    if (data.socialMedia.linkedin) html += `<a href="${data.socialMedia.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>`;
+                    if (data.socialMedia.whatsapp) html += `<a href="${data.socialMedia.whatsapp}" target="_blank"><i class="fab fa-whatsapp"></i></a>`;
+                    if (container) container.innerHTML = html;
                 }
             } catch (error) {
-                console.log('Social media links not available');
+                console.log('Social links unavailable');
             }
         }
-
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadClassLeaders();
-            loadSocialMediaLinks();
-        });
+    </script>
+</body>
+</html>

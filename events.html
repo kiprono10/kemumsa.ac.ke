@@ -26,12 +26,7 @@
             <!-- Logo -->
             <div class="logo-area">
                 <div class="logo-icon">
-                    <div class="logo-heart">
-                        <i class="fas fa-heartbeat"></i>
-                    </div>
-                    <div class="logo-caduceus">
-                        <i class="fas fa-staff-snake"></i>
-                    </div>
+                    <img src="outsourced-media/Logo.png" alt="KeMUMSA Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 <div class="logo-text">
                     <h1 class="association-name">KeMUMSA</h1>
@@ -297,27 +292,38 @@
         // Fetch events from API
         async function fetchEvents() {
             try {
-                const response = await fetch('http://localhost:3000/api/events');
+                const response = await fetch('/api/events');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 let events = await response.json();
                 
-                // Normalize events - ensure all have isActive property
+                // Ensure events is an array
+                if (!Array.isArray(events)) {
+                    if (events.events && Array.isArray(events.events)) {
+                        events = events.events;
+                    } else {
+                        throw new Error('Invalid response format from API');
+                    }
+                }
+                
+                // Normalize events - ensure all have isActive property and proper date format
                 events = events.map(event => ({
                     ...event,
+                    _id: event._id || event.id || Date.now().toString(),
                     isActive: event.isActive !== undefined ? event.isActive : true,
-                    isPast: event.isPast !== undefined ? event.isPast : false
+                    isPast: event.isPast !== undefined ? event.isPast : false,
+                    date: event.date || new Date().toISOString()
                 }));
                 
                 allEvents = events;
-                console.log('Fetched events from API:', allEvents);
+                console.log('Fetched events from API:', allEvents.length, 'events loaded');
                 return allEvents;
             } catch (error) {
-                console.error('Error loading events:', error);
+                console.error('Error loading events from API:', error);
                 // Fallback to sample data if API fails
                 allEvents = sampleEvents;
-                console.log('Using sample events:', allEvents);
+                console.log('Using sample events fallback:', allEvents.length, 'events loaded');
                 return allEvents;
             }
         }

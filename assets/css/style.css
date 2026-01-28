@@ -132,6 +132,15 @@ body {
     height: 60px;
 }
 
+.logo-icon img {
+    animation: bounce 3s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
 .logo-heart {
     position: absolute;
     top: 0;
@@ -234,6 +243,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-left: 20px;
 }
 
 .btn-login, .btn-join {

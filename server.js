@@ -7,7 +7,7 @@ const compression = require('compression');
 require('dotenv').config();
 
 // Import database models
-const { connectDB, syncDatabase } = require('./models');
+const { connectDB, syncDatabase, Member, Event, Executive, ClassLeader, Resource, Message, Communication, Admin } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
