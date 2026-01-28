@@ -1161,8 +1161,21 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="carouselImageUrl">Image URL</label>
-                                <input type="text" id="carouselImageUrl" placeholder="https://..." required>
+                                <label for="carouselImageUrl">Image URL or Upload</label>
+                                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                                    <input type="text" id="carouselImageUrl" placeholder="https://..." style="flex: 1;">
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('carouselImageFile').click()">
+                                        <i class="fas fa-upload"></i> Upload
+                                    </button>
+                                </div>
+                                <input type="file" id="carouselImageFile" accept="image/*" style="display: none;" onchange="handleCarouselImageUpload(event)">
+                                <small style="color: #666;">Max file size: 10MB. Supported: JPG, PNG, GIF, WEBP</small>
+                                <div id="uploadProgress" style="display: none; margin-top: 0.5rem;">
+                                    <div style="background: #f0f0f0; border-radius: 4px; height: 6px; overflow: hidden;">
+                                        <div id="uploadProgressBar" style="background: #007bff; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                                    </div>
+                                    <small id="uploadStatus" style="color: #666; display: block; margin-top: 0.25rem;">Uploading...</small>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="carouselTitle">Title (optional)</label>
@@ -3726,6 +3739,67 @@
             } catch (error) {
                 console.error('Error toggling carousel image:', error);
                 alert('Error toggling image: ' + error.message);
+            }
+        }
+
+        async function handleCarouselImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const token = localStorage.getItem('adminToken');
+                const uploadProgress = document.getElementById('uploadProgress');
+                const uploadProgressBar = document.getElementById('uploadProgressBar');
+                const uploadStatus = document.getElementById('uploadStatus');
+
+                uploadProgress.style.display = 'block';
+                uploadStatus.textContent = `Uploading ${file.name}...`;
+                uploadProgressBar.style.width = '0%';
+
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = (e.loaded / e.total) * 100;
+                        uploadProgressBar.style.width = percentComplete + '%';
+                        uploadStatus.textContent = `Uploading... ${Math.round(percentComplete)}%`;
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            document.getElementById('carouselImageUrl').value = response.imageUrl;
+                            uploadStatus.textContent = 'Upload successful!';
+                            uploadProgressBar.style.width = '100%';
+                            setTimeout(() => {
+                                uploadProgress.style.display = 'none';
+                                document.getElementById('carouselImageFile').value = '';
+                            }, 1500);
+                        } else {
+                            uploadStatus.textContent = 'Upload failed: ' + response.message;
+                        }
+                    } else {
+                        uploadStatus.textContent = 'Upload failed: Server error';
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    uploadStatus.textContent = 'Upload failed: Network error';
+                });
+
+                xhr.open('POST', '/api/carousel/admin/upload');
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                xhr.send(formData);
+
+            } catch (error) {
+                console.error('Error uploading carousel image:', error);
+                alert('Error uploading image: ' + error.message);
+                document.getElementById('uploadProgress').style.display = 'none';
             }
         }
     </script>
